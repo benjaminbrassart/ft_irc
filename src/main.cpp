@@ -3,19 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/08 07:08:07 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/08 07:10:51 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/11/10 00:55:38 by estoffel          #+#    #+#             */
+/*   Updated: 2022/11/10 01:52:10 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <iostream>
+//./ircserv <port> <password>
+int	main(int ac, char **av) {
 
-int main(int argc, char const* argv[])
-{
-	(void)argc;
-	(void)argv;
-	std::cout << "Hello world!" << '\n';
+	if (ac != 3) {
+		std::cerr << "Wrong number of arguments -> \"./ircserv <port> <password>\"\n";
+		return 1;
+	}
 	return 0;
 }
