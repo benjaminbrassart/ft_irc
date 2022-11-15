@@ -6,7 +6,7 @@
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/15 18:56:27 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/11/15 20:18:11 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,11 @@
 # include "Client.hpp"
 # include "Channel.hpp"
 
-# include <algorithm>
+# include <iostream>
 # include <string>
 # include <vector>
+# include <algorithm>
+# include "colours.h"
 
 class Client;
 class Channel;
