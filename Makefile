@@ -3,64 +3,59 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+         #
+#    By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2022/11/08 07:03:27 by bbrassar          #+#    #+#              #
-#    Updated: 2022/11/15 19:17:13 by lrandria         ###   ########.fr        #
+#    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
+#    Updated: 2022/11/15 20:06:08 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = ircserv
+NAME	=	ircserv
 
-# ---------------------------------------------------------------------------- #
+CC		=	c++
 
-CXX = c++
-CXXFLAGS += -Wall
-CXXFLAGS += -Werror
-CXXFLAGS += -Wextra
-CXXFLAGS += -Wshadow
-CXXFLAGS += -std=c++98
-CXXFLAGS += -c
-CXXFLAGS += -g3
-CXXFLAGS += -I .
-CXXFLAGS += -I $(DIR_SRC)
+FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98
 
-RM = rm -f
+SRC		=	main.cpp		\
 
-# ---------------------------------------------------------------------------- #
+OBJ		:=	$(addprefix ./obj/,$(SRC:%.cpp=%.o))
 
-DIR_SRC = src
-DIR_OBJ = obj
+DEP		=	$(addprefix ./obj/,$(OBJ:%.o=%.d))
 
-# ---------------------------------------------------------------------------- #
-
-SRC += main.cpp
-SRC += parser.cpp
-SRC += class/server.cpp
-
-OBJ = $(SRC:%.cpp=$(DIR_OBJ)/%.o)
-DEP = $(OBJ:.o=.d)
-
-# ---------------------------------------------------------------------------- #
-
-$(NAME): $(OBJ)
-	$(CXX) $^ -o $@
-
-$(OBJ): $(DIR_OBJ)/%.o: $(DIR_SRC)/%.cpp
-	@mkdir -p $(@D)
-	$(CXX) $(CXXFLAGS) $< -o $@
-
--include $(DEP)
-
-# ---------------------------------------------------------------------------- #
+RM		=	rm -rf
 
 all: $(NAME)
 
-clean:
-	$(RM) -r $(DIR_OBJ)
+-include $(DEP)
 
-fclean: clean
+./obj/%.o: ./src/%.cpp
+	@mkdir -p $(@D)
+	$(CC) $(FLAGS) -o $@ -c $<
+
+$(NAME): $(OBJ)
+	$(CC) $(FLAGS) -o $(NAME) $(OBJ)
+	@printf "\n"
+	@printf "\n"
+	@echo "   🌼\033[1;97m I R C S E R V  C R E A T E D  W I T H  S U C C E S S 🌼\e[0m"
+	@printf "\n"
+	@echo "				x"
+	@printf "\n"
+	@echo "		✨	~ \033[1;97mBen Enora Liana\e[0m ~	✨"
+	@printf "\n"
+	@printf "\n"
+
+clean:
+	$(RM) obj/
+	@printf "\n"
+	@echo "💧\033[1;97m E V E R Y T H I N G  I S  C L E A N E D 💧\e[0m"
+	@printf "\n"
+
+fclean:
+	$(RM) obj/
 	$(RM) $(NAME)
+	@printf "\n"
+	@echo "💧\033[1;97m E V E R Y T H I N G  I S  C L E A N E D 💧\e[0m"
+	@printf "\n"
 
 re: fclean all
 
