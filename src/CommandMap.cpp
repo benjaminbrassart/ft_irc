@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:45:50 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/15 20:01:17 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/15 20:10:57 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,5 +40,9 @@ void CommandMap::put(std::string const& name, CommandHandler handler)
 
 void CommandMap::dispatch(Client& client, std::string const& name)
 {
-	CommandMap:: this->_commands.find(name)
+	CommandMap::map_type::const_iterator it;
+
+	it = this->_commands.find(name);
+	if (it != this->_commands.end())
+		it->second(client);
 }
