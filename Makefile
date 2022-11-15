@@ -6,7 +6,7 @@
 #    By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/11/15 19:09:45 by estoffel         ###   ########.fr        #
+#    Updated: 2022/11/15 19:16:11 by estoffel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ $(NAME): $(OBJ)
 	$(CC) $(FLAGS) -o $(NAME) $(OBJ)
 	@printf "\n"
 	@printf "\n"
-	@echo "🌼\033[1;97m I R C S E R V  C R E A T E D  W I T H  S U C C E S S 🌼\e[0m"
+	@echo "   🌼\033[1;97m I R C S E R V  C R E A T E D  W I T H  S U C C E S S 🌼\e[0m"
 	@printf "\n"
 	@echo "				x"
 	@printf "\n"
