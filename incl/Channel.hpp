@@ -19,26 +19,41 @@
 # include <string>
 # include <vector>
 
-namespace irc
-{
 class Client;
 class Server;
 
-class Channel
-{
-public:
-	typedef std::vector< Client* > ClientList;
+class Channel {
 
-public:
-	Server* server;
-	std::string topic;
-	std::string password;
-private:
-	ClientList _clients;
+	public:
+		Channel();
+		~Channel();
 
-public:
-	void broadcast(std::string const& message);
+		typedef std::vector<Client*> ClientList;
+		
+		void			cmdJoin(std::string channel, std::string key);
+		void			cmdPart(std::string channel, std::string reason);
+		void			cmdTopic(std::string channel, std::string topic);
+		void			cmdNames(std::string channel);
+		void			cmdList(std::string channel); // optional "elist" param
+		void			cmdInvite(std::string nickname, std::string channel);
+		void			cmdKick(std::string channel, std::string user);
+		//Server Queries and Commands
+		// void			cmdMOTD(std::string target);
+		// void			cmdAdmin(std::string target);
+		// int				cmdLusers(); // returns stats about local/global users
+		// void			cmdTime(std::string server);
+		// void			cmdStats(std::string query, std::string server);
+		// void			cmdHelp(std::string subject);
+		// void			cmdInfo();
+		// void			cmdMode(std::string target); //check the other params
+		void 			broadcast(std::string const &message);
+
+		Server			*server;
+		std::string		topic;
+		std::string		password;
+	
+	private:
+		ClientList		_clients;
 };
-} // namespace irc
 
 #endif // CHANNEL_HPP

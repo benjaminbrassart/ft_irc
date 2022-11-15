@@ -50,6 +50,15 @@
 typedef	std::string		String;
 typedef	unsigned int	uint;
 
+# include "Client.hpp"
+# include "Channel.hpp"
+
+# include <iostream>
+# include <string>
+# include <vector>
+# include <algorithm>
+# include "colours.h"
+
 class Client;
 class Channel;
 

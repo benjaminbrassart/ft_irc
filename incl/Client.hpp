@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/15 17:51:15 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/15 18:56:18 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@
 
 # include <netinet/in.h>
 
-namespace irc
-{
 class Channel;
 class Server;
 
@@ -47,6 +45,5 @@ public:
 private:
 	ChannelList _channels;
 }; // class Client
-} // namespace irc
 
 #endif // CLIENT_HPP
