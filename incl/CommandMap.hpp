@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:38:48 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/15 19:28:34 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/15 20:10:12 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,11 @@ class Client;
 
 class CommandMap
 {
+public:
+	typedef std::map< std::string const&, CommandHandler > map_type;
+
 private:
-	std::map< std::string const&, CommandHandler > _commands;
+	map_type _commands;
 
 public:
 	CommandMap(void);
