@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:38:48 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/15 20:10:12 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/15 20:53:07 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,12 @@
 # include <map>
 # include <string>
 
-namespace irc
-{
 class Client;
 
 class CommandMap
 {
 public:
-	typedef std::map< std::string const&, CommandHandler > map_type;
+	typedef std::map< std::string, CommandHandler > map_type;
 
 private:
 	map_type _commands;
@@ -41,7 +39,9 @@ public:
 public:
 	void put(std::string const& name, CommandHandler handler);
 	void dispatch(Client& client, std::string const& name);
+
+private:
+	void handleUnknownCommand(Client& client);
 }; // class CommandMap
-} // namespace irc
 
 #endif // COMMANDMAP_HPP
