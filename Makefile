@@ -6,7 +6,7 @@
 #    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/08 07:03:27 by bbrassar          #+#    #+#              #
-#    Updated: 2022/11/14 13:30:33 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/11/14 18:43:44 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,6 +21,7 @@ CXXFLAGS += -Wextra
 CXXFLAGS += -Wshadow
 CXXFLAGS += -std=c++98
 CXXFLAGS += -c
+CXXFLAGS += -g3
 CXXFLAGS += -I .
 CXXFLAGS += -I $(DIR_SRC)
 
@@ -34,6 +35,8 @@ DIR_OBJ = obj
 # ---------------------------------------------------------------------------- #
 
 SRC += main.cpp
+SRC += parser.cpp
+SRC += class/server.cpp
 
 OBJ = $(SRC:%.cpp=$(DIR_OBJ)/%.o)
 DEP = $(OBJ:.o=.d)
