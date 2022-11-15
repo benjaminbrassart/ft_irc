@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/15 18:01:43 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/15 18:56:27 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@
 # include <string>
 # include <vector>
 
-namespace irc
-{
 class Client;
 class Channel;
 
@@ -37,6 +35,5 @@ private:
 
 void dispatch(Client* sender);
 }; // class Server
-} // namespace irc
 
 #endif // SERVER_HPP
