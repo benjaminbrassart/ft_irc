@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:42:27 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 13:43:03 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 13:48:06 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ int main(int argc, char const* argv[])
 		return 1;
 	}
 
-	// TODO limit to 15 command parameters (see rfc2812: 2.3 Messages)
 	while (std::getline(input, line))
 	{
 		std::string prefix;
