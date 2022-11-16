@@ -1,0 +1,89 @@
+features:
+- authenticate
+- set nickname
+- set username
+- join channel
+- send private message
+- receive private message
+- forward message to clients in channel
+- operators
+- regular users
+- operator commands
+
+# https://datatracker.ietf.org/doc/html/rfc1459#section-4
+irc messages:
+
+# use password for authentication
+- PASS:
+  args: <password>
+  replies:
+    - ERR_NEEDMOREPARAMS
+    - ERR_ALREADYREGISTERED
+
+# set nickname
+- NICK:
+  args: <nick> [<hopcount (ignore)>]
+  replies:
+    - ERR_NONICKNAMEGIVEN
+    - ERR_ERRONEUSNICKNAME
+    - ERR_NICKNAMEINUSE
+    - ERR_NICKCOLLISION
+
+# give information about client
+- USER:
+  args: <username> <hostname> <servername> <realname>
+  replies:
+    - ERR_NEEDMOREPARAMS
+    - ERR_ALREADYREGISTERED
+
+# request operator privileges
+- OPER:
+  args: <user> <password>
+  replies:
+    - ERR_NEEDMOREPARAMS
+    - ERR_NOOPERHOST
+    - ERR_PASSWDMISMATCH
+    - RPL_YOUREOPER
+
+# leave the server
+- QUIT:
+  args: [<message>]
+  replies: null
+
+# join one or more channels
+# https://datatracker.ietf.org/doc/html/rfc1459#section-4.2.1
+- JOIN:
+  args: <channel>{,<channel>} [<key>{,<key>}]
+  replies:
+    - ERR_NEEDMOREPARAMS
+    - RR_BANNEDFROMCHAN
+    - ERR_INVITEONLYCHAN
+    - ERR_BADCHANNELKEY
+    - ERR_CHANNELISFULL
+    - ERR_BADCHANMASK
+    - ERR_NOSUCHCHANNEL
+    - ERR_TOOMANYCHANNELS
+    - RPL_TOPIC
+
+# leave one or more text channels
+- PART:
+  args: <channel>{,<channel>}
+  replies:
+    - ERR_NEEDMOREPARAMS
+    - ERR_NOSUCHCHANNEL
+    - ERR_NOTONCHANNEL
+
+# TODO decide whether we should add channel modes or not
+# https://datatracker.ietf.org/doc/html/rfc1459#section-4.2.3
+
+- PRIVMSG:
+  args: <receiver>{,<receiver>} <text to be sent>
+  replies:
+    - ERR_NORECIPIENT
+    - ERR_NOTEXTTOSEND
+    - ERR_CANNOTSENDTOCHAN
+    - ERR_NOTOPLEVEL
+    - ERR_WILDTOPLEVEL
+    - ERR_TOOMANYTARGETS
+    - ERR_NOSUCHNICK
+    - RPL_AWAY
