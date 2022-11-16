@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:42:27 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 01:47:47 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 11:12:55 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,12 @@ void cmd_pass(Client& client, std::string const& prefix, std::string const& line
 	static std::string const PASSWORD = "mdp123";
 	(void)prefix;
 
-	if (client.is_logged || client.password.second)
+	if (client.is_logged || client.password)
 		client.reply(ERR_ALREADYREGISTRED, ":Unauthorized command (already registered)");
 	else if (line.empty())
 		client.reply(ERR_NEEDMOREPARAMS, "PASS :Not enough parameters");
 	else
-		client.password = std::make_pair(line, true);
+		client.password = make_optional(line);
 }
 
 void cmd_ignore(Client& client, std::string const& prefix, std::string const& line)
