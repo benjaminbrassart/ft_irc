@@ -1,27 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ChannelUser.hpp                                    :+:      :+:    :+:   */
+/*   cmd_ignore.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/15 17:18:54 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/15 17:28:58 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/11/16 11:58:29 by bbrassar          #+#    #+#             */
+/*   Updated: 2022/11/16 11:59:37 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CHANNELUSER_HPP
-# define CHANNELUSER_HPP
+#include "command.h"
 
-# include "Client.hpp"
-
-namespace irc
+void cmd_ignore(CommandContext& context)
 {
-class ChannelUser
-{
-private:
-	Client
-}; // class ChannelUser
-} // namespace irc
-
-#endif // CHANNELUSER_HPP
+	(void)context;
+}

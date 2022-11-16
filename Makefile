@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+         #
+#    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/11/15 20:06:08 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/11/16 14:34:57 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,11 +16,16 @@ CC		=	c++
 
 FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98
 
-SRC		=	main.cpp		\
+SRC		=	bbrassar.cpp CommandMap.cpp Client.cpp CommandContext.cpp Channel.cpp
+SRC		+= cmds/cmd_ignore.cpp
+SRC		+= cmds/cmd_pass.cpp
+SRC		+= cmds/cmd_user.cpp
+SRC		+= cmds/cmd_nick.cpp
+SRC		+= cmds/cmd_quit.cpp
 
 OBJ		:=	$(addprefix ./obj/,$(SRC:%.cpp=%.o))
 
-DEP		=	$(addprefix ./obj/,$(OBJ:%.o=%.d))
+DEP		=	$(OBJ:%.o=%.d)
 
 RM		=	rm -rf
 

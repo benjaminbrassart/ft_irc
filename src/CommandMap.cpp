@@ -6,15 +6,12 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:45:50 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/15 20:10:57 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 11:47:35 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CommandMap.hpp"
-
-using irc::Client;
-using irc::CommandMap;
-using irc::CommandHandler;
+#include "reply.h"
 
 CommandMap::CommandMap() :
 	_commands()
@@ -38,11 +35,21 @@ void CommandMap::put(std::string const& name, CommandHandler handler)
 	this->_commands[name] = handler;
 }
 
-void CommandMap::dispatch(Client& client, std::string const& name)
+void CommandMap::dispatch(Client& client, std::string const& prefix, std::string const& name, std::string const& line)
 {
 	CommandMap::map_type::const_iterator it;
 
 	it = this->_commands.find(name);
-	if (it != this->_commands.end())
-		it->second(client);
+	if (it == this->_commands.end())
+		this->handleUnknownCommand(client, name);
+	else
+	{
+		CommandContext ctx(client, prefix, line);
+		it->second(ctx);
+	}
+}
+
+void CommandMap::handleUnknownCommand(Client& client, std::string const& name)
+{
+	client.reply(ERR_UNKNOWNCOMMAND, name + " :Unknown command");
 }
