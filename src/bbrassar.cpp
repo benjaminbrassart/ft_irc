@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:42:27 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 12:04:06 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 13:43:03 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int main(int argc, char const* argv[])
 	commands.put("CAP", cmd_ignore);
 	commands.put("PASS", cmd_pass);
 	commands.put("USER", cmd_user);
+	commands.put("NICK", cmd_nick);
 
 	input.open("input.txt", std::ifstream::in);
 	if (input.fail())
