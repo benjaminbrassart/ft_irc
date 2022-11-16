@@ -5,33 +5,33 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/15 17:16:34 by bbrassar          #+#   #+#            */
-/*   Updated: 2022/11/16 17:30:03 by bbrassar         ###  ########.fr       */
+/*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
+/*   Updated: 2022/11/16 21:22:01 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-#include "Client.hpp"
-#include "Channel.hpp"
+# include "Client.hpp"
+# include "Channel.hpp"
 
-#include <algorithm>
-#include <string>
-#include <vector>
-#include <iostream>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/epoll.h>
-#include <fcntl.h>
-#include <cstdlib>
-#include <signal.h>
-#include <netdb.h>
-#include <unistd.h>
-#include <cstring>
+# include <algorithm>
+# include <string>
+# include <vector>
+# include <iostream>
+# include <sys/types.h>
+# include <sys/socket.h>
+# include <sys/stat.h>
+# include <arpa/inet.h>
+# include <netinet/in.h>
+# include <sys/epoll.h>
+# include <fcntl.h>
+# include <cstdlib>
+# include <signal.h>
+# include <netdb.h>
+# include <unistd.h>
+# include <cstring>
 
 typedef	std::string		String;
 typedef	unsigned int	uint;
@@ -72,6 +72,8 @@ class Server {
 		};
 	public:
 		CommandMap commands;
+		std::string password;
+
 	private:
 		ClientList	_clients;
 		ChannelList	_channels;
