@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 10:56:27 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 11:56:33 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 13:22:15 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ struct optional
 	optional();
 	optional(T const& val);
 	optional(optional const& x);
+	optional& operator=(T const& x);
 	optional& operator=(optional const& x);
 	~optional();
 

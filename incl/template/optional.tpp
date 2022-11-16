@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:14:44 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 11:35:08 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 13:17:28 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,14 @@ optional< T >::optional(optional const& x) :
 	value(x.value),
 	has_value(x.has_value)
 {}
+
+template< class T >
+optional< T >& optional< T >::operator=(T const& x)
+{
+	this->value = x;
+	this->has_value = true;
+	return *this;
+}
 
 template< class T >
 optional< T >& optional< T >::operator=(optional const& x)
