@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 10:56:27 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 11:09:23 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 11:33:26 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ struct optional
 	~optional();
 
 	operator bool();
+	bool operator==(T const& rhs);
+	bool operator==(optional const& rhs);
 };
 
 template< class T >

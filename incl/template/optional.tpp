@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:14:44 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 11:18:36 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 11:35:08 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,4 +60,16 @@ template< class T >
 optional< T > make_optional(T const& value)
 {
 	return optional< T >(value);
+}
+
+template< class T >
+bool optional< T >::operator==(T const& rhs)
+{
+	return this->has_value && this->value == rhs;
+}
+
+template< class T >
+bool optional< T >::operator==(optional< T > const& rhs)
+{
+	return (this->has_value == rhs.has_value) && (this->value == rhs.value);
 }
