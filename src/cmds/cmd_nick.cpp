@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 19:34:49 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 20:43:16 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,9 @@ static bool __is_nickname_taken(Server const& server, std::string const& nicknam
 void cmd_nick(CommandContext& context)
 {
 	Client& client = context.client;
+	Server& server = *client.server;
 	std::string const& line = context.line;
+
 
 	if (line.empty())
 		client.reply(ERR_NONICKNAMEGIVEN, ":No nickname given");
@@ -54,9 +56,26 @@ void cmd_nick(CommandContext& context)
 		{
 			client.nickname = line;
 			std::cout << "Server           |   New nickname: \"" << client.nickname.value << "\"\n";
-			if (!client.is_logged)
+			if (!client.is_logged && client.nickname && client.info)
 			{
-				// TODO authenticate if possible
+				if (server.password == client.password.value)
+				{
+					std::stringstream ss;
+
+					ss
+						<< "Welcome tp the jungle "
+						<< client.nickname
+						<< '!'
+						<< client.info.value.username
+						<< '@'
+						<< "host" // TODO
+					;
+
+					client.is_logged = true;
+					client.reply(RPL_WELCOME, ss.str());
+				}
+				else
+					client.reply(ERR_PASSWDMISMATCH, ":Password incorrect"); // TODO check if this is the way the protocol is supposed to behave
 			}
 		}
 	}
