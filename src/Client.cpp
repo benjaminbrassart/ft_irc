@@ -3,37 +3,60 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 14:10:29 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 19:14:00 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
-#include <iostream> // TODO remove
+#include <iostream>
 
-Client::Client() :
-	is_logged(false)
-{}
+/* ==========================================================================
+								COPLIEN FORM 
+   ========================================================================== */
 
-Client::~Client()
-{}
+Client::Client() : isOpe(false), isLogged(false) {}
 
-void Client::reply(Reply code, std::string const& message)
-{
+Client::~Client() {}
+
+Client::Client(Client const &src) {
+	*this = src;
+}
+
+Client		&Client::operator=(Client const &rhs) {
+
+	if (this != &rhs) {
+
+		server = rhs.server;
+		channels = rhs.channels;
+		password = rhs.password;
+		info = rhs.info;
+		sock_fd = rhs.sock_fd;
+		isOpe = rhs.isOpe;
+		isLogged = rhs.isLogged;
+		nickname = rhs.nickname;
+		address = rhs.address;
+	}
+	return (*this);
+}
+
+/* ==========================================================================
+								MEMBERS FUNCTIONS
+   ========================================================================== */
+
+void Client::reply(Reply code, std::string const& message) {
 	// TODO send to socket
 	std::cout << "Server -> Client |   " << code << " \"" << message << "\"\n";
 }
 
-void Client::send(std::string const& command)
-{
+void Client::send(std::string const& command) {
 	// TODO send to socket
 	std::cout << "Server -> Client |   " << command << '\n';
 }
 
-void Client::closeConnection()
-{
+void Client::closeConnection() {
 	// TODO close socket
 	std::cout << "Server terminated connection to client\n";
 }
