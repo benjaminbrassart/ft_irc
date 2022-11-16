@@ -6,7 +6,7 @@
 #    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/11/16 11:18:48 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/11/16 12:04:34 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,10 @@ CC		=	c++
 
 FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98
 
-SRC		=	bbrassar.cpp CommandMap.cpp Client.cpp
+SRC		=	bbrassar.cpp CommandMap.cpp Client.cpp CommandContext.cpp
+SRC		+= cmds/cmd_ignore.cpp
+SRC		+= cmds/cmd_pass.cpp
+SRC		+= cmds/cmd_user.cpp
 
 OBJ		:=	$(addprefix ./obj/,$(SRC:%.cpp=%.o))
 
