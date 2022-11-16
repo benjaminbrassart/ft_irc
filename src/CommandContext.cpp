@@ -1,32 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                        :+:      :+:    :+:   */
+/*   CommandContext.cpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 14:45:39 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/11/16 11:47:46 by bbrassar          #+#    #+#             */
+/*   Updated: 2022/11/16 13:59:12 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Channel.hpp"
+#include "command.h"
 
-void Channel::addClient(Client& client)
+CommandContext::CommandContext(Client& client, std::string const& prefix, std::string const& line) :
+	client(client),
+	prefix(prefix),
+	line(line)
 {
-	// TODO
-	(void)client;
 }
 
-void Channel::removeClient(Client& client)
-{
-	// TODO
-	(void)client;
-}
-
-bool Channel::hasClient(Client& client)
-{
-	// TODO
-	(void)client;
-	return false;
-}
+CommandContext::~CommandContext()
+{}
