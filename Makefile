@@ -6,7 +6,7 @@
 #    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/11/16 01:31:41 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/11/16 11:18:48 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ SRC		=	bbrassar.cpp CommandMap.cpp Client.cpp
 
 OBJ		:=	$(addprefix ./obj/,$(SRC:%.cpp=%.o))
 
-DEP		=	$(addprefix ./obj/,$(OBJ:%.o=%.d))
+DEP		=	$(OBJ:%.o=%.d)
 
 RM		=	rm -rf
 
