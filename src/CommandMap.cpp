@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:45:50 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 01:45:55 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 11:36:31 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,5 +48,5 @@ void CommandMap::dispatch(Client& client, std::string const& prefix, std::string
 
 void CommandMap::handleUnknownCommand(Client& client, std::string const& name)
 {
-	client.reply(ERR_UNKNOWNCOMMAND, name + " :Unknown command"); // TODO add enum
+	client.reply(ERR_UNKNOWNCOMMAND, name + " :Unknown command");
 }
