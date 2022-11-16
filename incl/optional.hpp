@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 10:56:27 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 11:33:26 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 11:56:33 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,6 @@ optional< T > make_optional();
 template< class T >
 optional< T > make_optional(T const& value);
 
-#include "template/optional.tpp"
+# include "template/optional.tpp"
 
 #endif // OPTIONAL_HPP
