@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:34:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 14:00:07 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 18:43:59 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,9 @@ class Channel {
 
 	public:
 		Channel();
-		Channel(int test); // which params do I need?
 		~Channel();
 
 		typedef std::vector<Client*> ClientList;
-
 		void 			broadcast(std::string const &message);
 
 		Server			*server;

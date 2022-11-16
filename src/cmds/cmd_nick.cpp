@@ -6,12 +6,13 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 14:35:57 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 18:45:16 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "command.h"
+#include "CommandMap.hpp"
 #include "reply.h"
+#include "Client.hpp"
 
 // valid nickname characters:
 // []\`_^{}|a-zZ-Z0-9-

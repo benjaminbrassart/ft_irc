@@ -6,29 +6,36 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:38:48 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 01:41:42 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 18:44:15 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef COMMANDMAP_HPP
 # define COMMANDMAP_HPP
 
-# include "Client.hpp"
-
-# include "command.h"
-
 # include <map>
 # include <string>
 
 class Client;
 
+struct CommandContext
+{
+	Client& client;
+	std::string const& prefix;
+	std::string const& line;
+
+	CommandContext(Client& client, std::string const& prefix, std::string const& line);
+	~CommandContext();
+}; // struct CommandContext
+
 class CommandMap
 {
 public:
-	typedef std::map< std::string, CommandHandler > map_type;
+	typedef void (*Handler)(::CommandContext& context);
+	typedef std::map< std::string, Handler > MapType;
 
 private:
-	map_type _commands;
+	MapType _commands;
 
 public:
 	CommandMap(void);
@@ -37,11 +44,17 @@ public:
 	~CommandMap();
 
 public:
-	void put(std::string const& name, CommandHandler handler);
+	void put(std::string const& name, Handler handler);
 	void dispatch(Client& client, std::string const& prefix, std::string const& name, std::string const& line);
 
 public:
 	void handleUnknownCommand(Client& client, std::string const& name);
 }; // class CommandMap
+
+void cmd_ignore(CommandContext& context);
+void cmd_pass(CommandContext& context);
+void cmd_user(CommandContext& context);
+void cmd_nick(CommandContext& context);
+void cmd_quit(CommandContext& context);
 
 #endif // COMMANDMAP_HPP
