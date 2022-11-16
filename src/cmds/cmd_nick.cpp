@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 13:19:00 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 14:35:57 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void cmd_nick(CommandContext& context)
 	else
 	{
 		// TODO extract nickname
-		if (false) // check nickname validity
+		if (false) // TODO check nickname validity
 			client.reply(ERR_ERRONEUSNICKNAME, nick + " :Erroneous nickname");
 		else if (false) // TODO check if a user with that nickname is already logged
 			client.reply(ERR_NICKNAMEINUSE, nick + " :Nickname is already in use");
