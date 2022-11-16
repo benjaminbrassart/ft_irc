@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:40:51 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 13:53:34 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 19:13:11 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,6 @@ void cmd_pass(CommandContext& context);
 void cmd_user(CommandContext& context);
 void cmd_nick(CommandContext& context);
 void cmd_quit(CommandContext& context);
+void cmd_join(CommandContext& context);
 
 #endif // COMMAND_H
