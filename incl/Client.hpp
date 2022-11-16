@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 11:07:56 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 12:07:37 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "Channel.hpp"
 # include "Server.hpp"
 # include "optional.hpp"
+# include "reply.h"
 
 # include <sstream>
 # include <string>
@@ -57,7 +58,7 @@ private:
 	ChannelList _channels;
 
 public:
-	void reply(int code, std::string const& message);
+	void reply(Reply code, std::string const& message);
 }; // class Client
 
 #endif // CLIENT_HPP
