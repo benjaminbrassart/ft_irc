@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:45:10 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 12:08:16 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 13:22:53 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@ enum Reply
 	RPL_WELCOME = 1,
 
 	ERR_UNKNOWNCOMMAND = 421,
+	ERR_NONICKNAMEGIVEN = 431,
+	ERR_ERRONEUSNICKNAME = 432,
+	ERR_NICKNAMEINUSE = 433,
 	ERR_NEEDMOREPARAMS = 461,
 	ERR_ALREADYREGISTRED = 462,
 
@@ -26,11 +29,7 @@ enum Reply
 	ERR_BADCHANNELKEY = 0,
 	ERR_CANNOTSENDTOCHAN = 0,
 	ERR_CHANNELISFULL = 0,
-	ERR_ERRONEUSNICKNAME = 0,
 	ERR_INVITEONLYCHAN = 0,
-	ERR_NICKCOLLISION = 0,
-	ERR_NICKNAMEINUSE = 0,
-	ERR_NONICKNAMEGIVEN = 0,
 	ERR_NOOPERHOST = 0,
 	ERR_NORECIPIENT = 0,
 	ERR_NOSUCHCHANNEL = 0,
