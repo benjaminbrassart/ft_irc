@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 12:07:37 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 14:09:19 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,16 +49,16 @@ public:
 	bool is_op;
 	std::string buffer;
 	bool is_logged;
+	ChannelList channels;
 
 public:
 	Client();
 	~Client();
 
-private:
-	ChannelList _channels;
-
 public:
+	void send(std::string const& command);
 	void reply(Reply code, std::string const& message);
+	void closeConnection();
 }; // class Client
 
 #endif // CLIENT_HPP
