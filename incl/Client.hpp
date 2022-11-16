@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/15 18:56:18 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/11/16 14:09:19 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,12 @@
 
 # include "Channel.hpp"
 # include "Server.hpp"
+# include "optional.hpp"
+# include "reply.h"
 
 # include <sstream>
 # include <string>
+# include <utility>
 # include <vector>
 
 # include <netinet/in.h>
@@ -29,21 +32,33 @@ class Client
 {
 public:
 	typedef std::vector< Channel* > ChannelList;
+	struct Info
+	{
+		std::string username;
+		std::string hostname;
+		std::string realname;
+	};
 
 public:
 	Server* server;
 	int sock_fd;
 	::in_addr address;
-	std::string nickname;
-	std::string username;
-	std::string hostname;
-	std::string servername;
-	std::string realname;
+	optional< std::string > nickname;
+	optional< Info > info;
+	optional< std::string > password;
 	bool is_op;
 	std::string buffer;
+	bool is_logged;
+	ChannelList channels;
 
-private:
-	ChannelList _channels;
+public:
+	Client();
+	~Client();
+
+public:
+	void send(std::string const& command);
+	void reply(Reply code, std::string const& message);
+	void closeConnection();
 }; // class Client
 
 #endif // CLIENT_HPP
