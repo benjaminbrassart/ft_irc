@@ -6,32 +6,34 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:42:27 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/15 22:18:45 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 01:47:47 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CommandMap.hpp"
+#include "reply.h"
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
 
-void cmd_pass(Client& client, std::vector< std::string > const& args)
+void cmd_pass(Client& client, std::string const& prefix, std::string const& line)
 {
 	static std::string const PASSWORD = "mdp123";
-	(void)client;
+	(void)prefix;
 
-	if (args.size() != 1)
-		return;
-	if (PASSWORD == args[0])
-		std::cout << "password ok\n";
+	if (client.is_logged || client.password.second)
+		client.reply(ERR_ALREADYREGISTRED, ":Unauthorized command (already registered)");
+	else if (line.empty())
+		client.reply(ERR_NEEDMOREPARAMS, "PASS :Not enough parameters");
 	else
-		std::cout << "password ko :(\n";
+		client.password = std::make_pair(line, true);
 }
 
-void cmd_ignore(Client& client, std::vector< std::string > const& args)
+void cmd_ignore(Client& client, std::string const& prefix, std::string const& line)
 {
 	(void)client;
-	(void)args;
+	(void)prefix;
+	(void)line;
 }
 
 int main(int argc, char const* argv[])
@@ -46,7 +48,6 @@ int main(int argc, char const* argv[])
 
 	commands.put("PASS", cmd_pass);
 	commands.put("CAP", cmd_ignore);
-	commands.put("LS", cmd_ignore);
 
 	input.open("input.txt", std::ifstream::in);
 	if (input.fail())
@@ -56,29 +57,38 @@ int main(int argc, char const* argv[])
 		return 1;
 	}
 
+	// TODO limit to 15 command parameters (see rfc2812: 2.3 Messages)
 	while (std::getline(input, line))
 	{
-		std::vector< std::string > args;
-		std::string::const_iterator it;
-		std::string::const_iterator fast;
+		std::string prefix;
+		std::string params;
+		std::string::iterator begin;
+		std::string::iterator it;
 
-		it = line.begin();
-		while (it != line.end())
-		{
-			while (it != line.end() && (*it == ' ' || *it == '\t'))
-				++it;
-			fast = it;
-			while (fast != line.end() && *fast != ' ' && *fast != '\t')
-				++fast;
-			if (fast == it)
-				break;
-			args.push_back(std::string(it, fast));
-			it = fast;
-		}
-
-		if (args.empty())
-			commands.handleUnknownCommand(client);
+		if (line.empty())
+			commands.handleUnknownCommand(client, "");
 		else
-			commands.dispatch(client, args.front(), std::vector< std::string >(args.begin() + 1, args.end())); // TODO may be kinda slow
+		{
+			begin = line.begin();
+
+			// extract prefix if any
+			if (*begin == ':')
+			{
+				it = std::find(begin, line.end(), ' ');
+				prefix = std::string(begin, it);
+				begin = it;
+				if (begin != line.end())
+					++begin;
+			}
+
+			// extract command name
+			it = std::find(begin, line.end(), ' ');
+
+			// extract the rest of the line if any
+			if (it != line.end())
+				params = std::string(it + 1, line.end());
+
+			commands.dispatch(client, prefix, std::string(begin, it), params);
+		}
 	}
 }

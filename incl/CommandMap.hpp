@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:38:48 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/15 21:30:13 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 01:41:42 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ public:
 
 public:
 	void put(std::string const& name, CommandHandler handler);
-	void dispatch(Client& client, std::string const& name, std::vector< std::string > const& args);
+	void dispatch(Client& client, std::string const& prefix, std::string const& name, std::string const& line);
 
 public:
-	void handleUnknownCommand(Client& client);
+	void handleUnknownCommand(Client& client, std::string const& name);
 }; // class CommandMap
 
 #endif // COMMANDMAP_HPP
