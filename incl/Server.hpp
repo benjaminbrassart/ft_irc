@@ -3,64 +3,50 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/15 22:34:35 by estoffel         ###   ########.fr       */
+/*   Created: 2022/11/15 17:16:34 by bbrassar          #+#   #+#            */
+/*   Updated: 2022/11/16 17:30:03 by bbrassar         ###  ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-# define GREY "\033[0;30m"
-# define RORED "\033[0;31m"
-# define RED "\033[0;91m"
-# define GREEN "\033[0;32m"
-# define YELW "\033[0;33m"
-# define BLUE "\033[0;34m"
-# define PINK "\033[0;35m"
-# define TURQ "\033[0;36m"
-# define WHITE "\033[0;97m"
-# define BWHITE "\033[1;97m"
-# define LWHITE "\033[4;97m"
-# define IWHITE "\033[3;97m"
-# define END "\e[0m"
+#include "Client.hpp"
+#include "Channel.hpp"
 
-# include "Client.hpp"
-# include "Channel.hpp"
-
-# include <algorithm>
-# include <string>
-# include <vector>
-# include <iostream>
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <sys/stat.h>
-# include <arpa/inet.h>
-# include <netinet/in.h>
-# include <sys/epoll.h>
-# include <fcntl.h>
-# include <cstdlib>
-# include <signal.h>
-# include <netdb.h>
-# include <unistd.h>
-# include <cstring>
+#include <algorithm>
+#include <string>
+#include <vector>
+#include <iostream>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/stat.h>
+#include <arpa/inet.h>
+#include <netinet/in.h>
+#include <sys/epoll.h>
+#include <fcntl.h>
+#include <cstdlib>
+#include <signal.h>
+#include <netdb.h>
+#include <unistd.h>
+#include <cstring>
 
 typedef	std::string		String;
 typedef	unsigned int	uint;
 
-# include "Client.hpp"
-# include "Channel.hpp"
+#include "CommandMap.hpp"
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include "colours.h"
 
-# include <iostream>
-# include <string>
-# include <vector>
-# include <algorithm>
-# include "colours.h"
 
 class Client;
 class Channel;
+class CommandRegistry;
 
 class Server {
 
@@ -84,7 +70,8 @@ class Server {
 			private:
 				String	_what;
 		};
-
+	public:
+		CommandMap commands;
 	private:
 		ClientList	_clients;
 		ChannelList	_channels;

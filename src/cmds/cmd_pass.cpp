@@ -6,11 +6,13 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:50:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 11:55:17 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 18:19:59 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "command.h"
+#include "Client.hpp"
+#include "CommandMap.hpp"
+#include "optional.hpp"
 #include "reply.h"
 
 void cmd_pass(CommandContext& context)

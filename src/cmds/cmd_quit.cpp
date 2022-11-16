@@ -6,11 +6,12 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 13:50:33 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 14:09:11 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 18:21:21 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "command.h"
+#include "Client.hpp"
+#include "CommandMap.hpp"
 
 void cmd_quit(CommandContext& context)
 {
