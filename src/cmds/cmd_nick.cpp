@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 21:20:55 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 21:24:14 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "Client.hpp"
 
 #include <cctype>
+#include <sstream>
 
 /**
  * Check if a given nickname is valid

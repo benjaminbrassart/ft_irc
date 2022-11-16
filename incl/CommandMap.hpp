@@ -6,27 +6,19 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:38:48 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 18:44:15 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 21:25:17 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef COMMANDMAP_HPP
 # define COMMANDMAP_HPP
 
+# include "command.h"
+
 # include <map>
 # include <string>
 
 class Client;
-
-struct CommandContext
-{
-	Client& client;
-	std::string const& prefix;
-	std::string const& line;
-
-	CommandContext(Client& client, std::string const& prefix, std::string const& line);
-	~CommandContext();
-}; // struct CommandContext
 
 class CommandMap
 {
