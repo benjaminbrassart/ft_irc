@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:34:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 18:43:59 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/17 20:06:59 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include "Server.hpp"
 
 # include <string>
-# include <vector>
+# include <set>
 
 class Client;
 class Server;
@@ -26,22 +26,24 @@ class Channel {
 
 	public:
 		Channel();
+		Channel(std::string name, std::string passwd);
+		Channel(Channel const &src);
 		~Channel();
 
-		typedef std::vector<Client*> ClientList;
-		void 			broadcast(std::string const &message);
+		Channel						&operator=(Channel const &rhs);
 
-		Server			*server;
-		std::string		topic;
-		std::string		password;
+		void 						broadcast(std::string const &message);
+		void 						addClient(Client &client);
+		void 						removeClient(Client &client);
+		bool 						hasClient(Client &client);
 
-	private:
-		ClientList		_clients;
+		Server						*server;
+		typedef std::set<Client*> 	ClientList;
 
-	public:
-		void addClient(Client& client);
-		void removeClient(Client& client);
-		bool hasClient(Client& client);
+		ClientList					allClients;
+		std::string					name;
+		std::string					topic;
+		std::string					passwd;
 };
 
-#endif // CHANNEL_HPP
+#endif

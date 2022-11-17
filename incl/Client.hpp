@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 18:47:04 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/17 20:08:38 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,36 +26,34 @@
 class Channel;
 class Server;
 
-class Client
-{
-public:
-	typedef std::vector< Channel* > ChannelList;
-	struct Info
-	{
-		std::string username;
-		std::string hostname;
-		std::string realname;
-	};
+class Client {
 
-public:
-	Server* server;
-	int sock_fd;
-	::in_addr address;
-	optional< std::string > nickname;
-	optional< Info > info;
-	optional< std::string > password;
-	bool is_op;
-	bool is_logged;
-	ChannelList channels;
+	public:
+		Client();
+		Client(Client const &src);
+		~Client();
 
-public:
-	Client();
-	~Client();
+		typedef std::vector<Channel*> ChannelList;
+	
+		void 					send(std::string const& command);
+		void 					reply(Reply code, std::string const& message);
+		void 					closeConnection();
 
-public:
-	void send(std::string const& command);
-	void reply(Reply code, std::string const& message);
-	void closeConnection();
-}; // class Client
+		struct Info {
+			std::string 		username;
+			std::string 		hostname;
+			std::string 		realname;
+		};
+	
+		Server* 				server;
+		ChannelList 			channels;
+		optional< std::string > password;
+		optional< Info >		info;
+		int 					sock_fd;
+		bool					isOpe;
+		bool 					isLogged;
+		std::string				nickname;
+		::in_addr 				address;
+};
 
-#endif // CLIENT_HPP
+#endif
