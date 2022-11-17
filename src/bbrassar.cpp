@@ -6,32 +6,32 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:42:27 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 14:34:49 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 18:45:13 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "CommandMap.hpp"
-#include "command.h"
+#include "Client.hpp"
 #include "reply.h"
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
+#include <algorithm>
 
 int main(int argc, char const* argv[])
 {
+	Server server;
 	Client client;
-	CommandMap commands;
 	std::ifstream input;
 	std::string line;
 
 	if (argc < 2)
 		return 1;
 
-	commands.put("CAP", cmd_ignore);
-	commands.put("PASS", cmd_pass);
-	commands.put("USER", cmd_user);
-	commands.put("NICK", cmd_nick);
-	commands.put("QUIT", cmd_quit);
+	server.commands.put("CAP", cmd_ignore);
+	server.commands.put("PASS", cmd_pass);
+	server.commands.put("USER", cmd_user);
+	server.commands.put("NICK", cmd_nick);
+	server.commands.put("QUIT", cmd_quit);
 
 	input.open("input.txt", std::ifstream::in);
 	if (input.fail())
@@ -49,7 +49,7 @@ int main(int argc, char const* argv[])
 		std::string::iterator it;
 
 		if (line.empty())
-			commands.handleUnknownCommand(client, "");
+			server.commands.handleUnknownCommand(client, "");
 		else
 		{
 			begin = line.begin();
@@ -71,7 +71,7 @@ int main(int argc, char const* argv[])
 			if (it != line.end())
 				params = std::string(it + 1, line.end());
 
-			commands.dispatch(client, prefix, std::string(begin, it), params);
+			server.commands.dispatch(client, prefix, std::string(begin, it), params);
 		}
 	}
 }

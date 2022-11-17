@@ -1,35 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                        :+:      :+:    :+:   */
+/*   cmd_join.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 18:45:14 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
+/*   Updated: 2022/11/16 21:19:36 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Channel.hpp"
+#include "Client.hpp"
+#include "command.h"
 
-Channel::~Channel()
-{}
-
-void Channel::addClient(Client& client)
+void cmd_join(CommandContext& context)
 {
-	// TODO
-	(void)client;
-}
+	Client& client = context.client;
+	Server& server = *client.server;
 
-void Channel::removeClient(Client& client)
-{
-	// TODO
-	(void)client;
-}
-
-bool Channel::hasClient(Client& client)
-{
-	// TODO
-	(void)client;
-	return false;
+	(void)server;
 }

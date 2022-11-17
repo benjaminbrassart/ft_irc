@@ -6,7 +6,7 @@
 /*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 20:41:58 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/11/17 20:04:16 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,17 +37,17 @@
 using					std::string;
 typedef	unsigned int	uint;
 
-# include "Client.hpp"
-# include "Channel.hpp"
+#include "CommandMap.hpp"
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include "colours.h"
 
-# include <iostream>
-# include <string>
-# include <vector>
-# include <algorithm>
-# include "colours.h"
 
 class Client;
 class Channel;
+class CommandRegistry;
 
 class Server {
 
@@ -74,6 +74,9 @@ class Server {
 			private:
 				string	_what;
 		};
+	public:
+		CommandMap commands;
+		std::string password;
 
 	private:
 		ClientList	_clients;
