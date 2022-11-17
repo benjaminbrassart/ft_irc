@@ -6,24 +6,22 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 14:09:19 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 18:47:04 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CLIENT_HPP
 # define CLIENT_HPP
 
-# include "Channel.hpp"
-# include "Server.hpp"
-# include "optional.hpp"
-# include "reply.h"
+#include "Server.hpp"
+#include "Channel.hpp"
+#include "optional.hpp"
+#include "reply.h"
 
-# include <sstream>
-# include <string>
-# include <utility>
-# include <vector>
+#include <string>
+#include <vector>
 
-# include <netinet/in.h>
+#include <netinet/in.h>
 
 class Channel;
 class Server;
@@ -47,7 +45,6 @@ public:
 	optional< Info > info;
 	optional< std::string > password;
 	bool is_op;
-	std::string buffer;
 	bool is_logged;
 	ChannelList channels;
 

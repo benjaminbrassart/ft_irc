@@ -6,11 +6,12 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:01:23 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 12:30:55 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/16 18:44:43 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "command.h"
+#include "Client.hpp"
+#include "CommandMap.hpp"
 
 void cmd_user(CommandContext& context)
 {

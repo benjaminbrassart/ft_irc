@@ -1,27 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ChannelUser.hpp                                    :+:      :+:    :+:   */
+/*   cmd_part.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/15 17:18:54 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/15 17:28:58 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/11/16 14:11:06 by bbrassar          #+#    #+#             */
+/*   Updated: 2022/11/16 18:39:38 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CHANNELUSER_HPP
-# define CHANNELUSER_HPP
+#include "Client.hpp"
+#include "CommandMap.hpp"
+#include "reply.h"
 
-# include "Client.hpp"
-
-namespace irc
+void cmd_part(CommandContext& context)
 {
-class ChannelUser
-{
-private:
-	Client
-}; // class ChannelUser
-} // namespace irc
-
-#endif // CHANNELUSER_HPP
+	(void)context;
+}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 16:12:56 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/11/16 21:22:01 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,17 +36,17 @@
 typedef	std::string		String;
 typedef	unsigned int	uint;
 
-# include "Client.hpp"
-# include "Channel.hpp"
+#include "CommandMap.hpp"
+#include <iostream>
+#include <string>
+#include <vector>
+#include <algorithm>
+#include "colours.h"
 
-# include <iostream>
-# include <string>
-# include <vector>
-# include <algorithm>
-# include "colours.h"
 
 class Client;
 class Channel;
+class CommandRegistry;
 
 class Server {
 
@@ -70,6 +70,9 @@ class Server {
 			private:
 				String	_what;
 		};
+	public:
+		CommandMap commands;
+		std::string password;
 
 	private:
 		ClientList	_clients;
