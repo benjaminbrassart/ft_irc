@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/17 20:08:38 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/11/17 20:43:08 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,10 @@ class Client {
 		Client(Client const &src);
 		~Client();
 
+		Client &operator=(Client const& src);
+
 		typedef std::vector<Channel*> ChannelList;
-	
+
 		void 					send(std::string const& command);
 		void 					reply(Reply code, std::string const& message);
 		void 					closeConnection();
@@ -44,7 +46,7 @@ class Client {
 			std::string 		hostname;
 			std::string 		realname;
 		};
-	
+
 		Server* 				server;
 		ChannelList 			channels;
 		optional< std::string > password;

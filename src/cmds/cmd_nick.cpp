@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 21:24:14 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/17 20:49:20 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,15 +57,16 @@ void cmd_nick(CommandContext& context)
 		else
 		{
 			client.nickname = line;
-			std::cout << "Server           |   New nickname: \"" << client.nickname.value << "\"\n";
-			if (!client.is_logged && client.nickname && client.info)
+			std::cout << "Server           |   New nickname: \"" << client.nickname << "\"\n";
+			// TODO check if NICK and USER have been sent
+			if (!client.isLogged) // && client.nickname && client.info)
 			{
 				if (server.password == client.password.value)
 				{
 					std::stringstream ss;
 
 					ss
-						<< "Welcome tp the jungle "
+						<< "Welcome to the jungle "
 						<< client.nickname
 						<< '!'
 						<< client.info.value.username
@@ -73,7 +74,7 @@ void cmd_nick(CommandContext& context)
 						<< "host" // TODO
 					;
 
-					client.is_logged = true;
+					client.isLogged = true;
 					client.reply(RPL_WELCOME, ss.str());
 				}
 				else
