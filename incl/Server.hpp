@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 21:22:01 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/17 20:04:16 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,10 @@
 # include <signal.h>
 # include <netdb.h>
 # include <unistd.h>
+# include <stdio.h>
 # include <cstring>
 
-typedef	std::string		String;
+using					std::string;
 typedef	unsigned int	uint;
 
 #include "CommandMap.hpp"
@@ -57,18 +58,21 @@ class Server {
 		typedef std::vector< Client > ClientList;
 		typedef std::vector< Channel > ChannelList;
 
+		const int	&getsocketfd() const;
+		const int	&getclientfd() const;
+		
 		void	dispatch(Client* sender);
-		bool	create_socket();
+		void	create_socket(int port);
 
 		class IoException : public std::exception {
 			public:
-				IoException(String const&, int);
+				IoException(string const&, int);
 				~IoException() throw();
 
 				virtual const char*	what() const throw();
 
 			private:
-				String	_what;
+				string	_what;
 		};
 	public:
 		CommandMap commands;
@@ -78,6 +82,7 @@ class Server {
 		ClientList	_clients;
 		ChannelList	_channels;
 		int			_socketfd;
+		int			_clientfd;
 
 }; // class Server
 
