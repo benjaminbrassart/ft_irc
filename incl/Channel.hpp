@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:34:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/17 15:25:41 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/17 20:46:22 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 # include "Server.hpp"
 
 # include <string>
-# include <vector>
+# include <set>
 
 class Client;
 class Server;
@@ -26,18 +26,21 @@ class Channel {
 
 	public:
 		Channel();
+		Channel(std::string name, std::string passwd);
+		Channel(Channel const &src);
 		~Channel();
 
-		typedef std::vector<Client*> ClientList;
-		void 			broadcast(std::string const &message);
+		Channel						&operator=(Channel const &rhs);
+
+		typedef std::set< Client* > ClientList;
 
 		std::string name;
 		Server			*server;
 		std::string		topic;
-		std::string		password;
+		std::string		passwd;
 
 	private:
-		mutable ClientList		_clients; // TODO find another way because it kinda violates const contract
+		mutable ClientList		allClients; // TODO find another way because it kinda violates const contract
 
 	public:
 		/**
@@ -63,6 +66,14 @@ class Channel {
 		 * @return true if the client in inside this channel, false otherwise
 		 */
 		bool hasClient(Client& client) const;
+
+		/**
+		 * Send a message from a client to all other clients in this channel
+		 *
+		 * @param sender the sender of the message
+		 * @param msg the message to send
+		 */
+		void broadcast(Client &sender, std::string const msg);
 };
 
-#endif // CHANNEL_HPP
+#endif
