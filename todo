@@ -87,3 +87,6 @@ irc messages:
     - ERR_TOOMANYTARGETS
     - ERR_NOSUCHNICK
     - RPL_AWAY
+
+poll: Ajouter au buffer du client quand on doit lui répondre et lui envoyer le buffer quand il est ready en écriture
+line breaks: use \r\n instead of \n
