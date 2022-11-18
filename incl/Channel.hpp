@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:34:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/17 20:06:59 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/11/17 20:46:22 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,18 +32,48 @@ class Channel {
 
 		Channel						&operator=(Channel const &rhs);
 
-		void 						broadcast(std::string const &message);
-		void 						addClient(Client &client);
-		void 						removeClient(Client &client);
-		bool 						hasClient(Client &client);
+		typedef std::set< Client* > ClientList;
 
-		Server						*server;
-		typedef std::set<Client*> 	ClientList;
+		std::string name;
+		Server			*server;
+		std::string		topic;
+		std::string		passwd;
 
-		ClientList					allClients;
-		std::string					name;
-		std::string					topic;
-		std::string					passwd;
+	private:
+		mutable ClientList		allClients; // TODO find another way because it kinda violates const contract
+
+	public:
+		/**
+		 * Add a client to this channel's members
+		 *
+		 * @param client the client to add
+		 * @return true if the client was not already present in the channel, false otherwise
+		 */
+		bool addClient(Client& client) const;
+
+		/**
+		 * Remove a client from this channel's members
+		 *
+		 * @param client the client to remove
+		 * @return true if the client was present in the channel, false otherwise
+		 */
+		bool removeClient(Client& client) const;
+
+		/**
+		 * Check whether a client is a member of this channel
+		 *
+		 * @param client the client to check the presence of
+		 * @return true if the client in inside this channel, false otherwise
+		 */
+		bool hasClient(Client& client) const;
+
+		/**
+		 * Send a message from a client to all other clients in this channel
+		 *
+		 * @param sender the sender of the message
+		 * @param msg the message to send
+		 */
+		void broadcast(Client &sender, std::string const msg);
 };
 
 #endif

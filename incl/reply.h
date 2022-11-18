@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:45:10 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 13:22:53 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/17 19:40:57 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ enum Reply
 {
 	RPL_WELCOME = 1,
 
+	ERR_NOSUCHCHANNEL = 403,
 	ERR_UNKNOWNCOMMAND = 421,
 	ERR_NONICKNAMEGIVEN = 431,
 	ERR_ERRONEUSNICKNAME = 432,
@@ -32,7 +33,6 @@ enum Reply
 	ERR_INVITEONLYCHAN = 0,
 	ERR_NOOPERHOST = 0,
 	ERR_NORECIPIENT = 0,
-	ERR_NOSUCHCHANNEL = 0,
 	ERR_NOSUCHNICK = 0,
 	ERR_NOTEXTTOSEND = 0,
 	ERR_NOTONCHANNEL = 0,

@@ -3,25 +3,25 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/17 20:09:16 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/11/17 20:49:47 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 
 /* ==========================================================================
-								COPLIEN AFORM 
+								COPLIEN AFORM
    ========================================================================== */
 
 Channel::Channel() : name("default") {}
 
 Channel::Channel(std::string name, std::string passwd): name(name), passwd(passwd) {}
 
-Channel	&Channel::operator=() {
-	
+Channel	&Channel::operator=(Channel const& rhs) {
+
 	if (this != &rhs) {
 
 		server = rhs.server;
@@ -30,15 +30,18 @@ Channel	&Channel::operator=() {
 		topic = rhs.topic;
 		passwd = rhs.passwd;
 	}
-	return (*this);	
+	return (*this);
 }
 
+Channel::~Channel()
+{}
+
 /* ==========================================================================
-								MEMBER FUNCTIONS 
+								MEMBER FUNCTIONS
    ========================================================================== */
 
 void	Channel::broadcast(Client &sender, std::string const msg) {
-	
+
 	ClientList::iterator	i = allClients.begin();
 
 	for (; i != allClients.end(); i++) {
@@ -48,16 +51,16 @@ void	Channel::broadcast(Client &sender, std::string const msg) {
 	 // MUST REDIRECT STREAM
 }
 
-void 	Channel::addClient(Client &newClient) {
-	allClients.insert(&newCLient);
+bool 	Channel::addClient(Client &newClient) const {
+	return allClients.insert(&newClient).second;
 }
 
-void Channel::removeClient(Client &client) {
-	allClients.erase(&client);
+bool Channel::removeClient(Client &client) const {
+	return allClients.erase(&client) > 0;
 }
 
-bool Channel::hasClient(Client &client) {
-	
+bool Channel::hasClient(Client &client) const {
+
 	ClientList::iterator	i = allClients.begin();
 
 	for (; i != allClients.end(); i++) {

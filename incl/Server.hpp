@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/17 20:04:16 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/11/17 20:15:59 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,7 @@ typedef	unsigned int	uint;
 #include "CommandMap.hpp"
 #include <iostream>
 #include <string>
+#include <set>
 #include <vector>
 #include <algorithm>
 #include "colours.h"
@@ -49,6 +50,11 @@ class Client;
 class Channel;
 class CommandRegistry;
 
+struct ChannelComparator : public std::binary_function< Channel, Channel, bool >
+{
+	bool operator()(Channel const& rhs, Channel const& lhs);
+};
+
 class Server {
 
 	public:
@@ -56,11 +62,11 @@ class Server {
 		~Server();
 
 		typedef std::vector< Client > ClientList;
-		typedef std::vector< Channel > ChannelList;
+		typedef std::set< Channel, ChannelComparator > ChannelList;
 
 		const int	&getsocketfd() const;
 		const int	&getclientfd() const;
-		
+
 		void	dispatch(Client* sender);
 		void	create_socket(int port);
 
@@ -77,10 +83,10 @@ class Server {
 	public:
 		CommandMap commands;
 		std::string password;
+		ChannelList	channels;
 
 	private:
 		ClientList	_clients;
-		ChannelList	_channels;
 		int			_socketfd;
 		int			_clientfd;
 

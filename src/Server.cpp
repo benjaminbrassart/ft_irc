@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/16 23:28:22 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/11/17 20:47:46 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include <cerrno>
 
 Server::Server() {}
 
@@ -47,4 +48,9 @@ void	Server::create_socket(int port) {
 	_clientfd = accept(_socketfd, (sockaddr*)&client_add, &client_taille);
 	if (_clientfd == -1)
 		throw Server::IoException("client", errno);
+}
+
+bool ChannelComparator::operator()(Channel const& lhs, Channel const& rhs)
+{
+	return lhs.name < rhs.name;
 }
