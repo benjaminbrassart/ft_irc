@@ -6,12 +6,12 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:42:27 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/18 21:16:48 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/18 23:45:22 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
-#include "reply.h"
+#include "Reply.hpp"
 #include <iostream>
 #include <fstream>
 #include <stdexcept>

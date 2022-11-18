@@ -6,12 +6,12 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/18 21:23:24 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/18 23:45:22 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CommandMap.hpp"
-#include "reply.h"
+#include "Reply.hpp"
 #include "Client.hpp"
 
 #include <cctype>

@@ -6,11 +6,11 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 18:04:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/18 21:22:16 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/18 23:45:22 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "reply.h"
+#include "Reply.hpp"
 
 // TODO change to 3 args
 std::string ReplyFactory<RPL_WELCOME>::makeReply(std::string const& nickname, std::string const& user, std::string const& host)

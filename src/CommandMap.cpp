@@ -6,13 +6,13 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:45:50 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/18 20:22:08 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/18 23:45:22 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 #include "CommandMap.hpp"
-#include "reply.h"
+#include "Reply.hpp"
 
 CommandMap::CommandMap() :
 	_commands()
