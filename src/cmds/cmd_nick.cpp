@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/18 18:54:57 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/18 21:23:24 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 #include "Client.hpp"
 
 #include <cctype>
-#include <sstream>
 
 /**
  * Check if a given nickname is valid
@@ -63,19 +62,8 @@ void cmd_nick(CommandContext& context)
 			{
 				if (server.password == client.password.value)
 				{
-					std::stringstream ss;
-
-					ss
-						<< "Welcome to the jungle "
-						<< client.nickname
-						<< '!'
-						<< client.info.value.username
-						<< '@'
-						<< "host" // TODO
-					;
-
 					client.isLogged = true;
-					client.reply<RPL_WELCOME>(ss.str());
+					client.reply<RPL_WELCOME>(client.nickname, client.info.value.username, client.info.value.hostname);
 				}
 				else
 					client.reply<ERR_PASSWDMISMATCH>(); // TODO check if this is the way the protocol is supposed to behave

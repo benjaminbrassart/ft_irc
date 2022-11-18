@@ -6,16 +6,16 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 18:04:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/18 21:12:33 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/18 21:22:16 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "reply.h"
 
 // TODO change to 3 args
-std::string ReplyFactory<RPL_WELCOME>::makeReply(std::string const& name)
+std::string ReplyFactory<RPL_WELCOME>::makeReply(std::string const& nickname, std::string const& user, std::string const& host)
 {
-	return std::string("Welcome to the Internet Relay Network ") + name;
+	return std::string("Welcome to the Internet Relay Network ") + nickname + '!' + user + '@' + host;
 }
 
 std::string ReplyFactory<ERR_NOSUCHNICK>::makeReply(std::string const& nickname)

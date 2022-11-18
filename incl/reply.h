@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:45:10 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/18 21:19:38 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/18 21:23:51 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ struct ReplyFactory
 template<>
 struct ReplyFactory<RPL_WELCOME>
 {
-	static std::string makeReply(std::string const& name);
+	static std::string makeReply(std::string const& nickname, std::string const& user, std::string const& host);
 };
 
 template<>
