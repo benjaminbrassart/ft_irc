@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/17 20:47:46 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/18 21:34:45 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,11 @@ void	Server::create_socket(int port) {
 	_clientfd = accept(_socketfd, (sockaddr*)&client_add, &client_taille);
 	if (_clientfd == -1)
 		throw Server::IoException("client", errno);
+}
+
+bool ClientComparator::operator()(Client const& lhs, Client const& rhs)
+{
+	return lhs.sock_fd < rhs.sock_fd;
 }
 
 bool ChannelComparator::operator()(Channel const& lhs, Channel const& rhs)
