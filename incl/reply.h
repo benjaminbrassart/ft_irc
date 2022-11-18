@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:45:10 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/18 21:14:51 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/18 21:19:38 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,7 +248,5 @@ struct ReplyFactory<ERR_YOUWILLBEBANNED>
 {
 	static std::string makeReply();
 };
-
-# include "template/reply.tpp"
 
 #endif // REPLY_H
