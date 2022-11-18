@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:45:50 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/18 23:45:22 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/19 00:42:35 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ CommandMap& CommandMap::operator=(CommandMap const& x)
 CommandMap::~CommandMap()
 {}
 
-void CommandMap::put(std::string const& command, CommandMap::Handler handler)
+void CommandMap::put(std::string const& command, CommandMap::Handler handler, int requiredFlags)
 {
-	this->_commands[command] = handler;
+	this->_commands[command] = std::make_pair(handler, requiredFlags);
 }
 
 void CommandMap::dispatch(Client& client, std::string const& prefix, std::string const& command, std::string const& line)
@@ -43,10 +43,12 @@ void CommandMap::dispatch(Client& client, std::string const& prefix, std::string
 	it = this->_commands.find(command);
 	if (it == this->_commands.end())
 		this->handleUnknownCommand(client, command);
+	else if ((client.state & it->second.second) != it->second.second)
+		std::cout << "(ignored)" << '\n';
 	else
 	{
 		CommandContext ctx(client, prefix, line);
-		it->second(ctx);
+		it->second.first(ctx);
 	}
 }
 

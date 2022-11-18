@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/18 23:28:45 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/19 00:14:54 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,13 +98,13 @@ void Server::__acceptClient()
 		return;
 	}
 
-	this->clients.insert(Client(fd, address));
+	this->clients.insert(Client(*this, fd, address));
 }
 
 void Server::__readFromClient(int fd)
 {
 	ClientList::const_iterator it;
-	Client client;
+	Client client(*this);
 
 	client.sock_fd = fd;
 	it = this->clients.find(client);
@@ -120,7 +120,7 @@ void Server::__readFromClient(int fd)
 void Server::__writeToClient(int fd)
 {
 	ClientList::const_iterator it;
-	Client client;
+	Client client(*this);
 
 	client.sock_fd = fd;
 	it = this->clients.find(client);
@@ -133,12 +133,12 @@ void Server::__writeToClient(int fd)
 	const_cast<Client*>(&*it)->writeTo();
 }
 
-bool ClientComparator::operator()(Client const& lhs, Client const& rhs)
+bool ClientComparator::operator()(Client const& lhs, Client const& rhs) const
 {
 	return lhs.sock_fd < rhs.sock_fd;
 }
 
-bool ChannelComparator::operator()(Channel const& lhs, Channel const& rhs)
+bool ChannelComparator::operator()(Channel const& lhs, Channel const& rhs) const
 {
 	return lhs.name < rhs.name;
 }

@@ -1,26 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_user.cpp                                       :+:      :+:    :+:   */
+/*   cmd_motd.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/16 12:01:23 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 00:09:52 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/11/19 00:23:13 by bbrassar          #+#    #+#             */
+/*   Updated: 2022/11/19 00:44:02 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 #include "CommandMap.hpp"
+#include "Reply.hpp"
+#include <fstream>
 
-void cmd_user(CommandContext& context)
+#define MOTD_FILE "motd.txt"
+
+void cmd_motd(CommandContext& context)
 {
-	Client& client = context.client;
-
-	if (client.state & CLIENT_STATE_USER)
-		client.reply<ERR_ALREADYREGISTRED>();
-	else
-	{
-		// TODO
-	}
+	context.client.sendMotd();
 }

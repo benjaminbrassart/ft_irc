@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/18 23:45:22 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/19 00:43:14 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,15 +23,21 @@
 
 # include <netinet/in.h>
 
+# define CLIENT_STATE_INIT		(0)
+# define CLIENT_STATE_PASS		(1 << 0)
+# define CLIENT_STATE_USER		(1 << 1)
+# define CLIENT_STATE_NICK		(1 << 2)
+# define CLIENT_STATE_LOGGED	(CLIENT_STATE_PASS & CLIENT_STATE_NICK & CLIENT_STATE_USER)
+
 class Channel;
 class Server;
 
 class Client {
 
 	public:
-		Client();
+		Client(Server& server);
+		Client(Server& server, int fd, sockaddr_in& addr);
 		Client(Client const &src);
-		Client(int fd, sockaddr_in& addr);
 		~Client();
 
 		Client &operator=(Client const& src);
@@ -48,6 +54,8 @@ class Client {
 		template< Reply reply >
 		void 					reply(std::string const& param1, std::string const& param2, std::string const& param3);
 
+		void					sendMotd();
+
 		void					readFrom();
 		void					writeTo();
 
@@ -61,11 +69,10 @@ class Client {
 
 		Server* 				server;
 		ChannelList 			channels;
-		optional< std::string >	password;
 		optional< Info >		info;
+		int						state;
 		int 					sock_fd;
 		bool					isOpe;
-		bool 					isLogged;
 		std::string				nickname;
 		::sockaddr_in			address;
 		std::string				readBuffer;

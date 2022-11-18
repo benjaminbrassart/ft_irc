@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/18 23:33:13 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/19 00:46:55 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,13 +50,13 @@ class CommandRegistry;
 // sort by socket file descriptor
 struct ClientComparator : public std::binary_function< Client, Client, bool >
 {
-	bool operator()(Client const& lhs, Client const& rhs);
+	bool operator()(Client const& lhs, Client const& rhs) const;
 };
 
 // sort by channel name
 struct ChannelComparator : public std::binary_function< Channel, Channel, bool >
 {
-	bool operator()(Channel const& rhs, Channel const& lhs);
+	bool operator()(Channel const& rhs, Channel const& lhs) const;
 };
 
 class Server {
@@ -101,7 +101,9 @@ class Server {
 		};
 
 		CommandMap commands;
+		std::string name;
 		std::string password;
+		std::string motdFileName;
 		ChannelList	channels;
 		ClientList	clients;
 

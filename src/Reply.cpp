@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   reply.cpp                                          :+:      :+:    :+:   */
+/*   Reply.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 18:04:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/18 23:45:22 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/19 00:48:52 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,22 @@
 // TODO change to 3 args
 std::string ReplyFactory<RPL_WELCOME>::makeReply(std::string const& nickname, std::string const& user, std::string const& host)
 {
-	return std::string("Welcome to the Internet Relay Network ") + nickname + '!' + user + '@' + host;
+	return "Welcome to the Internet Relay Network " + nickname + '!' + user + '@' + host;
+}
+
+std::string ReplyFactory<RPL_MOTD>::makeReply(std::string const& text)
+{
+	return ":- " + text;
+}
+
+std::string ReplyFactory<RPL_MOTDSTART>::makeReply(std::string const& serverName)
+{
+	return ":- " + serverName + " Message of the day -";
+}
+
+std::string ReplyFactory<RPL_ENDOFMOTD>::makeReply()
+{
+	return ":End of MOTD command";
 }
 
 std::string ReplyFactory<ERR_NOSUCHNICK>::makeReply(std::string const& nickname)
@@ -73,14 +88,14 @@ std::string ReplyFactory<ERR_UNKNOWNCOMMAND>::makeReply(std::string const& comma
 	return command + " :Unknown command";
 }
 
-std::string ReplyFactory<ERR_NOMOTD>::makeReply(std::string const& command)
+std::string ReplyFactory<ERR_NOMOTD>::makeReply()
 {
-	return command + " :MOTD File is missing";
+	return ":MOTD File is missing";
 }
 
 std::string ReplyFactory<ERR_FILEERROR>::makeReply(std::string const& operation, std::string const& name)
 {
-	return std::string(":File error doing ") + operation + " on " + name;
+	return ":File error doing " + operation + " on " + name;
 }
 
 std::string ReplyFactory<ERR_NONICKNAMEGIVEN>::makeReply()

@@ -6,7 +6,7 @@
 #    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/11/18 23:45:57 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/11/19 00:23:49 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,6 +24,7 @@ SRC		+= cmds/cmd_quit.cpp
 SRC		+= cmds/cmd_part.cpp
 SRC		+= cmds/cmd_ignore.cpp
 SRC		+= cmds/cmd_join.cpp
+SRC		+= cmds/cmd_motd.cpp
 
 OBJ		:=	$(addprefix ./obj/,$(SRC:%.cpp=%.o))
 

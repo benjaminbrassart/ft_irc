@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:42:27 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/18 23:45:22 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/19 00:50:59 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,18 +20,23 @@
 int main(int argc, char const* argv[])
 {
 	Server server;
-	Client client;
+	Client client = Client(server);
 	std::ifstream input;
 	std::string line;
+
+	server.name = "ft_ble";
+	server.password = "farzar";
+	server.motdFileName = "motd.txt";
 
 	if (argc < 2)
 		return 1;
 
 	server.commands.put("CAP", cmd_ignore);
 	server.commands.put("PASS", cmd_pass);
-	server.commands.put("USER", cmd_user);
-	server.commands.put("NICK", cmd_nick);
-	server.commands.put("QUIT", cmd_quit);
+	server.commands.put("USER", cmd_user, CLIENT_STATE_PASS);
+	server.commands.put("NICK", cmd_nick, CLIENT_STATE_PASS);
+	server.commands.put("QUIT", cmd_quit, CLIENT_STATE_LOGGED);
+	server.commands.put("MOTD", cmd_motd, CLIENT_STATE_LOGGED);
 
 	input.open("input.txt", std::ifstream::in);
 	if (input.fail())
@@ -42,36 +47,5 @@ int main(int argc, char const* argv[])
 	}
 
 	while (std::getline(input, line))
-	{
-		std::string prefix;
-		std::string params;
-		std::string::iterator begin;
-		std::string::iterator it;
-
-		if (line.empty())
-			server.commands.handleUnknownCommand(client, "");
-		else
-		{
-			begin = line.begin();
-
-			// extract prefix if any
-			if (*begin == ':')
-			{
-				it = std::find(begin, line.end(), ' ');
-				prefix = std::string(begin, it);
-				begin = it;
-				if (begin != line.end())
-					++begin;
-			}
-
-			// extract command name
-			it = std::find(begin, line.end(), ' ');
-
-			// extract the rest of the line if any
-			if (it != line.end())
-				params = std::string(it + 1, line.end());
-
-			server.commands.dispatch(client, prefix, std::string(begin, it), params);
-		}
-	}
+		server.processCommand(client, line);
 }

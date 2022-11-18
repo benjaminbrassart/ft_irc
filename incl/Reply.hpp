@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:45:10 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/18 23:45:32 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/19 00:32:26 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@
 enum Reply
 {
 	RPL_WELCOME = 1,
+
+	RPL_MOTD = 372,
+	RPL_MOTDSTART = 375,
+	RPL_ENDOFMOTD = 376,
 
 	ERR_NOSUCHNICK = 401,
 	ERR_NOSUCHCHANNEL = 403,
@@ -73,6 +77,24 @@ template<>
 struct ReplyFactory<RPL_WELCOME>
 {
 	static std::string makeReply(std::string const& nickname, std::string const& user, std::string const& host);
+};
+
+template<>
+struct ReplyFactory<RPL_MOTD>
+{
+	static std::string makeReply(std::string const& text);
+};
+
+template<>
+struct ReplyFactory<RPL_MOTDSTART>
+{
+	static std::string makeReply(std::string const& serverName);
+};
+
+template<>
+struct ReplyFactory<RPL_ENDOFMOTD>
+{
+	static std::string makeReply();
 };
 
 template<>
@@ -144,7 +166,7 @@ struct ReplyFactory<ERR_UNKNOWNCOMMAND>
 template<>
 struct ReplyFactory<ERR_NOMOTD>
 {
-	static std::string makeReply(std::string const& command);
+	static std::string makeReply();
 };
 
 template<>
