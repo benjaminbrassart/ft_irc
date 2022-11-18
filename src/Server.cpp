@@ -6,11 +6,12 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/18 21:34:45 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/18 23:28:45 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include <algorithm>
 #include <cerrno>
 
 Server::Server() {}
@@ -48,6 +49,88 @@ void	Server::create_socket(int port) {
 	_clientfd = accept(_socketfd, (sockaddr*)&client_add, &client_taille);
 	if (_clientfd == -1)
 		throw Server::IoException("client", errno);
+}
+
+void Server::processCommand(Client& client, std::string const& line)
+{
+	std::string prefix;
+	std::string params;
+	std::string::const_iterator begin;
+	std::string::const_iterator it;
+
+	if (line.empty())
+			return;
+	begin = line.begin();
+
+	// extract prefix if any
+	if (*begin == ':')
+	{
+		it = std::find(begin, line.end(), ' ');
+		prefix = std::string(begin, it);
+		begin = it;
+		if (begin != line.end())
+			++begin;
+	}
+
+	// extract command name
+	it = std::find(begin, line.end(), ' ');
+
+	// extract the rest of the line if any
+	if (it != line.end())
+		params = std::string(it + 1, line.end());
+
+	// execute the command with the given arguments
+	this->commands.dispatch(client, prefix, std::string(begin, it), params);
+}
+
+void Server::__acceptClient()
+{
+	int fd;
+	sockaddr_in address;
+	socklen_t addressLength;
+
+	addressLength = sizeof (address);
+	fd = ::accept(this->_socketfd, (sockaddr*)&address, &addressLength);
+
+	if (fd == -1)
+	{
+		// TODO log error, do not throw an exception because this is not fatal
+		return;
+	}
+
+	this->clients.insert(Client(fd, address));
+}
+
+void Server::__readFromClient(int fd)
+{
+	ClientList::const_iterator it;
+	Client client;
+
+	client.sock_fd = fd;
+	it = this->clients.find(client);
+	if (it == this->clients.end())
+	{
+		// TODO log error, client not found
+		return;
+	}
+
+	const_cast<Client*>(&*it)->readFrom();
+}
+
+void Server::__writeToClient(int fd)
+{
+	ClientList::const_iterator it;
+	Client client;
+
+	client.sock_fd = fd;
+	it = this->clients.find(client);
+	if (it == this->clients.end())
+	{
+		// TODO log error, client not found
+		return;
+	}
+
+	const_cast<Client*>(&*it)->writeTo();
 }
 
 bool ClientComparator::operator()(Client const& lhs, Client const& rhs)

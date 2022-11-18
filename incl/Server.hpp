@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/18 21:44:59 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/18 23:33:13 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,15 @@ class Server {
 		const int	&getsocketfd() const;
 		const int	&getclientfd() const;
 
-		void	create_socket(int port);
+		void		create_socket(int port);
+
+		/**
+		 * Process a line and break it into a command, then execute it if possible
+		 *
+		 * @param client the client whom issued the command
+		 * @param line the command line to process
+		 */
+		void		processCommand(Client& client, std::string const& line);
 
 		class IoException : public std::exception {
 			public:
