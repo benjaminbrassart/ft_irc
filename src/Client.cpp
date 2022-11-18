@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 19:19:48 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/11/18 20:05:16 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <iostream>
 
 /* ==========================================================================
-								COPLIEN FORM 
+								COPLIEN FORM
    ========================================================================== */
 
 Client::Client() : isOpe(false), isLogged(false) {}
@@ -46,11 +46,6 @@ Client		&Client::operator=(Client const &rhs) {
 								MEMBERS FUNCTIONS
    ========================================================================== */
 
-void Client::reply(Reply code, std::string const& message) {
-	// TODO send to socket
-	std::cout << "Server -> Client |   " << code << " \"" << message << "\"\n";
-}
-
 void Client::send(std::string const& command) {
 	// TODO send to socket
 	std::cout << "Server -> Client |   " << command << '\n';
@@ -59,4 +54,9 @@ void Client::send(std::string const& command) {
 void Client::closeConnection() {
 	// TODO close socket
 	std::cout << "Server terminated connection to client\n";
+}
+
+void Client::__replyRaw(Reply code, std::string const& message)
+{
+	std::cout << "Server -> Client |   " << code << " \"" << message << "\"\n";
 }

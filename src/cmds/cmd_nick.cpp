@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/17 20:49:20 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/18 18:54:57 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,14 @@ void cmd_nick(CommandContext& context)
 
 
 	if (line.empty())
-		client.reply(ERR_NONICKNAMEGIVEN, ":No nickname given");
+		client.reply<ERR_NONICKNAMEGIVEN>();
 	else
 	{
 		// TODO extract nickname
 		if (!__is_nickname_valid(line))
-			client.reply(ERR_ERRONEUSNICKNAME, line + " :Erroneous nickname");
+			client.reply<ERR_ERRONEUSNICKNAME>(line);
 		else if (__is_nickname_taken(*client.server, line))
-			client.reply(ERR_NICKNAMEINUSE, line + " :Nickname is already in use");
+			client.reply<ERR_NICKNAMEINUSE>(line);
 		else
 		{
 			client.nickname = line;
@@ -75,10 +75,10 @@ void cmd_nick(CommandContext& context)
 					;
 
 					client.isLogged = true;
-					client.reply(RPL_WELCOME, ss.str());
+					client.reply<RPL_WELCOME>(ss.str());
 				}
 				else
-					client.reply(ERR_PASSWDMISMATCH, ":Password incorrect"); // TODO check if this is the way the protocol is supposed to behave
+					client.reply<ERR_PASSWDMISMATCH>(); // TODO check if this is the way the protocol is supposed to behave
 			}
 		}
 	}
