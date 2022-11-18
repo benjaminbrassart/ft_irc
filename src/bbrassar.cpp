@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:42:27 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/17 20:41:28 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/18 21:16:48 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int main(int argc, char const* argv[])
 
 			// extract the rest of the line if any
 			if (it != line.end())
-				params = std::string(++it, line.end());
+				params = std::string(it + 1, line.end());
 
 			server.commands.dispatch(client, prefix, std::string(begin, it), params);
 		}
