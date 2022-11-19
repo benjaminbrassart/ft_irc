@@ -73,7 +73,6 @@ irc messages:
     - ERR_NOSUCHCHANNEL
     - ERR_NOTONCHANNEL
 
-# TODO decide whether we should add channel modes or not
 # https://datatracker.ietf.org/doc/html/rfc1459#section-4.2.3
 
 - PRIVMSG:
