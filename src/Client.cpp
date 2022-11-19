@@ -6,13 +6,14 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 00:47:31 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/19 04:23:23 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 int const Client::READ_BUFFER_SIZE = 2048;
 
@@ -22,15 +23,15 @@ int const Client::READ_BUFFER_SIZE = 2048;
 
 Client::Client(Server& server) :
 	server(&server),
-	state(CLIENT_STATE_INIT),
-	isOpe(false)
+	sock_fd(-1),
+	_state(CLIENT_STATE_INIT)
 {}
 
 Client::Client(Server& server, int fd, sockaddr_in& addr) :
 	server(&server),
-	state(CLIENT_STATE_INIT),
 	sock_fd(fd),
-	address(addr)
+	address(addr),
+	_state(CLIENT_STATE_INIT)
 {}
 
 Client::~Client() {}
@@ -43,12 +44,11 @@ Client		&Client::operator=(Client const &rhs) {
 
 	if (this != &rhs) {
 
-		this->state = rhs.state;
+		this->_state = rhs._state;
 		this->server = rhs.server;
 		this->channels = rhs.channels;
 		this->info = rhs.info;
 		this->sock_fd = rhs.sock_fd;
-		this->isOpe = rhs.isOpe;
 		this->nickname = rhs.nickname;
 		this->address = rhs.address;
 	}
@@ -58,6 +58,21 @@ Client		&Client::operator=(Client const &rhs) {
 /* ==========================================================================
 								MEMBERS FUNCTIONS
    ========================================================================== */
+
+void Client::quit(std::string const& message)
+{
+	Server& server = *this->server;
+	Server::ClientList::const_iterator it;
+
+	(void)message;
+	for (it = server.clients.begin(); it != server.clients.end(); ++it)
+	{
+		if (&*it != this)
+		{
+			// TODO
+		}
+	}
+}
 
 void Client::readFrom()
 {
@@ -108,6 +123,22 @@ void Client::closeConnection() {
 	std::cout << "Server terminated connection to client\n";
 }
 
+void Client::tryLogin()
+{
+	if (this->checkState(CLIENT_STATE_LOGGED))
+		this->reply<RPL_WELCOME>(this->nickname, this->info.username, this->info.hostname);
+}
+
+bool Client::checkState(ClientState state)
+{
+	return (this->_state & state) == state;
+}
+
+void Client::setState(ClientState state)
+{
+	this->_state |= state;
+}
+
 void Client::sendMotd()
 {
 	std::ifstream file;
@@ -128,7 +159,12 @@ void Client::sendMotd()
 
 void Client::__replyRaw(Reply code, std::string const& message)
 {
+	std::stringstream ss;
+
+	ss << code << ' ' << message << "\r\n";
+
 	std::cout << "Server -> Client |   " << code << " \"" << message << "\"\n";
+	this->writeBuffer += ss.str();
 }
 
 void Client::__processReadBuffer()

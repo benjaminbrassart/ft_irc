@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:38:48 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 00:50:02 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/19 04:14:18 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define COMMANDMAP_HPP
 
 # include "command.h"
+# include "ClientState.hpp"
 
 # include <map>
 # include <string>
@@ -24,7 +25,7 @@ class CommandMap
 {
 public:
 	typedef void (*Handler)(::CommandContext& context);
-	typedef std::pair< Handler, int > HandlerPair;
+	typedef std::pair< Handler, ClientState > HandlerPair;
 	typedef std::map< std::string, HandlerPair > MapType;
 
 private:
@@ -37,7 +38,7 @@ public:
 	~CommandMap();
 
 public:
-	void put(std::string const& name, Handler handler, int requiredFlags = 0);
+	void put(std::string const& name, Handler handler, ClientState requiredFlags = CLIENT_STATE_INIT);
 	void dispatch(Client& client, std::string const& prefix, std::string const& name, std::string const& line);
 
 public:

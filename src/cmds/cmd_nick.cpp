@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 00:54:25 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/19 04:08:45 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,23 +58,8 @@ void cmd_nick(CommandContext& context)
 		else
 		{
 			client.nickname = nickname;
-			if (client.state & ~CLIENT_STATE_LOGGED)
-			{
-				// TODO
-			}
-
-			// std::cout << "Server           |   New nickname: \"" << client.nickname << "\"\n";
-			// TODO check if NICK and USER have been sent
-			// if (!client.isLogged) // && client.nickname && client.info)
-			// {
-			// 	if (server.password == client.password.value)
-			// 	{
-			// 		client.isLogged = true;
-			// 		client.reply<RPL_WELCOME>(client.nickname, client.info.value.username, client.info.value.hostname);
-			// 	}
-			// 	else
-			// 		client.reply<ERR_PASSWDMISMATCH>(); // TODO check if this is the way the protocol is supposed to behave
-			// }
+			client.setState(CLIENT_STATE_NICK);
+			client.tryLogin();
 		}
 	}
 }
