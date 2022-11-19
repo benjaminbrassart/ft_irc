@@ -6,7 +6,7 @@
 #    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/11/19 00:23:49 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/11/19 01:55:17 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,7 +16,7 @@ CC		=	c++
 
 FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98
 
-SRC		= bbrassar.cpp Client.cpp CommandContext.cpp Channel.cpp Server.cpp CommandMap.cpp Reply.cpp
+SRC		= bbrassar.cpp Client.cpp CommandContext.cpp Channel.cpp Server.cpp CommandMap.cpp Reply.cpp wildcard.cpp
 SRC		+= cmds/cmd_user.cpp
 SRC		+= cmds/cmd_nick.cpp
 SRC		+= cmds/cmd_pass.cpp
