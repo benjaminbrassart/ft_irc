@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:34:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 01:36:56 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/19 03:37:17 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ class Channel {
 		std::string		passwd;
 
 	private:
-		ClientList		allClients; // TODO find another way because it kinda violates const contract
+		ClientList		allClients;
 
 	public:
 		/**
