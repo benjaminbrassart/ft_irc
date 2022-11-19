@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:45:10 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 00:32:26 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/19 02:48:45 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ enum Reply
 	RPL_MOTD = 372,
 	RPL_MOTDSTART = 375,
 	RPL_ENDOFMOTD = 376,
+	RPL_YOUREOPER = 381,
 
 	ERR_NOSUCHNICK = 401,
 	ERR_NOSUCHCHANNEL = 403,
@@ -93,6 +94,11 @@ struct ReplyFactory<RPL_MOTDSTART>
 
 template<>
 struct ReplyFactory<RPL_ENDOFMOTD>
+{
+	static std::string makeReply();
+};
+template<>
+struct ReplyFactory<RPL_YOUREOPER>
 {
 	static std::string makeReply();
 };

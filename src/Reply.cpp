@@ -6,16 +6,15 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 18:04:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 00:48:52 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/19 03:32:16 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Reply.hpp"
 
-// TODO change to 3 args
-std::string ReplyFactory<RPL_WELCOME>::makeReply(std::string const& nickname, std::string const& user, std::string const& host)
+std::string ReplyFactory<RPL_WELCOME>::makeReply(std::string const& nickname, std::string const& username, std::string const& hostname)
 {
-	return "Welcome to the Internet Relay Network " + nickname + '!' + user + '@' + host;
+	return "Welcome to the Internet Relay Network " + nickname + '!' + username + '@' + hostname;
 }
 
 std::string ReplyFactory<RPL_MOTD>::makeReply(std::string const& text)
@@ -31,6 +30,11 @@ std::string ReplyFactory<RPL_MOTDSTART>::makeReply(std::string const& serverName
 std::string ReplyFactory<RPL_ENDOFMOTD>::makeReply()
 {
 	return ":End of MOTD command";
+}
+
+std::string ReplyFactory<RPL_YOUREOPER>::makeReply()
+{
+	return ":You are now an IRC operator";
 }
 
 std::string ReplyFactory<ERR_NOSUCHNICK>::makeReply(std::string const& nickname)
