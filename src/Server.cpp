@@ -6,13 +6,14 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/19 00:14:54 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/19 03:12:15 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <algorithm>
 #include <cerrno>
+#include <fstream>
 
 Server::Server() {}
 
@@ -81,6 +82,21 @@ void Server::processCommand(Client& client, std::string const& line)
 
 	// execute the command with the given arguments
 	this->commands.dispatch(client, prefix, std::string(begin, it), params);
+}
+
+void Server::loadOperatorFile(std::string const& file)
+{
+	std::ifstream in;
+	std::string line;
+
+	in.open(file.c_str());
+	if (in)
+	{
+		while (std::getline(in, line))
+		{
+			// TODO parse and add to map
+		}
+	}
 }
 
 void Server::__acceptClient()

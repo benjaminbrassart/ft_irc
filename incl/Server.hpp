@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 00:46:55 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/19 03:09:10 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,13 @@ class Server {
 
 		typedef std::set< Client, ClientComparator > ClientList;
 		typedef std::set< Channel, ChannelComparator > ChannelList;
+		typedef std::map< std::string, std::string > OperatorPasswordMap;
 
 		const int	&getsocketfd() const;
 		const int	&getclientfd() const;
 
 		void		create_socket(int port);
+		void		loadOperatorFile(std::string const& file);
 
 		/**
 		 * Process a line and break it into a command, then execute it if possible
@@ -106,6 +108,7 @@ class Server {
 		std::string motdFileName;
 		ChannelList	channels;
 		ClientList	clients;
+		OperatorPasswordMap operatorPasswords;
 
 	private:
 		int			_socketfd;
