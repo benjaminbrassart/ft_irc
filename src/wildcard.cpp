@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 01:48:21 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/20 23:33:51 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 00:49:28 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ bool wildcardMatch(std::string const& pattern, std::string const& str)
 			{
 				++pat;
 			}
-			while (pat != pattern.rend() && (*pat == '*' || *pat == '?'));
+			while (pat != pattern.rend() && (*pat == '*' || (s != str.rend() && *pat == '?')));
 
 			if (pat == pattern.rend())
 				return true;
