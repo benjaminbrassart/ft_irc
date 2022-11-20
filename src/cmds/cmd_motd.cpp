@@ -1,30 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_pass.cpp                                       :+:      :+:    :+:   */
+/*   cmd_motd.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/16 11:50:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 04:44:55 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/11/19 00:23:13 by bbrassar          #+#    #+#             */
+/*   Updated: 2022/11/19 00:44:02 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 #include "CommandMap.hpp"
 #include "Reply.hpp"
+#include <fstream>
 
-void cmd_pass(CommandContext& context)
+#define MOTD_FILE "motd.txt"
+
+void cmd_motd(CommandContext& context)
 {
-	Client& client = context.client;
-	std::string const& line = context.line;
-
-	if (client.checkState(CLIENT_STATE_PASS))
-		client.reply<ERR_ALREADYREGISTRED>();
-	else if (line.empty())
-		client.reply<ERR_NEEDMOREPARAMS>("PASS");
-	else if (line != client.server->password)
-		client.reply<ERR_PASSWDMISMATCH>();
-	else
-		client.setState(CLIENT_STATE_PASS);
+	context.client.sendMotd();
 }

@@ -1,0 +1,6 @@
+CAP LS
+PASS farzar
+NICK bbrassar
+USER bbrassar 8 127.0.0.1 :Benjamin Brassart
+MOTD
+QUIT

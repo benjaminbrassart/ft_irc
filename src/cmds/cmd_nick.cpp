@@ -6,16 +6,19 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/17 20:49:20 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/19 04:08:45 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "CommandMap.hpp"
-#include "reply.h"
+#include "Reply.hpp"
 #include "Client.hpp"
 
 #include <cctype>
-#include <sstream>
+
+#undef SPECIAL_CHARS
+#define SEPCIAL_CHARS "-[]\\`_^{}|"
+#define SPECIAL_CHARS_COUNT (sizeof (SPECIAL_CHARS) / sizeof (*SEPCIAL_CHARS))
 
 /**
  * Check if a given nickname is valid
@@ -32,7 +35,7 @@ static bool __is_nickname_valid(std::string const& nickname);
  * @param nickname the nickname to check
  * @return true if the nickname is available on this server, false otherwise
  */
-static bool __is_nickname_taken(Server const& server, std::string const& nickname);
+static bool __is_nickname_available(Server& server, std::string const& nickname);
 
 // valid nickname characters:
 // []\`_^{}|a-zZ-Z0-9-
@@ -41,45 +44,22 @@ static bool __is_nickname_taken(Server const& server, std::string const& nicknam
 void cmd_nick(CommandContext& context)
 {
 	Client& client = context.client;
-	Server& server = *client.server;
-	std::string const& line = context.line;
+	std::string const& nickname = context.line;
 
-
-	if (line.empty())
-		client.reply(ERR_NONICKNAMEGIVEN, ":No nickname given");
+	if (nickname.empty())
+		client.reply<ERR_NONICKNAMEGIVEN>();
 	else
 	{
 		// TODO extract nickname
-		if (!__is_nickname_valid(line))
-			client.reply(ERR_ERRONEUSNICKNAME, line + " :Erroneous nickname");
-		else if (__is_nickname_taken(*client.server, line))
-			client.reply(ERR_NICKNAMEINUSE, line + " :Nickname is already in use");
+		if (!__is_nickname_valid(nickname))
+			client.reply<ERR_ERRONEUSNICKNAME>(nickname);
+		else if (!__is_nickname_available(*client.server, nickname))
+			client.reply<ERR_NICKNAMEINUSE>(nickname);
 		else
 		{
-			client.nickname = line;
-			std::cout << "Server           |   New nickname: \"" << client.nickname << "\"\n";
-			// TODO check if NICK and USER have been sent
-			if (!client.isLogged) // && client.nickname && client.info)
-			{
-				if (server.password == client.password.value)
-				{
-					std::stringstream ss;
-
-					ss
-						<< "Welcome to the jungle "
-						<< client.nickname
-						<< '!'
-						<< client.info.value.username
-						<< '@'
-						<< "host" // TODO
-					;
-
-					client.isLogged = true;
-					client.reply(RPL_WELCOME, ss.str());
-				}
-				else
-					client.reply(ERR_PASSWDMISMATCH, ":Password incorrect"); // TODO check if this is the way the protocol is supposed to behave
-			}
+			client.nickname = nickname;
+			client.setState(CLIENT_STATE_NICK);
+			client.tryLogin();
 		}
 	}
 }
@@ -87,7 +67,7 @@ void cmd_nick(CommandContext& context)
 // TODO
 static bool __is_nickname_valid(std::string const& nickname)
 {
-	static std::string const SPECIAL_CHARS("-[]\\`_^{}|");
+	static char const SPECIAL_CHARS[] = "-[]\\`_^{}|";
 	std::string::const_iterator it;
 	std::string::value_type c;
 	bool is_valid;
@@ -101,15 +81,17 @@ static bool __is_nickname_valid(std::string const& nickname)
 		else
 			is_valid = std::isalnum(c);
 		// TODO make this prettier
-		is_valid |= (std::find(SPECIAL_CHARS.begin(), SPECIAL_CHARS.end(), c) != SPECIAL_CHARS.end());
+		is_valid |= (std::find(SPECIAL_CHARS, SPECIAL_CHARS + SPECIAL_CHARS_COUNT, c) != SPECIAL_CHARS + SPECIAL_CHARS_COUNT);
 	}
 	return is_valid;
 }
 
-// TODO
-static bool __is_nickname_taken(Server const& server, std::string const& nickname)
+static bool __is_nickname_available(Server& server, std::string const& nickname)
 {
-	(void)server;
-	(void)nickname;
-	return false;
+	Server::ClientList::const_iterator it;
+	Client client(server);
+
+	client.nickname = nickname;
+	it = server.clients.find(client);
+	return it == server.clients.end();
 }

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_pass.cpp                                       :+:      :+:    :+:   */
+/*   cmd_oper.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/16 11:50:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 04:44:55 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/11/19 02:38:39 by bbrassar          #+#    #+#             */
+/*   Updated: 2022/11/19 02:49:46 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,18 @@
 #include "CommandMap.hpp"
 #include "Reply.hpp"
 
-void cmd_pass(CommandContext& context)
+void cmd_oper(CommandContext& context)
 {
 	Client& client = context.client;
-	std::string const& line = context.line;
+	Server& server = *client.server;
+	std::string name; // TODO
+	std::string password; // TODO
+	Server::OperatorPasswordMap::const_iterator it;
 
-	if (client.checkState(CLIENT_STATE_PASS))
-		client.reply<ERR_ALREADYREGISTRED>();
-	else if (line.empty())
-		client.reply<ERR_NEEDMOREPARAMS>("PASS");
-	else if (line != client.server->password)
-		client.reply<ERR_PASSWDMISMATCH>();
+	// TODO check client host => ERR_NOOPERHOST
+	it = server.operatorPasswords.find(name);
+	if (it != server.operatorPasswords.end() && it->second == password)
+		client.reply<RPL_YOUREOPER>();
 	else
-		client.setState(CLIENT_STATE_PASS);
+		client.reply<ERR_PASSWDMISMATCH>();
 }

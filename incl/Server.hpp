@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/17 20:15:59 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/19 03:09:10 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,24 +35,28 @@
 # include <cstring>
 
 using					std::string;
-typedef	unsigned int	uint;
 
 #include "CommandMap.hpp"
 #include <iostream>
 #include <string>
 #include <set>
-#include <vector>
 #include <algorithm>
 #include "colours.h"
-
 
 class Client;
 class Channel;
 class CommandRegistry;
 
+// sort by socket file descriptor
+struct ClientComparator : public std::binary_function< Client, Client, bool >
+{
+	bool operator()(Client const& lhs, Client const& rhs) const;
+};
+
+// sort by channel name
 struct ChannelComparator : public std::binary_function< Channel, Channel, bool >
 {
-	bool operator()(Channel const& rhs, Channel const& lhs);
+	bool operator()(Channel const& rhs, Channel const& lhs) const;
 };
 
 class Server {
@@ -61,18 +65,35 @@ class Server {
 		Server();
 		~Server();
 
-		typedef std::vector< Client > ClientList;
+		typedef std::set< Client, ClientComparator > ClientList;
 		typedef std::set< Channel, ChannelComparator > ChannelList;
+		typedef std::map< std::string, std::string > OperatorPasswordMap;
 
 		const int	&getsocketfd() const;
 		const int	&getclientfd() const;
 
-		void	dispatch(Client* sender);
-		void	create_socket(int port);
+		void		create_socket(int port);
+		void		loadOperatorFile(std::string const& file);
+
+		/**
+		 * Process a line and break it into a command, then execute it if possible
+		 *
+		 * @param client the client whom issued the command
+		 * @param line the command line to process
+		 */
+		void		processCommand(Client& client, std::string const& line);
 
 		class IoException : public std::exception {
 			public:
-				IoException(string const&, int);
+				/**
+				 * Construct a new IoException
+				 *
+				 * @param syscallName the name of the system call that failed
+				 * @param errnum the code of the error
+				 * @see errno(3)
+				 * @see strerror(3)
+				 */
+				IoException(string const& syscallName, int errnum);
 				~IoException() throw();
 
 				virtual const char*	what() const throw();
@@ -80,15 +101,39 @@ class Server {
 			private:
 				string	_what;
 		};
-	public:
+
 		CommandMap commands;
+		std::string name;
 		std::string password;
+		std::string motdFileName;
 		ChannelList	channels;
+		ClientList	clients;
+		OperatorPasswordMap operatorPasswords;
 
 	private:
-		ClientList	_clients;
 		int			_socketfd;
 		int			_clientfd;
+
+		/**
+		 * Accept a client and add it to the client list
+		 *
+		 * @see accept(2)
+		 */
+		void __acceptClient();
+
+		/**
+		 * Read data from a polled client
+		 *
+		 * @param fd the socket file descriptor of the client
+		 */
+		void __readFromClient(int fd);
+
+		/**
+		 * Write data to the client (if any)
+		 *
+		 * @param fd the socket file descriptor of the client
+		 */
+		void __writeToClient(int fd);
 
 }; // class Server
 

@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_part.cpp                                       :+:      :+:    :+:   */
+/*   wildcard.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/16 14:11:06 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/18 23:45:22 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/11/19 01:47:26 by bbrassar          #+#    #+#             */
+/*   Updated: 2022/11/19 01:48:07 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Client.hpp"
-#include "CommandMap.hpp"
-#include "Reply.hpp"
+#ifndef WILDCARD_H
+# define WILDCARD_H
 
-void cmd_part(CommandContext& context)
-{
-	(void)context;
-}
+# include <string>
+
+bool wildcardMatch(std::string const& pattern, std::string const& str);
+
+#endif // WILDCARD_H
