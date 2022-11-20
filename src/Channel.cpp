@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 01:36:51 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/20 21:02:18 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,5 @@ bool Channel::removeClient(Client &client) {
 }
 
 bool Channel::hasClient(Client &client) const {
-
-	ClientList::iterator	i = allClients.begin();
-
-	for (; i != allClients.end(); i++) {
-		if (&client != *i)
-			return true;
-	 }
-	return false;
+	return allClients.find(&client) != allClients.end();
 }
