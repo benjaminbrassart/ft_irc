@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 01:36:51 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/20 22:53:10 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,22 +48,27 @@ void	Channel::broadcast(Client &sender, std::string const msg) {
 		if (&sender != *i)
 			std::cout << sender.nickname << ": \"" << msg << "\"";
 	 }
-	 // MUST REDIRECT STREAM
 }
 
-bool 	Channel::addClient(Client &newClient) {
-	return allClients.insert(&newClient).second;
+bool 	Channel::addClient(ClientList list, Client &newClient) {
+	
+	ClientList::iterator	i = banned.begin();
+
+	for (; i != banned.end(); i++)
+		if (&newClient == *i)
+			return false;					// to check with team
+	return list.insert(&newClient).second;
 }
 
-bool Channel::removeClient(Client &client) {
-	return allClients.erase(&client) > 0;
+bool Channel::removeClient(ClientList list, Client &client) {
+	return list.erase(&client) > 0;
 }
 
-bool Channel::hasClient(Client &client) const {
+bool Channel::hasClient(ClientList list, Client &client) const {
 
-	ClientList::iterator	i = allClients.begin();
+	ClientList::iterator	i = list.begin();
 
-	for (; i != allClients.end(); i++) {
+	for (; i != list.end(); i++) {
 		if (&client != *i)
 			return true;
 	 }
