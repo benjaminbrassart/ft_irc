@@ -6,16 +6,32 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 18:04:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 08:07:20 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 15:04:21 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Reply.hpp"
+#include "config.h"
 
 std::string ReplyFactory<RPL_WELCOME>::makeReply(std::string const& nickname, std::string const& username, std::string const& hostname)
 {
 	return "Welcome to the Internet Relay Network " + nickname + '!' + username + '@' + hostname;
 }
+
+std::string ReplyFactory<RPL_YOURHOST>::makeReply()
+{
+	return "Your host is " SERVER_NAME ", running version " VERSION;
+};
+
+std::string ReplyFactory<RPL_CREATED>::makeReply(std::string const& startDate)
+{
+	return "This server was created " + startDate;
+};
+
+std::string ReplyFactory<RPL_MYINFO>::makeReply()
+{
+	return ""; // TODO
+};
 
 std::string ReplyFactory<RPL_LIST>::makeReply(std::string const& channel, std::string const& visibleClients, std::string const& topic)
 {

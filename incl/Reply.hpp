@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:45:10 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 08:04:27 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 13:38:34 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 enum Reply
 {
 	RPL_WELCOME = 1,
+	RPL_YOURHOST = 2,
+	RPL_CREATED = 3,
+	RPL_MYINFO = 4,
 
 	RPL_LIST = 322,
 	RPL_LISTEND = 323,
@@ -84,6 +87,24 @@ template<>
 struct ReplyFactory<RPL_WELCOME>
 {
 	static std::string makeReply(std::string const& nickname, std::string const& user, std::string const& host);
+};
+
+template<>
+struct ReplyFactory<RPL_YOURHOST>
+{
+	static std::string makeReply();
+};
+
+template<>
+struct ReplyFactory<RPL_CREATED>
+{
+	static std::string makeReply(std::string const& startDate);
+};
+
+template<>
+struct ReplyFactory<RPL_MYINFO>
+{
+	static std::string makeReply();
 };
 
 template<>
