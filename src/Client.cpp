@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 04:23:23 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 08:16:08 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,21 @@ void Client::sendMotd()
 	}
 	else
 		this->reply<ERR_NOMOTD>();
+}
+
+void Client::leaveChannel(Channel& channel, std::string const& message)
+{
+	(void)channel;
+	(void)message;
+	// TODO
+}
+
+void Client::leaveAllChannels(std::string const& message)
+{
+	ChannelList::iterator it;
+
+	for (it = this->channels.begin(); it != this->channels.end(); ++it)
+		leaveChannel(const_cast<Channel&>(**it), message);
 }
 
 void Client::__replyRaw(Reply code, std::string const& message)
