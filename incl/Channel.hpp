@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:34:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 08:08:30 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 08:14:06 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,16 +36,16 @@ class Channel {
 		typedef std::set< Client* >		ClientList;
 		typedef std::set< std::string >	MaskList;
 
-		Server			*server;
-		ChannelMode		mode;
-		std::string		name;
-		std::string		topic;
-		std::string		passwd;
-		unsigned int	userLimit;
-		ClientList		allClients;
-		MaskList		banMasks;
-		MaskList		exceptionMasks;
-		MaskList		invitationMasks;
+		Server				*server;
+		ChannelMode			mode;
+		std::string const	name;
+		std::string			topic;
+		std::string			passwd;
+		unsigned int		userLimit;
+		ClientList			allClients;
+		MaskList			banMasks;
+		MaskList			exceptionMasks;
+		MaskList			invitationMasks;
 
 		static ChannelMode const DEFAULT_MODE;
 

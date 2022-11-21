@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 03:34:24 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 08:14:39 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ Channel	&Channel::operator=(Channel const& rhs) {
 	if (this != &rhs) {
 		this->server = rhs.server;
 		this->mode = rhs.mode;
-		this->name = rhs.name;
+		const_cast<std::string&>(this->name) = rhs.name;
 		this->topic = rhs.topic;
 		this->passwd = rhs.passwd;
 		this->userLimit = rhs.userLimit;
