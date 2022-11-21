@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 03:09:10 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 08:22:22 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,12 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <cstring>
+
+# if defined(__APPLE__) || defined(__MACH__)
+#  define SET_NON_BLOCKING(fd) ::fcntl(fd, F_SETFL, O_NONBLOCK);
+# else
+#  define SET_NON_BLOCKING(fd)
+# endif
 
 using					std::string;
 
@@ -74,6 +80,9 @@ class Server {
 
 		void		create_socket(int port);
 		void		loadOperatorFile(std::string const& file);
+
+		Channel*	getChannel(std::string const& channelName);
+		Channel&	getOrCreateChannel(std::string const& channelName);
 
 		/**
 		 * Process a line and break it into a command, then execute it if possible

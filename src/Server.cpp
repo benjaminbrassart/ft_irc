@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/19 03:12:15 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 08:22:18 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,24 @@ void	Server::create_socket(int port) {
 	_clientfd = accept(_socketfd, (sockaddr*)&client_add, &client_taille);
 	if (_clientfd == -1)
 		throw Server::IoException("client", errno);
+}
+
+Channel& Server::getOrCreateChannel(std::string const& channelName)
+{
+	Channel channel = Channel(*this, channelName);
+
+	return const_cast<Channel&>(*this->channels.insert(channel).first);
+}
+
+Channel* Server::getChannel(std::string const& channelName)
+{
+	Channel channel = Channel(*this, channelName);
+	ChannelList::const_iterator it;
+
+	it = this->channels.find(channel);
+	if (it != this->channels.end())
+		return const_cast<Channel*>(&*it);
+	return 0;
 }
 
 void Server::processCommand(Client& client, std::string const& line)
@@ -130,7 +148,7 @@ void Server::__readFromClient(int fd)
 		return;
 	}
 
-	const_cast<Client*>(&*it)->readFrom();
+	const_cast<Client&>(*it).readFrom();
 }
 
 void Server::__writeToClient(int fd)
@@ -146,7 +164,7 @@ void Server::__writeToClient(int fd)
 		return;
 	}
 
-	const_cast<Client*>(&*it)->writeTo();
+	const_cast<Client&>(*it).writeTo();
 }
 
 bool ClientComparator::operator()(Client const& lhs, Client const& rhs) const
