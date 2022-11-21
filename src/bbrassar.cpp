@@ -18,13 +18,14 @@
 #include <stdexcept>
 #include <algorithm>
 
-// static void __testWildcard(std::string const& pattern, std::string const& str);
+#include "config.h"
+
 
 int main(int argc, char const* argv[])
 {
-	// {
-	// 	std::cout << "Tests wildcard\n\n";
-	// 	std::cout << std::boolalpha;
+	std::cout
+		<< "Starting ircserv version " << VERSION << '\n'
+		<< "Build date: " << STR(BUILD_DATE) << '\n';
 
 	// 	__testWildcard("*", "ABC");
 	// 	__testWildcard("*", "");
@@ -43,8 +44,7 @@ int main(int argc, char const* argv[])
 	// 	__testWildcard("?*", "ABC");
 	// 	__testWildcard("A?C", "ABC");
 
-	// 	return 0;
-	// }
+	std::cout << "  IN/OUT  \033[37m|\033[0m     IP ADDR     \033[37m|\033[0m          COMMAND" << '\n';
 
 	Server server;
 	Client client = Client(server);
