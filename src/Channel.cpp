@@ -6,29 +6,71 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/20 21:02:18 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 03:34:24 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 
+ChannelMode const Channel::DEFAULT_MODE = 0;
+
 /* ==========================================================================
 								COPLIEN AFORM
    ========================================================================== */
 
-Channel::Channel() : name("default") {}
+Channel::Channel() :
+	server(NULL),
+	mode(Channel::DEFAULT_MODE),
+	name(),
+	topic(),
+	passwd(),
+	userLimit(0),
+	allClients(),
+	banMasks(),
+	exceptionMasks(),
+	invitationMasks()
+{}
 
-Channel::Channel(std::string name, std::string passwd): name(name), passwd(passwd) {}
+Channel::Channel(Server& server, std::string name, std::string passwd) :
+	server(&server),
+	mode(Channel::DEFAULT_MODE),
+	name(name),
+	topic(),
+	passwd(passwd),
+	userLimit(0),
+	allClients(),
+	banMasks(),
+	exceptionMasks(),
+	invitationMasks()
+{}
+
+Channel::Channel(Channel const& rhs) :
+	server(rhs.server),
+	mode(rhs.mode),
+	name(rhs.name),
+	topic(rhs.topic),
+	passwd(rhs.passwd),
+	userLimit(rhs.userLimit),
+	allClients(rhs.allClients),
+	banMasks(rhs.banMasks),
+	exceptionMasks(rhs.exceptionMasks),
+	invitationMasks(rhs.invitationMasks)
+{
+}
 
 Channel	&Channel::operator=(Channel const& rhs) {
 
 	if (this != &rhs) {
-
-		server = rhs.server;
-		allClients = rhs.allClients;
-		name = rhs.name;
-		topic = rhs.topic;
-		passwd = rhs.passwd;
+		this->server = rhs.server;
+		this->mode = rhs.mode;
+		this->name = rhs.name;
+		this->topic = rhs.topic;
+		this->passwd = rhs.passwd;
+		this->userLimit = rhs.userLimit;
+		this->allClients = rhs.allClients;
+		this->banMasks = rhs.banMasks;
+		this->exceptionMasks = rhs.exceptionMasks;
+		this->invitationMasks = rhs.invitationMasks;
 	}
 	return (*this);
 }
