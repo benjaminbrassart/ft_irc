@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 02:27:00 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 09:17:28 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 # include "ClientState.hpp"
 
 # include <string>
-# include <vector>
+# include <set>
 
 # include <netinet/in.h>
 
@@ -36,7 +36,7 @@ class Client {
 
 		Client &operator=(Client const& src);
 
-		typedef std::vector<Channel*> ChannelList;
+		typedef std::set<Channel*> ChannelList;
 
 		void					send(std::string const& command);
 		template< Reply reply >
