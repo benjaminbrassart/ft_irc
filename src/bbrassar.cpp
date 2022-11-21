@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:42:27 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 11:50:02 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 11:58:45 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,8 @@ int main(int argc, char const* argv[])
 	server.name = "ft_ble";
 	server.password = "farzar";
 	server.motdFileName = "motd.txt";
+
+	server.loadOperatorFile("operators.txt");
 
 	if (argc < 2)
 		return 1;
