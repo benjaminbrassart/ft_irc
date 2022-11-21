@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:42:27 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 04:15:51 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 11:50:02 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ int main(int argc, char const* argv[])
 	server.commands.put("NICK", cmd_nick, CLIENT_STATE_PASS);
 	server.commands.put("QUIT", cmd_quit, CLIENT_STATE_LOGGED);
 	server.commands.put("MOTD", cmd_motd, CLIENT_STATE_LOGGED);
+	server.commands.put("OPER", cmd_oper, CLIENT_STATE_LOGGED);
 
 	input.open("input.txt", std::ifstream::in);
 	if (input.fail())

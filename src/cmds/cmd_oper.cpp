@@ -6,26 +6,45 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 02:38:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 02:49:46 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 11:54:40 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
-#include "CommandMap.hpp"
+#include "command.h"
 #include "Reply.hpp"
+#include "wildcard.h"
 
 void cmd_oper(CommandContext& context)
 {
 	Client& client = context.client;
-	Server& server = *client.server;
-	std::string name; // TODO
-	std::string password; // TODO
-	Server::OperatorPasswordMap::const_iterator it;
 
-	// TODO check client host => ERR_NOOPERHOST
-	it = server.operatorPasswords.find(name);
-	if (it != server.operatorPasswords.end() && it->second == password)
-		client.reply<RPL_YOUREOPER>();
-	else
-		client.reply<ERR_PASSWDMISMATCH>();
+	if (client.checkState(CLIENT_STATE_OPERATOR)) // client is already operator
+		return;
+
+	Server& server = *client.server;
+	Server::OperatorPasswordList::const_iterator it;
+	std::vector< std::string > const args = CommandContext::splitArguments(context.line);
+	std::string password;
+	std::string name;
+
+	if (args.size() < 2)
+	{
+		client.reply<ERR_NEEDMOREPARAMS>("OPER");
+		return;
+	}
+
+	name = args[0];
+	password = args[1];
+
+	for (it = server.operatorPasswords.begin(); it != server.operatorPasswords.end(); ++it)
+	{
+		if (name == it->name && wildcardMatch(it->host, client.info.hostname) && password == it->password)
+		{
+			client.reply<RPL_YOUREOPER>();
+			client.setState(CLIENT_STATE_OPERATOR);
+			return;
+		}
+	}
+	client.reply<ERR_PASSWDMISMATCH>();
 }

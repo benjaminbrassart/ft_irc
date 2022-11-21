@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/21 08:22:18 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 11:52:48 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <algorithm>
 #include <cerrno>
 #include <fstream>
+#include <sstream>
 
 Server::Server() {}
 
@@ -106,13 +107,18 @@ void Server::loadOperatorFile(std::string const& file)
 {
 	std::ifstream in;
 	std::string line;
+	std::stringstream ss;
+	OperatorEntry entry;
 
 	in.open(file.c_str());
 	if (in)
 	{
 		while (std::getline(in, line))
 		{
-			// TODO parse and add to map
+			ss << line;
+			ss >> entry.name >> entry.host >> entry.password;
+			ss.clear();
+			this->operatorPasswords.push_back(entry);
 		}
 	}
 }
