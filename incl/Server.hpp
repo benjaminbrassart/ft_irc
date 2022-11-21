@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 11:25:21 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 14:31:08 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ class Server {
 				string	_what;
 		};
 
+		std::string startDate;
 		CommandMap commands;
 		std::string name;
 		std::string password;
@@ -145,6 +146,9 @@ class Server {
 		 */
 		void __writeToClient(int fd);
 
+		static std::string __getStartDate();
 }; // class Server
+
+std::ostream& operator<<(std::ostream& os, sockaddr_in& address);
 
 #endif // SERVER_HPP

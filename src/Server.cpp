@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/21 11:52:48 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 14:37:43 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 #include <algorithm>
 #include <cerrno>
 #include <fstream>
+#include <iomanip>
 #include <sstream>
 
-Server::Server() {}
+Server::Server() :
+	startDate(Server::__getStartDate())
+ {}
 
 Server::~Server() {}
 
@@ -99,6 +102,13 @@ void Server::processCommand(Client& client, std::string const& line)
 	if (it != line.end())
 		params = std::string(it + 1, line.end());
 
+	std::cout
+		<< std::setfill(' ')
+		<< " \033[32m< INPUT\033[0m  \033[37m|\033[0m "
+		<< "\033[33m"
+		<< std::setw(15) << std::left
+		<< client.address << "\033[0m" << " \033[37m|\033[0m "
+		<< line << "\r\n";
 	// execute the command with the given arguments
 	this->commands.dispatch(client, prefix, std::string(begin, it), params);
 }
@@ -173,6 +183,19 @@ void Server::__writeToClient(int fd)
 	const_cast<Client&>(*it).writeTo();
 }
 
+std::string Server::__getStartDate()
+{
+	char buffer[20];
+	time_t timestamp;
+	tm* timeinfo;
+	size_t res;
+
+	time(&timestamp);
+	timeinfo = localtime(&timestamp);
+	res = strftime(buffer, sizeof (buffer), "%Y-%m-%d %H:%M:%S", timeinfo);
+	return std::string(buffer, res);
+}
+
 bool ClientComparator::operator()(Client const& lhs, Client const& rhs) const
 {
 	return lhs.sock_fd < rhs.sock_fd;
@@ -181,4 +204,10 @@ bool ClientComparator::operator()(Client const& lhs, Client const& rhs) const
 bool ChannelComparator::operator()(Channel const& lhs, Channel const& rhs) const
 {
 	return lhs.name < rhs.name;
+}
+
+std::ostream& operator<<(std::ostream& os, sockaddr_in& address)
+{
+	os << inet_ntoa(reinterpret_cast<in_addr&>(address));
+	return os;
 }
