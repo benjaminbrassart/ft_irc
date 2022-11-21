@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 04:13:44 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 02:27:00 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,18 +48,71 @@ class Client {
 		template< Reply reply >
 		void 					reply(std::string const& param1, std::string const& param2, std::string const& param3);
 
+		/**
+		 * Make this client client leave the server
+		 *
+		 * @param message the message to be displayed to other clients
+		 */
 		void					quit(std::string const& message);
 
+		/**
+		 * Send the server's Message Of The Day to this client
+		 */
 		void					sendMotd();
 
+		/**
+		 * Read data from the client's socket
+		 *
+		 * @warning make sure the file descriptor is polled AND ready!
+		 */
 		void					readFrom();
+
+		/**
+		 * Write data to the client's socket
+		 *
+		 * @warning make sure the file descriptor is polled AND ready!
+		 */
 		void					writeTo();
 
+		/**
+		 * Attempt to log in the client, does nothing if the client is not
+		 * ready to be logged in
+		 */
 		void					tryLogin();
+
+		/**
+		 * Close this client's socket
+		 */
 		void 					closeConnection();
 
+		/**
+		 * Check whether a state is set or not for this client
+		 *
+		 * @return true if the state is set, false otherwise
+		 */
 		bool					checkState(ClientState state);
+
+		/**
+		 * Set a state for this client
+		 *
+		 * @param state the state to set
+		 */
 		void					setState(ClientState state);
+
+		/**
+		 * Make this user leave a channel
+		 *
+		 * @param channel the channel to leave
+		 * @param message the message to be displayed to other clients
+		 */
+		void					leaveChannel(Channel& channel, std::string const& message);
+
+		/**
+		 * Make this user leave all joined channels
+		 *
+		 * @param message the message to be displayed to other clients
+		 */
+		void					leaveAllChannels(std::string const& message);
 
 		struct Info {
 			std::string 		username;
