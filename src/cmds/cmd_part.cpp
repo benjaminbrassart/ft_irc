@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:11:06 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 05:00:31 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/22 23:27:12 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 void cmd_part(CommandContext& context)
 {
 	Client& client = context.client;
-	std::vector< std::string > const args = CommandContext::splitArguments(context.line, ',');
+	CommandContext::ArgumentList& args = context.args;
 	std::string::const_iterator chan_it;
 	std::string const* message_ptr;
 

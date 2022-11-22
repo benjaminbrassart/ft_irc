@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:50:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 04:44:55 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/22 23:26:38 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,13 +17,13 @@
 void cmd_pass(CommandContext& context)
 {
 	Client& client = context.client;
-	std::string const& line = context.line;
+	CommandContext::ArgumentList& args = context.args;
 
 	if (client.checkState(CLIENT_STATE_PASS))
 		client.reply<ERR_ALREADYREGISTRED>();
-	else if (line.empty())
+	else if (args.empty())
 		client.reply<ERR_NEEDMOREPARAMS>("PASS");
-	else if (line != client.server->password)
+	else if (args[0] != client.server->password)
 		client.reply<ERR_PASSWDMISMATCH>();
 	else
 		client.setState(CLIENT_STATE_PASS);

@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 03:50:35 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/22 23:28:47 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,12 @@
 void cmd_join(CommandContext& context)
 {
 	Client& client = context.client;
-	Server& server = *client.server;
-	std::vector< std::string > args;
+	Server& server = context.server;
+	CommandContext::ArgumentList& args = context.args;
 	std::vector < std::string > channels;
 	std::vector < std::string > keys;
 	std::vector < std::string >::const_iterator chan_it;
 	std::vector < std::string >::const_iterator key_it;
-
-	if (context.line == "0")
-	{
-		client.leaveAllChannels("");
-		return;
-	}
-
-	args = CommandContext::splitArguments(context.line);
 
 	if (args.empty())
 	{
@@ -48,8 +40,14 @@ void cmd_join(CommandContext& context)
 		return;
 	}
 
-	channels = CommandContext::splitArguments(args[0], ',');
-	keys = CommandContext::splitArguments(args[1], ',');
+	if (args[0] == "0")
+	{
+		client.leaveAllChannels(""); // TODO
+		return;
+	}
+
+	channels = CommandContext::split(args[0], ',');
+	keys = CommandContext::split(args[1], ',');
 
 	chan_it = channels.begin();
 	key_it = keys.begin();

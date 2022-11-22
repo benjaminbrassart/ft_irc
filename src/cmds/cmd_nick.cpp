@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 11:56:00 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/22 23:25:51 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,19 +40,20 @@ static bool __is_nickname_available(Server& server, std::string const& nickname)
 void cmd_nick(CommandContext& context)
 {
 	Client& client = context.client;
-	std::string const& nickname = context.line;
+	CommandContext::ArgumentList& args = context.args;
+	std::string nickname;
 
-	if (nickname.empty())
+	if (args.empty())
 		client.reply<ERR_NONICKNAMEGIVEN>();
 	else
 	{
-		if (!__is_nickname_valid(nickname))
-			client.reply<ERR_ERRONEUSNICKNAME>(nickname);
-		else if (!__is_nickname_available(*client.server, nickname))
-			client.reply<ERR_NICKNAMEINUSE>(nickname);
+		if (!__is_nickname_valid(args[0]))
+			client.reply<ERR_ERRONEUSNICKNAME>(args[0]);
+		else if (!__is_nickname_available(*client.server, args[0]))
+			client.reply<ERR_NICKNAMEINUSE>(args[0]);
 		else
 		{
-			client.nickname = nickname;
+			client.nickname = args[0];
 			client.setState(CLIENT_STATE_NICK);
 			client.tryLogin();
 		}

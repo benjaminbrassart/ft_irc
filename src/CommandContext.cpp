@@ -6,24 +6,25 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:47:46 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 02:00:44 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/22 23:31:25 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "Client.hpp"
 #include "CommandMap.hpp"
 #include <algorithm>
 
-CommandContext::CommandContext(Client& client, std::string const& prefix, std::string const& line) :
+CommandContext::CommandContext(Client& client, std::string const& line) :
 	client(client),
-	prefix(prefix),
-	line(line)
+	server(*client.server),
+	args(CommandContext::split(line, ' '))
 {
 }
 
 CommandContext::~CommandContext()
 {}
 
-std::vector< std::string > CommandContext::splitArguments(std::string const& line, char delim)
+CommandContext::ArgumentList CommandContext::split(std::string const& line, char delim)
 {
 	std::string args[15];
 	std::string::const_iterator it;
