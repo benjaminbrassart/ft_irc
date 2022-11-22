@@ -6,43 +6,71 @@
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/22 16:02:10 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/11/22 17:41:02 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 
+ChannelMode const Channel::DEFAULT_MODE = 0;
+
 /* ==========================================================================
 								COPLIEN AFORM
    ========================================================================== */
 
-Channel::Channel() : _owner("default"), _name("default") {}
+Channel::Channel() :
+	server(NULL),
+	mode(Channel::DEFAULT_MODE),
+	name(),
+	topic(),
+	passwd(),
+	userLimit(0),
+	allClients(),
+	banMasks(),
+	exceptionMasks(),
+	invitationMasks()
+{}
 
-Channel::Channel(Client &owner, std::string name) : _owner(owner.nickname) {
-	
-	setName(name);
-	addClient(operators, owner);
-}
+Channel::Channel(Server& server, std::string name, std::string passwd) :
+	server(&server),
+	mode(Channel::DEFAULT_MODE),
+	name(name),
+	topic(),
+	passwd(passwd),
+	userLimit(0),
+	allClients(),
+	banMasks(),
+	exceptionMasks(),
+	invitationMasks()
+{}
 
-Channel::Channel(Client &owner, std::string name, std::string passwd): _owner(owner.nickname),
-																	   _passwd(passwd) {
-	
-	setName(name);
-	addClient(operators, owner);
+Channel::Channel(Channel const& rhs) :
+	server(rhs.server),
+	mode(rhs.mode),
+	name(rhs.name),
+	topic(rhs.topic),
+	passwd(rhs.passwd),
+	userLimit(rhs.userLimit),
+	allClients(rhs.allClients),
+	banMasks(rhs.banMasks),
+	exceptionMasks(rhs.exceptionMasks),
+	invitationMasks(rhs.invitationMasks)
+{
 }
 
 Channel	&Channel::operator=(Channel const& rhs) {
 
 	if (this != &rhs) {
-
-		server = rhs.server;
-		allClients = rhs.allClients;
-		operators = rhs.operators;
-		banned = rhs.banned;
-		_owner = rhs._owner;
-		_name = rhs._name;
-		_topic = rhs._topic;
-		_passwd = rhs._passwd;
+		this->server = rhs.server;
+		this->mode = rhs.mode;
+		const_cast<std::string&>(this->name) = rhs.name;
+		this->topic = rhs.topic;
+		this->passwd = rhs.passwd;
+		this->userLimit = rhs.userLimit;
+		this->allClients = rhs.allClients;
+		this->banMasks = rhs.banMasks;
+		this->exceptionMasks = rhs.exceptionMasks;
+		this->invitationMasks = rhs.invitationMasks;
 	}
 	return (*this);
 }
@@ -108,13 +136,6 @@ bool Channel::removeClient(ClientList &list, Client &client) {
 	return list.erase(&client) > 0;
 }
 
-bool Channel::hasClient(ClientList &list, Client &client) const {
-
-	ClientList::iterator	i = list.begin();
-
-	for (; i != list.end(); i++) {
-		if (&client != *i)
-			return true;
-	 }
-	return false;
+bool Channel::hasClient(Client &client) const {
+	return allClients.find(&client) != allClients.end();
 }

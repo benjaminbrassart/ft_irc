@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:38:48 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 04:14:18 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 11:50:35 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,12 +44,5 @@ public:
 public:
 	void handleUnknownCommand(Client& client, std::string const& name);
 }; // class CommandMap
-
-void cmd_ignore(CommandContext& context);
-void cmd_pass(CommandContext& context);
-void cmd_user(CommandContext& context);
-void cmd_nick(CommandContext& context);
-void cmd_quit(CommandContext& context);
-void cmd_motd(CommandContext& context);
 
 #endif // COMMANDMAP_HPP

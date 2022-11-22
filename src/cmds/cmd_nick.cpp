@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 04:08:45 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 11:56:00 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,6 @@
 #include "Client.hpp"
 
 #include <cctype>
-
-#undef SPECIAL_CHARS
-#define SEPCIAL_CHARS "-[]\\`_^{}|"
-#define SPECIAL_CHARS_COUNT (sizeof (SPECIAL_CHARS) / sizeof (*SEPCIAL_CHARS))
 
 /**
  * Check if a given nickname is valid
@@ -50,7 +46,6 @@ void cmd_nick(CommandContext& context)
 		client.reply<ERR_NONICKNAMEGIVEN>();
 	else
 	{
-		// TODO extract nickname
 		if (!__is_nickname_valid(nickname))
 			client.reply<ERR_ERRONEUSNICKNAME>(nickname);
 		else if (!__is_nickname_available(*client.server, nickname))
@@ -64,10 +59,17 @@ void cmd_nick(CommandContext& context)
 	}
 }
 
-// TODO
+static bool __is_char_valid(char c)
+{
+	static char const SC[] = "-[]\\`_^{}|";
+	static char const* const SC_BEGIN = &*&SC[0];
+	static char const* const SC_END = &SC[sizeof (SC) - 1];
+
+	return std::find(SC_BEGIN, SC_END, c) != SC_END;
+}
+
 static bool __is_nickname_valid(std::string const& nickname)
 {
-	static char const SPECIAL_CHARS[] = "-[]\\`_^{}|";
 	std::string::const_iterator it;
 	std::string::value_type c;
 	bool is_valid;
@@ -80,8 +82,7 @@ static bool __is_nickname_valid(std::string const& nickname)
 			is_valid = std::isalpha(c);
 		else
 			is_valid = std::isalnum(c);
-		// TODO make this prettier
-		is_valid |= (std::find(SPECIAL_CHARS, SPECIAL_CHARS + SPECIAL_CHARS_COUNT, c) != SPECIAL_CHARS + SPECIAL_CHARS_COUNT);
+		is_valid |= __is_char_valid(c);
 	}
 	return is_valid;
 }

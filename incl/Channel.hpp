@@ -6,13 +6,14 @@
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:34:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/22 16:01:25 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/11/22 17:40:24 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHANNEL_HPP
 # define CHANNEL_HPP
 
+# include "ChannelMode.hpp"
 # include "Client.hpp"
 # include "Server.hpp"
 
@@ -26,76 +27,50 @@ class Channel {
 
 	public:
 		Channel();
-		Channel(Client &owner, std::string name);
-		Channel(Client &owner, std::string name, std::string passwd);
+		Channel(Server& server, std::string name = std::string(), std::string passwd = std::string());
 		Channel(Channel const &src);
 		~Channel();
 
 		Channel						&operator=(Channel const &rhs);
 
-		typedef std::set<Client*>	ClientList;
-		typedef std::vector<bool>	ModeFlags;
+		typedef std::set< Client* >		ClientList;
+		typedef std::set< std::string >	MaskList;
 
-		Server						*server;
-		ClientList					allClients;
-		ClientList					banned;
-		ClientList					operators;
+		Server				*server;
+		ChannelMode			mode;
+		std::string const	name;
+		std::string			topic;
+		std::string			passwd;
+		unsigned int		userLimit;
+		ClientList			allClients;
+		MaskList			banMasks;
+		MaskList			exceptionMasks;
+		MaskList			invitationMasks;
 
-		private:
-			std::string				_owner;
-			std::string				_name;
-			std::string				_topic;
-			std::string				_passwd;
-			std::string				_modes; //need to define them
-
-		public:
-			
-		/* ===============================================================
-								GETTERS-SETTERS
-   		================================================================== */
-
-			bool	setName(std::string name);
-			bool	setChanModes(std::string modes);
-			void	setTopic(std::string topic);
-			void	setPasswd(std::string passwd);
-
-		/* ===============================================================
-								BASIC UTILITIES
-   		================================================================== */
-		
-		/* returns true if client was not already present in list, false otherwise or if client is banned */
-			bool 	addClient(ClientList &list, Client &client); 
-		
-		/* returns true if client was in list, false otherwise */
-			bool 	removeClient(ClientList &list, Client &client);
-		
-		/* returns true if client is in list, false otherwise */
-			bool 	hasClient(ClientList &list, Client &client) const;
-		
-		/* Send a message from a client to all other clients in this channel */
-			void 	broadcast(Client &sender, std::string const msg);
-
-		/* Only operators can add modes */
-			void	addModes(std::string modes);
-
-		/* ===============================================================
-								OPERATORS CMDS
-   		================================================================== */
-
-			void 	invite(Client &ope, Client &nick);
-			void 	kick(Client &ope, Client &nick);
-		// void oper(Client &ope, Client &nick);
-		// void wallops(Client &ope, Client &nick);
-		// void globops(Client &ope, Client &nick);
-		// void chatops(Client &ope, Client &nick);
-		// void adchat(Client &ope, Client &nick);
-		// void nachat(Client &ope, Client &nick);
+		static ChannelMode const DEFAULT_MODE;
 
 
 
 
+		bool addBanMask(std::string const& mask);
+		bool removeBanMask(std::string const& mask);
+		void displayBanMasks(Client& client);
 
+		bool addExceptionMask(std::string const& mask);
+		bool removeExceptionMask(std::string const& mask);
+		void displayExceptionMasks(Client& client);
 
+		bool addInvitationMask(std::string const& mask);
+		bool removeInvitationMask(std::string const& mask);
+		void displayInvitationMasks(Client& client);
+
+		/**
+		 * Send a message from a client to all other clients in this channel
+		 *
+		 * @param sender the sender of the message
+		 * @param msg the message to send
+		 */
+		void broadcast(Client &sender, std::string const msg);
 };
 
 #endif

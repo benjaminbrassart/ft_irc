@@ -6,7 +6,7 @@
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:45:10 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 15:57:35 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/11/22 17:35:22 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,16 @@
 enum Reply
 {
 	RPL_WELCOME = 1,
+	RPL_YOURHOST = 2,
+	RPL_CREATED = 3,
+	RPL_MYINFO = 4,
 
+	RPL_LIST = 322,
+	RPL_LISTEND = 323,
+	RPL_CHANNELMODEIS = 324,
+	RPL_UNIQOPIS = 325,
+	RPL_NOTOPIC = 331,
+	RPL_TOPIC = 332,
 	RPL_MOTD = 372,
 	RPL_MOTDSTART = 375,
 	RPL_ENDOFMOTD = 376,
@@ -78,6 +87,60 @@ template<>
 struct ReplyFactory<RPL_WELCOME>
 {
 	static std::string makeReply(std::string const& nickname, std::string const& user, std::string const& host);
+};
+
+template<>
+struct ReplyFactory<RPL_YOURHOST>
+{
+	static std::string makeReply();
+};
+
+template<>
+struct ReplyFactory<RPL_CREATED>
+{
+	static std::string makeReply(std::string const& startDate);
+};
+
+template<>
+struct ReplyFactory<RPL_MYINFO>
+{
+	static std::string makeReply();
+};
+
+template<>
+struct ReplyFactory<RPL_LIST>
+{
+	static std::string makeReply(std::string const& channel, std::string const& visibleClients, std::string const& topic);
+};
+
+template<>
+struct ReplyFactory<RPL_LISTEND>
+{
+	static std::string makeReply();
+};
+
+template<>
+struct ReplyFactory<RPL_CHANNELMODEIS>
+{
+	static std::string makeReply(std::string const& channel, std::string const& mode, std::string const& params);
+};
+
+template<>
+struct ReplyFactory<RPL_UNIQOPIS>
+{
+	static std::string makeReply(std::string const& channel, std::string const& nickname);
+};
+
+template<>
+struct ReplyFactory<RPL_NOTOPIC>
+{
+	static std::string makeReply(std::string const& channel);
+};
+
+template<>
+struct ReplyFactory<RPL_TOPIC>
+{
+	static std::string makeReply(std::string const& channel, std::string const& topic);
 };
 
 template<>
@@ -275,6 +338,72 @@ template<>
 struct ReplyFactory<ERR_YOUWILLBEBANNED>
 {
 	static std::string makeReply();
+};
+
+template<>
+struct ReplyFactory<ERR_KEYSET>
+{
+	static std::string makeReply(std::string const& channel);
+};
+
+template<>
+struct ReplyFactory<ERR_CHANNELISFULL>
+{
+	static std::string makeReply(std::string const& channel);
+};
+
+template<>
+struct ReplyFactory<ERR_UNKNOWNMODE>
+{
+	static std::string makeReply(std::string const& c, std::string const& channel);
+};
+
+template<>
+struct ReplyFactory<ERR_INVITEONLYCHAN>
+{
+	static std::string makeReply(std::string const& channel);
+};
+
+template<>
+struct ReplyFactory<ERR_BANNEDFROMCHAN>
+{
+	static std::string makeReply(std::string const& channel);
+};
+
+template<>
+struct ReplyFactory<ERR_BADCHANNELKEY>
+{
+	static std::string makeReply(std::string const& channel);
+};
+
+template<>
+struct ReplyFactory<ERR_BADCHANMASK>
+{
+	static std::string makeReply(std::string const& channel);
+};
+
+template<>
+struct ReplyFactory<ERR_NOCHANMODES>
+{
+	static std::string makeReply(std::string const& channel);
+};
+
+template<>
+struct ReplyFactory<ERR_BANLISTFULL>
+{
+	static std::string makeReply(std::string const& channel, std::string const& c);
+};
+
+template<>
+struct ReplyFactory<ERR_NOPRIVILEGES>
+{
+	static std::string makeReply();
+};
+
+template<>
+struct ReplyFactory<ERR_CHANOPRIVSNEEDED>
+{
+	static std::string makeReply(std::string const& channel);
 };
 
 #endif // REPLY_H
