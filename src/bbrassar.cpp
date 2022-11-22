@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:42:27 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 04:15:51 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 11:58:45 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,14 @@
 #include <stdexcept>
 #include <algorithm>
 
-// static void __testWildcard(std::string const& pattern, std::string const& str);
+#include "config.h"
+
 
 int main(int argc, char const* argv[])
 {
-	// {
-	// 	std::cout << "Tests wildcard\n\n";
-	// 	std::cout << std::boolalpha;
+	std::cout
+		<< "Starting ircserv version " << VERSION << '\n'
+		<< "Build date: " << STR(BUILD_DATE) << '\n';
 
 	// 	__testWildcard("*", "ABC");
 	// 	__testWildcard("*", "");
@@ -43,8 +44,7 @@ int main(int argc, char const* argv[])
 	// 	__testWildcard("?*", "ABC");
 	// 	__testWildcard("A?C", "ABC");
 
-	// 	return 0;
-	// }
+	std::cout << "  IN/OUT  \033[37m|\033[0m     IP ADDR     \033[37m|\033[0m          COMMAND" << '\n';
 
 	Server server;
 	Client client = Client(server);
@@ -55,6 +55,8 @@ int main(int argc, char const* argv[])
 	server.password = "farzar";
 	server.motdFileName = "motd.txt";
 
+	server.loadOperatorFile("operators.txt");
+
 	if (argc < 2)
 		return 1;
 
@@ -64,6 +66,7 @@ int main(int argc, char const* argv[])
 	server.commands.put("NICK", cmd_nick, CLIENT_STATE_PASS);
 	server.commands.put("QUIT", cmd_quit, CLIENT_STATE_LOGGED);
 	server.commands.put("MOTD", cmd_motd, CLIENT_STATE_LOGGED);
+	server.commands.put("OPER", cmd_oper, CLIENT_STATE_LOGGED);
 
 	input.open("input.txt", std::ifstream::in);
 	if (input.fail())

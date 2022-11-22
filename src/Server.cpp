@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/19 03:12:15 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 14:37:43 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,12 @@
 #include <algorithm>
 #include <cerrno>
 #include <fstream>
+#include <iomanip>
+#include <sstream>
 
-Server::Server() {}
+Server::Server() :
+	startDate(Server::__getStartDate())
+ {}
 
 Server::~Server() {}
 
@@ -52,6 +56,24 @@ void	Server::create_socket(int port) {
 		throw Server::IoException("client", errno);
 }
 
+Channel& Server::getOrCreateChannel(std::string const& channelName)
+{
+	Channel channel = Channel(*this, channelName);
+
+	return const_cast<Channel&>(*this->channels.insert(channel).first);
+}
+
+Channel* Server::getChannel(std::string const& channelName)
+{
+	Channel channel = Channel(*this, channelName);
+	ChannelList::const_iterator it;
+
+	it = this->channels.find(channel);
+	if (it != this->channels.end())
+		return const_cast<Channel*>(&*it);
+	return 0;
+}
+
 void Server::processCommand(Client& client, std::string const& line)
 {
 	std::string prefix;
@@ -80,6 +102,13 @@ void Server::processCommand(Client& client, std::string const& line)
 	if (it != line.end())
 		params = std::string(it + 1, line.end());
 
+	std::cout
+		<< std::setfill(' ')
+		<< " \033[32m< INPUT\033[0m  \033[37m|\033[0m "
+		<< "\033[33m"
+		<< std::setw(15) << std::left
+		<< client.address << "\033[0m" << " \033[37m|\033[0m "
+		<< line << "\r\n";
 	// execute the command with the given arguments
 	this->commands.dispatch(client, prefix, std::string(begin, it), params);
 }
@@ -88,13 +117,18 @@ void Server::loadOperatorFile(std::string const& file)
 {
 	std::ifstream in;
 	std::string line;
+	std::stringstream ss;
+	OperatorEntry entry;
 
 	in.open(file.c_str());
 	if (in)
 	{
 		while (std::getline(in, line))
 		{
-			// TODO parse and add to map
+			ss << line;
+			ss >> entry.name >> entry.host >> entry.password;
+			ss.clear();
+			this->operatorPasswords.push_back(entry);
 		}
 	}
 }
@@ -130,7 +164,7 @@ void Server::__readFromClient(int fd)
 		return;
 	}
 
-	const_cast<Client*>(&*it)->readFrom();
+	const_cast<Client&>(*it).readFrom();
 }
 
 void Server::__writeToClient(int fd)
@@ -146,7 +180,20 @@ void Server::__writeToClient(int fd)
 		return;
 	}
 
-	const_cast<Client*>(&*it)->writeTo();
+	const_cast<Client&>(*it).writeTo();
+}
+
+std::string Server::__getStartDate()
+{
+	char buffer[20];
+	time_t timestamp;
+	tm* timeinfo;
+	size_t res;
+
+	time(&timestamp);
+	timeinfo = localtime(&timestamp);
+	res = strftime(buffer, sizeof (buffer), "%Y-%m-%d %H:%M:%S", timeinfo);
+	return std::string(buffer, res);
 }
 
 bool ClientComparator::operator()(Client const& lhs, Client const& rhs) const
@@ -157,4 +204,10 @@ bool ClientComparator::operator()(Client const& lhs, Client const& rhs) const
 bool ChannelComparator::operator()(Channel const& lhs, Channel const& rhs) const
 {
 	return lhs.name < rhs.name;
+}
+
+std::ostream& operator<<(std::ostream& os, sockaddr_in& address)
+{
+	os << inet_ntoa(reinterpret_cast<in_addr&>(address));
+	return os;
 }

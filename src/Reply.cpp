@@ -6,15 +6,61 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 18:04:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 03:32:16 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 15:04:21 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Reply.hpp"
+#include "config.h"
 
 std::string ReplyFactory<RPL_WELCOME>::makeReply(std::string const& nickname, std::string const& username, std::string const& hostname)
 {
 	return "Welcome to the Internet Relay Network " + nickname + '!' + username + '@' + hostname;
+}
+
+std::string ReplyFactory<RPL_YOURHOST>::makeReply()
+{
+	return "Your host is " SERVER_NAME ", running version " VERSION;
+};
+
+std::string ReplyFactory<RPL_CREATED>::makeReply(std::string const& startDate)
+{
+	return "This server was created " + startDate;
+};
+
+std::string ReplyFactory<RPL_MYINFO>::makeReply()
+{
+	return ""; // TODO
+};
+
+std::string ReplyFactory<RPL_LIST>::makeReply(std::string const& channel, std::string const& visibleClients, std::string const& topic)
+{
+	return channel + " " + visibleClients + " :" + topic;
+}
+
+std::string ReplyFactory<RPL_LISTEND>::makeReply()
+{
+	return ":End of LIST";
+}
+
+std::string ReplyFactory<RPL_CHANNELMODEIS>::makeReply(std::string const& channel, std::string const& mode, std::string const& params)
+{
+	return channel + " " + mode + " " + params;
+}
+
+std::string ReplyFactory<RPL_UNIQOPIS>::makeReply(std::string const& channel, std::string const& nickname)
+{
+	return channel + " " + nickname;
+}
+
+std::string ReplyFactory<RPL_NOTOPIC>::makeReply(std::string const& channel)
+{
+	return channel + " :No topic is set";
+}
+
+std::string ReplyFactory<RPL_TOPIC>::makeReply(std::string const& channel, std::string const& topic)
+{
+	return channel + " :" + topic;
 }
 
 std::string ReplyFactory<RPL_MOTD>::makeReply(std::string const& text)
@@ -180,4 +226,60 @@ std::string ReplyFactory<ERR_YOUREBANNEDCREEP>::makeReply()
 std::string ReplyFactory<ERR_YOUWILLBEBANNED>::makeReply()
 {
 	return ""; // TODO
+}
+
+
+std::string ReplyFactory<ERR_KEYSET>::makeReply(std::string const& channel)
+{
+	return channel + " :Channel key already set";
+}
+
+std::string ReplyFactory<ERR_CHANNELISFULL>::makeReply(std::string const& channel)
+{
+	return channel + " :Cannot join channel (+l)";
+}
+
+std::string ReplyFactory<ERR_UNKNOWNMODE>::makeReply(std::string const& c, std::string const& channel)
+{
+	return c + " :is unknown mode char to me for " + channel;
+}
+
+std::string ReplyFactory<ERR_INVITEONLYCHAN>::makeReply(std::string const& channel)
+{
+	return channel + " :Cannot join channel (+i)";
+}
+
+std::string ReplyFactory<ERR_BANNEDFROMCHAN>::makeReply(std::string const& channel)
+{
+	return channel + " :Cannot join channel (+b)";
+}
+
+std::string ReplyFactory<ERR_BADCHANNELKEY>::makeReply(std::string const& channel)
+{
+	return channel + " :Cannot join channel (+k)";
+}
+
+std::string ReplyFactory<ERR_BADCHANMASK>::makeReply(std::string const& channel)
+{
+	return channel + " :Bad Channel Mask";
+}
+
+std::string ReplyFactory<ERR_NOCHANMODES>::makeReply(std::string const& channel)
+{
+	return channel + " :Channel doesn't support modes";
+}
+
+std::string ReplyFactory<ERR_BANLISTFULL>::makeReply(std::string const& channel, std::string const& c)
+{
+	return channel + c + " :Channel list is full";
+}
+
+std::string ReplyFactory<ERR_NOPRIVILEGES>::makeReply()
+{
+	return ":Permission Denied- You're not an IRC operator";
+}
+
+std::string ReplyFactory<ERR_CHANOPRIVSNEEDED>::makeReply(std::string const& channel)
+{
+	return channel + " :You're not channel operator";
 }

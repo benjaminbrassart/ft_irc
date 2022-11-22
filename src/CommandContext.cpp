@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:47:46 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 03:47:54 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 02:00:44 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ CommandContext::CommandContext(Client& client, std::string const& prefix, std::s
 CommandContext::~CommandContext()
 {}
 
-std::vector< std::string > CommandContext::splitArguments(std::string const& line)
+std::vector< std::string > CommandContext::splitArguments(std::string const& line, char delim)
 {
 	std::string args[15];
 	std::string::const_iterator it;
@@ -39,7 +39,7 @@ std::vector< std::string > CommandContext::splitArguments(std::string const& lin
 			args[count++] = std::string(++it, line.end());
 			break;
 		}
-		fast = std::find(it, line.end(), ' ');
+		fast = std::find(it, line.end(), delim);
 		args[count++] = std::string(it, fast);
 		it = fast;
 		if (it != line.end())

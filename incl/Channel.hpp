@@ -6,13 +6,14 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:34:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 03:37:17 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 08:14:06 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef CHANNEL_HPP
 # define CHANNEL_HPP
 
+# include "ChannelMode.hpp"
 # include "Client.hpp"
 # include "Server.hpp"
 
@@ -26,21 +27,27 @@ class Channel {
 
 	public:
 		Channel();
-		Channel(std::string name, std::string passwd);
+		Channel(Server& server, std::string name = std::string(), std::string passwd = std::string());
 		Channel(Channel const &src);
 		~Channel();
 
 		Channel						&operator=(Channel const &rhs);
 
-		typedef std::set< Client* > ClientList;
+		typedef std::set< Client* >		ClientList;
+		typedef std::set< std::string >	MaskList;
 
-		std::string		name;
-		Server			*server;
-		std::string		topic;
-		std::string		passwd;
+		Server				*server;
+		ChannelMode			mode;
+		std::string const	name;
+		std::string			topic;
+		std::string			passwd;
+		unsigned int		userLimit;
+		ClientList			allClients;
+		MaskList			banMasks;
+		MaskList			exceptionMasks;
+		MaskList			invitationMasks;
 
-	private:
-		ClientList		allClients;
+		static ChannelMode const DEFAULT_MODE;
 
 	public:
 		/**
@@ -66,6 +73,18 @@ class Channel {
 		 * @return true if the client in inside this channel, false otherwise
 		 */
 		bool hasClient(Client& client) const;
+
+		bool addBanMask(std::string const& mask);
+		bool removeBanMask(std::string const& mask);
+		void displayBanMasks(Client& client);
+
+		bool addExceptionMask(std::string const& mask);
+		bool removeExceptionMask(std::string const& mask);
+		void displayExceptionMasks(Client& client);
+
+		bool addInvitationMask(std::string const& mask);
+		bool removeInvitationMask(std::string const& mask);
+		void displayInvitationMasks(Client& client);
 
 		/**
 		 * Send a message from a client to all other clients in this channel

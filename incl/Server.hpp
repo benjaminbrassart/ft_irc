@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 03:09:10 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 14:31:08 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,15 @@
 # include <stdio.h>
 # include <cstring>
 
+# if defined(__APPLE__) || defined(__MACH__)
+#  define SET_NON_BLOCKING(fd) ::fcntl(fd, F_SETFL, O_NONBLOCK);
+# else
+#  define SET_NON_BLOCKING(fd)
+# endif
+
 using					std::string;
 
+#include "OperatorEntry.hpp"
 #include "CommandMap.hpp"
 #include <iostream>
 #include <string>
@@ -67,13 +74,16 @@ class Server {
 
 		typedef std::set< Client, ClientComparator > ClientList;
 		typedef std::set< Channel, ChannelComparator > ChannelList;
-		typedef std::map< std::string, std::string > OperatorPasswordMap;
+		typedef std::vector< OperatorEntry > OperatorPasswordList;
 
 		const int	&getsocketfd() const;
 		const int	&getclientfd() const;
 
 		void		create_socket(int port);
 		void		loadOperatorFile(std::string const& file);
+
+		Channel*	getChannel(std::string const& channelName);
+		Channel&	getOrCreateChannel(std::string const& channelName);
 
 		/**
 		 * Process a line and break it into a command, then execute it if possible
@@ -102,13 +112,14 @@ class Server {
 				string	_what;
 		};
 
+		std::string startDate;
 		CommandMap commands;
 		std::string name;
 		std::string password;
 		std::string motdFileName;
 		ChannelList	channels;
 		ClientList	clients;
-		OperatorPasswordMap operatorPasswords;
+		OperatorPasswordList operatorPasswords;
 
 	private:
 		int			_socketfd;
@@ -135,6 +146,9 @@ class Server {
 		 */
 		void __writeToClient(int fd);
 
+		static std::string __getStartDate();
 }; // class Server
+
+std::ostream& operator<<(std::ostream& os, sockaddr_in& address);
 
 #endif // SERVER_HPP

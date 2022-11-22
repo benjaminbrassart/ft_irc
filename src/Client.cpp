@@ -6,11 +6,13 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 04:23:23 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 14:40:46 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
+#include <ctime>
+#include <iomanip>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -126,7 +128,12 @@ void Client::closeConnection() {
 void Client::tryLogin()
 {
 	if (this->checkState(CLIENT_STATE_LOGGED))
+	{
 		this->reply<RPL_WELCOME>(this->nickname, this->info.username, this->info.hostname);
+		this->reply<RPL_YOURHOST>();
+		this->reply<RPL_CREATED>(this->server->startDate);
+		this->reply<RPL_MYINFO>();
+	}
 }
 
 bool Client::checkState(ClientState state)
@@ -157,13 +164,28 @@ void Client::sendMotd()
 		this->reply<ERR_NOMOTD>();
 }
 
+void Client::leaveChannel(Channel& channel, std::string const& message)
+{
+	(void)message;
+	this->channels.erase(&channel);
+}
+
+void Client::leaveAllChannels(std::string const& message)
+{
+	ChannelList::iterator it;
+
+	for (it = this->channels.begin(); it != this->channels.end(); ++it)
+		leaveChannel(const_cast<Channel&>(**it), message);
+}
+
 void Client::__replyRaw(Reply code, std::string const& message)
 {
 	std::stringstream ss;
 
-	ss << code << ' ' << message << "\r\n";
+	ss << std::setfill('0') << std::setw(3) << code << std::setw(0) << ' ' << message << "\r\n";
+	std::cout << std::setfill(' ') << " \033[31m> OUTPUT\033[0m \033[37m|\033[0m " << "\033[33m" << std::left << std::setw(15) << this->address << "\033[0m" << " \033[37m|\033[0m " << "\033[36m" << std::setfill('0') << std::setw(3) << std::right << code << "\033[0m" << std::setw(0) << ' ' << message << "\r\n";
 
-	std::cout << "Server -> Client |   " << code << " \"" << message << "\"\n";
+	// std::cout << "> " << std::setfill('0') << std::setw(3) << code << " \"" << message << "\"\n";
 	this->writeBuffer += ss.str();
 }
 
