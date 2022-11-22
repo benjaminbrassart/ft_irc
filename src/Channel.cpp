@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 08:14:39 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/22 17:41:02 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,8 +75,38 @@ Channel	&Channel::operator=(Channel const& rhs) {
 	return (*this);
 }
 
-Channel::~Channel()
-{}
+Channel::~Channel() {}
+
+/* ==========================================================================
+								MEMBER FUNCTIONS
+   ========================================================================== */
+
+bool	Channel::setName(std::string newName) {						// must change cerr for the right stream
+
+	if (newName.size() > 50) {
+		std::cerr << "error: channel name is too long.\n";
+		return false;
+	}
+	else if (newName[0] != '&' || newName[0] != '#'|| newName[0] != '+' || newName[0] != '!') {
+		std::cerr << "error: channel name requires a valid prefix.\n";
+		return false;
+	}
+	else if (newName.find_first_of("\t\v\f\n\r ,", 0) != newName.npos) {
+		std::cerr << "error: channel name cannot contain spaces or commas.\n";
+		return false;
+	}
+	return true;
+}
+
+bool	Channel::setChanModes(std::string modes) {
+
+	if (modes.find_first_not_of("Oovimnptkl", 0) != modes.npos) {
+		std::cerr << "error: unknown channel mode\n";
+		return false;
+	}
+	
+	return true;
+}
 
 /* ==========================================================================
 								MEMBER FUNCTIONS
@@ -90,15 +120,20 @@ void	Channel::broadcast(Client &sender, std::string const msg) {
 		if (&sender != *i)
 			std::cout << sender.nickname << ": \"" << msg << "\"";
 	 }
-	 // MUST REDIRECT STREAM
 }
 
-bool 	Channel::addClient(Client &newClient) {
-	return allClients.insert(&newClient).second;
+bool 	Channel::addClient(ClientList &list, Client &newClient) {
+	
+	ClientList::iterator	i = banned.begin();
+
+	for (; i != banned.end(); i++)
+		if (&newClient == *i)
+			return false;					// to check with team
+	return list.insert(&newClient).second;
 }
 
-bool Channel::removeClient(Client &client) {
-	return allClients.erase(&client) > 0;
+bool Channel::removeClient(ClientList &list, Client &client) {
+	return list.erase(&client) > 0;
 }
 
 bool Channel::hasClient(Client &client) const {

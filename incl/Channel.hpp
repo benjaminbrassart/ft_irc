@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:34:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 08:14:06 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/22 17:40:24 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,30 +49,8 @@ class Channel {
 
 		static ChannelMode const DEFAULT_MODE;
 
-	public:
-		/**
-		 * Add a client to this channel's members
-		 *
-		 * @param client the client to add
-		 * @return true if the client was not already present in the channel, false otherwise
-		 */
-		bool addClient(Client& client);
 
-		/**
-		 * Remove a client from this channel's members
-		 *
-		 * @param client the client to remove
-		 * @return true if the client was present in the channel, false otherwise
-		 */
-		bool removeClient(Client& client);
 
-		/**
-		 * Check whether a client is a member of this channel
-		 *
-		 * @param client the client to check the presence of
-		 * @return true if the client in inside this channel, false otherwise
-		 */
-		bool hasClient(Client& client) const;
 
 		bool addBanMask(std::string const& mask);
 		bool removeBanMask(std::string const& mask);

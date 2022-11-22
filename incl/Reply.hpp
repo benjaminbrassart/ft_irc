@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:45:10 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 13:38:34 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/22 17:35:22 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ enum Reply
 	ERR_NOMOTD = 422,
 	ERR_FILEERROR = 424,
 	ERR_NONICKNAMEGIVEN = 431,
-	ERR_ERRONEUSNICKNAME = 432,
+	ERR_ERRONEOUSNICKNAME = 432,
 	ERR_NICKNAMEINUSE = 433,
 	ERR_UNAVAILRESOURCE = 437,
 	ERR_USERNOTINCHANNEL = 441,
@@ -251,7 +251,7 @@ struct ReplyFactory<ERR_NONICKNAMEGIVEN>
 };
 
 template<>
-struct ReplyFactory<ERR_ERRONEUSNICKNAME>
+struct ReplyFactory<ERR_ERRONEOUSNICKNAME>
 {
 	static std::string makeReply(std::string const& nickname);
 };
