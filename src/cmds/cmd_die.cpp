@@ -1,31 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_pass.cpp                                       :+:      :+:    :+:   */
+/*   cmd_die.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/16 11:50:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 02:34:37 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/11/23 02:46:53 by bbrassar          #+#    #+#             */
+/*   Updated: 2022/11/23 02:49:04 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "command.h"
 #include "Client.hpp"
-#include "CommandMap.hpp"
-#include "Reply.hpp"
 
-void cmd_pass(CommandContext& context)
+void cmd_die(CommandContext& context)
 {
 	Client& client = context.client;
 	Server& server = context.server;
-	CommandContext::ArgumentList& args = context.args;
 
-	if (client.checkState(CLIENT_STATE_PASS))
-		client.reply<ERR_ALREADYREGISTRED>();
-	else if (args.empty())
-		client.reply<ERR_NEEDMOREPARAMS>(context.name);
-	else if (args[0] != server.password)
-		client.reply<ERR_PASSWDMISMATCH>();
+	if (client.checkState(CLIENT_STATE_OPERATOR))
+		server.shutdown();
 	else
-		client.setState(CLIENT_STATE_PASS);
+		client.reply<ERR_NOPRIVILEGES>();
 }

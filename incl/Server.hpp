@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 14:31:08 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/23 02:48:28 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,8 @@ class Server {
 
 		const int	&getsocketfd() const;
 		const int	&getclientfd() const;
+
+		void		shutdown();
 
 		void		create_socket(int port);
 		void		loadOperatorFile(std::string const& file);
