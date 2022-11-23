@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/21 14:37:43 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/23 04:03:18 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,22 +38,33 @@ const char*	Server::IoException::what() const throw() {
 
 void	Server::create_socket(int port) {
 
+	int	val = 1;
 	_socketfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (_socketfd != 0)
+	if (_socketfd == -1)
 		throw Server::IoException("socket", errno);
+	std::cout << "* socket created * ✅ " << "\n";
+	if (setsockopt(_socketfd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof val))
+		throw Server::IoException("used_address", errno);
 	sockaddr_in	sockadd_in;
 	sockadd_in.sin_addr.s_addr = htonl(INADDR_ANY);
 	sockadd_in.sin_family = AF_INET;
 	sockadd_in.sin_port = htons(port);
 	if (bind(_socketfd, (sockaddr*)&sockadd_in, sizeof(sockadd_in)) != 0)
 		throw Server::IoException("bind", errno);
+	std::cout << "* socket bound * ✅ " << "\n";
 	if (listen(_socketfd, SOMAXCONN) != 0)
 		throw Server::IoException("listen", errno);
+	std::cout << "* listening to client * ✅ " << "\n";
+	while (1) {
+	
+		
+	}
 	sockaddr_in	client_add;
 	socklen_t client_taille = sizeof(client_add);
 	_clientfd = accept(_socketfd, (sockaddr*)&client_add, &client_taille);
 	if (_clientfd == -1)
 		throw Server::IoException("client", errno);
+	std::cout << "* client accepted * ✅ " << "\n";
 }
 
 Channel& Server::getOrCreateChannel(std::string const& channelName)

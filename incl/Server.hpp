@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 14:31:08 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/23 04:03:08 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-# include "Client.hpp"
-# include "Channel.hpp"
+// # include "Client.hpp"
+// # include "Channel.hpp"
 
 # include <algorithm>
 # include <string>
@@ -25,7 +25,7 @@
 # include <sys/stat.h>
 # include <arpa/inet.h>
 # include <netinet/in.h>
-# include <sys/epoll.h>
+# include <poll.h>
 # include <fcntl.h>
 # include <cstdlib>
 # include <signal.h>
@@ -33,6 +33,7 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <cstring>
+# include <errno.h>
 
 # if defined(__APPLE__) || defined(__MACH__)
 #  define SET_NON_BLOCKING(fd) ::fcntl(fd, F_SETFL, O_NONBLOCK);
