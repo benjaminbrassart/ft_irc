@@ -6,7 +6,7 @@
 /*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/23 12:47:10 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/11/23 13:05:43 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,6 +165,11 @@ void Server::loadOperatorFile(std::string const& file)
 			this->operatorPasswords.push_back(entry);
 		}
 	}
+}
+
+void Server::shutdown()
+{
+	// TODO
 }
 
 void Server::__acceptClient()

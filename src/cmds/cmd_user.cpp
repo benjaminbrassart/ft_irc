@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:01:23 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/22 23:23:28 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/23 02:22:51 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,10 @@ void cmd_user(CommandContext& context)
 
 	if (client.checkState(CLIENT_STATE_USER))
 		client.reply<ERR_ALREADYREGISTRED>();
+	else if (args.size() < 4)
+		client.reply<ERR_NEEDMOREPARAMS>(context.name);
 	else
 	{
-		if (args.size() < 4)
-		{
-			client.reply<ERR_NEEDMOREPARAMS>("USER");
-			return;
-		}
 		client.info.username = args[0];
 		mode = args[1];
 		client.info.hostname = args[2];

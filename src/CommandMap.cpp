@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:45:50 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 01:27:50 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/23 02:21:38 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void CommandMap::dispatch(Client& client, std::string const& prefix, std::string
 		this->handleUnknownCommand(client, command);
 	else if (!(it->second.first == NULL || !client.checkState(it->second.second)))
 	{
-		CommandContext ctx(client, line);
+		CommandContext ctx(client, command, line);
 		it->second.first(ctx);
 	}
 }

@@ -6,7 +6,7 @@
 /*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 12:24:46 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/11/23 13:06:01 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ class Server {
 
 		const int	&getsocketfd() const;
 		const std::vector<pollfd>	&getclientfd() const;
+
+		void		shutdown();
 
 		void		create_socket(int port);
 		void		loadOperatorFile(std::string const& file);

@@ -5,6 +5,7 @@
       "label": "Make",
       "type": "shell",
       "command": "make",
+      "args": ["-j"],
       "options": {
         "cwd": "${workspaceFolder}",
       },
