@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:34:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/22 17:40:24 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/11/22 22:45:29 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,19 +50,11 @@ class Channel {
 		static ChannelMode const DEFAULT_MODE;
 
 
-
-
-		bool addBanMask(std::string const& mask);
-		bool removeBanMask(std::string const& mask);
-		void displayBanMasks(Client& client);
-
-		bool addExceptionMask(std::string const& mask);
-		bool removeExceptionMask(std::string const& mask);
-		void displayExceptionMasks(Client& client);
-
-		bool addInvitationMask(std::string const& mask);
-		bool removeInvitationMask(std::string const& mask);
-		void displayInvitationMasks(Client& client);
+		bool	setName(std::string newName);						// must change cerr for the right stre
+		bool	setChanModes(std::string modes);
+		bool	addClient(Client &newClient);
+		bool	removeClient(Client &client);
+		bool	hasClient(Client &client) const;
 
 		/**
 		 * Send a message from a client to all other clients in this channel

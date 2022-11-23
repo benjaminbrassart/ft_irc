@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/22 17:41:02 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/11/22 22:46:22 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ bool	Channel::setChanModes(std::string modes) {
 		std::cerr << "error: unknown channel mode\n";
 		return false;
 	}
-	
+
 	return true;
 }
 
@@ -122,18 +122,12 @@ void	Channel::broadcast(Client &sender, std::string const msg) {
 	 }
 }
 
-bool 	Channel::addClient(ClientList &list, Client &newClient) {
-	
-	ClientList::iterator	i = banned.begin();
-
-	for (; i != banned.end(); i++)
-		if (&newClient == *i)
-			return false;					// to check with team
-	return list.insert(&newClient).second;
+bool 	Channel::addClient(Client &newClient) {
+	return this->allClients.insert(&newClient).second;
 }
 
-bool Channel::removeClient(ClientList &list, Client &client) {
-	return list.erase(&client) > 0;
+bool Channel::removeClient(Client &client) {
+	return this->allClients.erase(&client) > 0;
 }
 
 bool Channel::hasClient(Client &client) const {
