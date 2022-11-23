@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:40:51 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/22 23:24:06 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/23 01:28:12 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,6 @@ struct CommandContext
 
 typedef void (*CommandHandler)(CommandContext& context);
 
-void cmd_ignore(CommandContext& context);
 void cmd_pass(CommandContext& context);
 void cmd_user(CommandContext& context);
 void cmd_nick(CommandContext& context);
