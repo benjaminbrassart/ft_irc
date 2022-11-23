@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:01:23 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 04:22:14 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/22 23:23:28 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,13 @@
 void cmd_user(CommandContext& context)
 {
 	Client& client = context.client;
-	std::vector< std::string > args;
+	std::vector< std::string >& args = context.args;
 	std::string mode;
 
 	if (client.checkState(CLIENT_STATE_USER))
 		client.reply<ERR_ALREADYREGISTRED>();
 	else
 	{
-		args = CommandContext::splitArguments(context.line);
 		if (args.size() < 4)
 		{
 			client.reply<ERR_NEEDMOREPARAMS>("USER");

@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:42:27 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 11:58:45 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/23 01:28:19 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int main(int argc, char const* argv[])
 	if (argc < 2)
 		return 1;
 
-	server.commands.put("CAP", cmd_ignore);
+	server.commands.put("CAP", NULL);
 	server.commands.put("PASS", cmd_pass);
 	server.commands.put("USER", cmd_user, CLIENT_STATE_PASS);
 	server.commands.put("NICK", cmd_nick, CLIENT_STATE_PASS);
