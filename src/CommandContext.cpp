@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:47:46 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 01:14:57 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/23 01:17:44 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ CommandContext::ArgumentList CommandContext::split(std::string const& line, char
 	unsigned int count;
 
 	count = 0;
-
 	it = std::find(line.begin(), line.end(), ':');
 
 	if (it != line.begin())
