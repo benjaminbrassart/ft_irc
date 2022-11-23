@@ -6,15 +6,15 @@
 /*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 04:03:08 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/11/23 12:24:46 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-// # include "Client.hpp"
-// # include "Channel.hpp"
+# include "Client.hpp"
+# include "Channel.hpp"
 
 # include <algorithm>
 # include <string>
@@ -78,7 +78,7 @@ class Server {
 		typedef std::vector< OperatorEntry > OperatorPasswordList;
 
 		const int	&getsocketfd() const;
-		const int	&getclientfd() const;
+		const std::vector<pollfd>	&getclientfd() const;
 
 		void		create_socket(int port);
 		void		loadOperatorFile(std::string const& file);
@@ -123,8 +123,8 @@ class Server {
 		OperatorPasswordList operatorPasswords;
 
 	private:
-		int			_socketfd;
-		int			_clientfd;
+		int					_socketfd;
+		std::vector<pollfd>	_clientfd;
 
 		/**
 		 * Accept a client and add it to the client list

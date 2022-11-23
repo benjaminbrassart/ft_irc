@@ -6,7 +6,7 @@
 #    By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/11/23 04:06:59 by estoffel         ###   ########.fr        #
+#    Updated: 2022/11/23 12:52:22 by estoffel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,11 +14,11 @@ NAME	=	ircserv
 
 CC		=	c++
 
-DEFINES += -DVERSION_COMMIT="$(COMMIT)"
-DEFINES += -DBUILD_DATE="$(BUILD_DATE)"
-DEFINES += -D_GLIBCXX_DEBUG
+# DEFINES += -DVERSION_COMMIT="$(COMMIT)"
+# DEFINES += -DBUILD_DATE="$(BUILD_DATE)"
+# DEFINES += -D_GLIBCXX_DEBUG
 
-FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98 $(DEFINES)
+FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98 #$(DEFINES)
 
 SRC		= bbrassar.cpp Client.cpp CommandContext.cpp Channel.cpp Server.cpp CommandMap.cpp Reply.cpp OperatorEntry.cpp wildcard.cpp
 SRC		+= cmds/cmd_user.cpp
@@ -37,8 +37,8 @@ DEP		=	$(OBJ:%.o=%.d)
 
 RM		=	rm -rf
 
-COMMIT	:= $(shell git rev-parse --short HEAD)
-BUILD_DATE := $(shell date +'%Y-%m-%d %H:%M:%S')
+# COMMIT	:= $(shell git rev-parse --short HEAD)
+# BUILD_DATE := $(shell date +'%Y-%m-%d %H:%M:%S')
 
 all: $(NAME)
 
