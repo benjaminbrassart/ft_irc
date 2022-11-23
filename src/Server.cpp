@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/21 14:37:43 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/23 02:49:36 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,6 +131,11 @@ void Server::loadOperatorFile(std::string const& file)
 			this->operatorPasswords.push_back(entry);
 		}
 	}
+}
+
+void Server::shutdown()
+{
+	// TODO
 }
 
 void Server::__acceptClient()
