@@ -73,7 +73,6 @@ irc messages:
     - ERR_NOSUCHCHANNEL
     - ERR_NOTONCHANNEL
 
-# TODO decide whether we should add channel modes or not
 # https://datatracker.ietf.org/doc/html/rfc1459#section-4.2.3
 
 - PRIVMSG:
@@ -87,3 +86,6 @@ irc messages:
     - ERR_TOOMANYTARGETS
     - ERR_NOSUCHNICK
     - RPL_AWAY
+
+poll: Ajouter au buffer du client quand on doit lui répondre et lui envoyer le buffer quand il est ready en écriture
+line breaks: use \r\n instead of \n

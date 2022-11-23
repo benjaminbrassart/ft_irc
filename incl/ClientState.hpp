@@ -1,27 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ChannelUser.hpp                                    :+:      :+:    :+:   */
+/*   ClientState.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/15 17:18:54 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/15 17:28:58 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/11/19 04:13:07 by bbrassar          #+#    #+#             */
+/*   Updated: 2022/11/19 04:13:19 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CHANNELUSER_HPP
-# define CHANNELUSER_HPP
+#ifndef CLIENT_STATE_HPP
+# define CLIENT_STATE_HPP
 
-# include "Client.hpp"
-
-namespace irc
+enum ClientState
 {
-class ChannelUser
-{
-private:
-	Client
-}; // class ChannelUser
-} // namespace irc
+	CLIENT_STATE_INIT = 0,
+	CLIENT_STATE_PASS = 1 << 0,
+	CLIENT_STATE_USER = 1 << 1,
+	CLIENT_STATE_NICK = 1 << 2,
+	CLIENT_STATE_OPERATOR = 1 << 3,
+	CLIENT_STATE_LOGGED = (CLIENT_STATE_PASS | CLIENT_STATE_USER | CLIENT_STATE_NICK),
+}; // enum ClientState
 
-#endif // CHANNELUSER_HPP
+#endif // CLIENT_STATE_HPP

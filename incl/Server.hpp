@@ -6,7 +6,7 @@
 /*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/16 20:41:58 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/11/23 12:24:46 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 # include <sys/stat.h>
 # include <arpa/inet.h>
 # include <netinet/in.h>
-# include <sys/epoll.h>
+# include <poll.h>
 # include <fcntl.h>
 # include <cstdlib>
 # include <signal.h>
@@ -33,21 +33,39 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <cstring>
+# include <errno.h>
+
+# if defined(__APPLE__) || defined(__MACH__)
+#  define SET_NON_BLOCKING(fd) ::fcntl(fd, F_SETFL, O_NONBLOCK);
+# else
+#  define SET_NON_BLOCKING(fd)
+# endif
 
 using					std::string;
-typedef	unsigned int	uint;
 
-# include "Client.hpp"
-# include "Channel.hpp"
-
-# include <iostream>
-# include <string>
-# include <vector>
-# include <algorithm>
-# include "colours.h"
+#include "OperatorEntry.hpp"
+#include "CommandMap.hpp"
+#include <iostream>
+#include <string>
+#include <set>
+#include <algorithm>
+#include "colours.h"
 
 class Client;
 class Channel;
+class CommandRegistry;
+
+// sort by socket file descriptor
+struct ClientComparator : public std::binary_function< Client, Client, bool >
+{
+	bool operator()(Client const& lhs, Client const& rhs) const;
+};
+
+// sort by channel name
+struct ChannelComparator : public std::binary_function< Channel, Channel, bool >
+{
+	bool operator()(Channel const& rhs, Channel const& lhs) const;
+};
 
 class Server {
 
@@ -55,18 +73,38 @@ class Server {
 		Server();
 		~Server();
 
-		typedef std::vector< Client > ClientList;
-		typedef std::vector< Channel > ChannelList;
+		typedef std::set< Client, ClientComparator > ClientList;
+		typedef std::set< Channel, ChannelComparator > ChannelList;
+		typedef std::vector< OperatorEntry > OperatorPasswordList;
 
 		const int	&getsocketfd() const;
-		const int	&getclientfd() const;
-		
-		void	dispatch(Client* sender);
-		void	create_socket(int port);
+		const std::vector<pollfd>	&getclientfd() const;
+
+		void		create_socket(int port);
+		void		loadOperatorFile(std::string const& file);
+
+		Channel*	getChannel(std::string const& channelName);
+		Channel&	getOrCreateChannel(std::string const& channelName);
+
+		/**
+		 * Process a line and break it into a command, then execute it if possible
+		 *
+		 * @param client the client whom issued the command
+		 * @param line the command line to process
+		 */
+		void		processCommand(Client& client, std::string const& line);
 
 		class IoException : public std::exception {
 			public:
-				IoException(string const&, int);
+				/**
+				 * Construct a new IoException
+				 *
+				 * @param syscallName the name of the system call that failed
+				 * @param errnum the code of the error
+				 * @see errno(3)
+				 * @see strerror(3)
+				 */
+				IoException(string const& syscallName, int errnum);
 				~IoException() throw();
 
 				virtual const char*	what() const throw();
@@ -75,12 +113,43 @@ class Server {
 				string	_what;
 		};
 
-	private:
-		ClientList	_clients;
-		ChannelList	_channels;
-		int			_socketfd;
-		int			_clientfd;
+		std::string startDate;
+		CommandMap commands;
+		std::string name;
+		std::string password;
+		std::string motdFileName;
+		ChannelList	channels;
+		ClientList	clients;
+		OperatorPasswordList operatorPasswords;
 
+	private:
+		int					_socketfd;
+		std::vector<pollfd>	_clientfd;
+
+		/**
+		 * Accept a client and add it to the client list
+		 *
+		 * @see accept(2)
+		 */
+		void __acceptClient();
+
+		/**
+		 * Read data from a polled client
+		 *
+		 * @param fd the socket file descriptor of the client
+		 */
+		void __readFromClient(int fd);
+
+		/**
+		 * Write data to the client (if any)
+		 *
+		 * @param fd the socket file descriptor of the client
+		 */
+		void __writeToClient(int fd);
+
+		static std::string __getStartDate();
 }; // class Server
+
+std::ostream& operator<<(std::ostream& os, sockaddr_in& address);
 
 #endif // SERVER_HPP

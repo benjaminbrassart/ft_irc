@@ -6,31 +6,30 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:38:48 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/15 20:10:12 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/21 11:50:35 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef COMMANDMAP_HPP
 # define COMMANDMAP_HPP
 
-# include "Client.hpp"
-
 # include "command.h"
+# include "ClientState.hpp"
 
 # include <map>
 # include <string>
 
-namespace irc
-{
 class Client;
 
 class CommandMap
 {
 public:
-	typedef std::map< std::string const&, CommandHandler > map_type;
+	typedef void (*Handler)(::CommandContext& context);
+	typedef std::pair< Handler, ClientState > HandlerPair;
+	typedef std::map< std::string, HandlerPair > MapType;
 
 private:
-	map_type _commands;
+	MapType _commands;
 
 public:
 	CommandMap(void);
@@ -39,9 +38,11 @@ public:
 	~CommandMap();
 
 public:
-	void put(std::string const& name, CommandHandler handler);
-	void dispatch(Client& client, std::string const& name);
+	void put(std::string const& name, Handler handler, ClientState requiredFlags = CLIENT_STATE_INIT);
+	void dispatch(Client& client, std::string const& prefix, std::string const& name, std::string const& line);
+
+public:
+	void handleUnknownCommand(Client& client, std::string const& name);
 }; // class CommandMap
-} // namespace irc
 
 #endif // COMMANDMAP_HPP

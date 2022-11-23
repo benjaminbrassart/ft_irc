@@ -6,7 +6,7 @@
 #    By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/11/15 20:06:08 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/11/23 12:52:22 by estoffel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,15 +14,31 @@ NAME	=	ircserv
 
 CC		=	c++
 
-FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98
+# DEFINES += -DVERSION_COMMIT="$(COMMIT)"
+# DEFINES += -DBUILD_DATE="$(BUILD_DATE)"
+# DEFINES += -D_GLIBCXX_DEBUG
 
-SRC		=	main.cpp		\
+FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98 #$(DEFINES)
+
+SRC		= bbrassar.cpp Client.cpp CommandContext.cpp Channel.cpp Server.cpp CommandMap.cpp Reply.cpp OperatorEntry.cpp wildcard.cpp
+SRC		+= cmds/cmd_user.cpp
+SRC		+= cmds/cmd_nick.cpp
+SRC		+= cmds/cmd_pass.cpp
+SRC		+= cmds/cmd_quit.cpp
+SRC		+= cmds/cmd_part.cpp
+SRC		+= cmds/cmd_join.cpp
+SRC		+= cmds/cmd_motd.cpp
+SRC		+= cmds/cmd_oper.cpp
+# SRC		+= cmds/cmd_mode.cpp
 
 OBJ		:=	$(addprefix ./obj/,$(SRC:%.cpp=%.o))
 
-DEP		=	$(addprefix ./obj/,$(OBJ:%.o=%.d))
+DEP		=	$(OBJ:%.o=%.d)
 
 RM		=	rm -rf
+
+# COMMIT	:= $(shell git rev-parse --short HEAD)
+# BUILD_DATE := $(shell date +'%Y-%m-%d %H:%M:%S')
 
 all: $(NAME)
 
@@ -33,7 +49,7 @@ all: $(NAME)
 	$(CC) $(FLAGS) -o $@ -c $<
 
 $(NAME): $(OBJ)
-	$(CC) $(FLAGS) -o $(NAME) $(OBJ)
+	$(CC) -o $(NAME) $(OBJ)
 	@printf "\n"
 	@printf "\n"
 	@echo "   🌼\033[1;97m I R C S E R V  C R E A T E D  W I T H  S U C C E S S 🌼\e[0m"
