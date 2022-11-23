@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 02:38:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 02:22:51 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/23 02:34:01 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void cmd_oper(CommandContext& context)
 	if (client.checkState(CLIENT_STATE_OPERATOR)) // client is already operator
 		return;
 
-	Server& server = *client.server;
+	Server& server = context.server;
 	Server::OperatorPasswordList::const_iterator it;
 	CommandContext::ArgumentList& args = context.args;
 	std::string password;
