@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:47:46 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 01:17:44 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/23 02:21:31 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,10 @@
 
 #define SIZEOF_ARRAY(Array) (sizeof (Array) / sizeof (*Array))
 
-CommandContext::CommandContext(Client& client, std::string const& line) :
+CommandContext::CommandContext(Client& client, std::string const& name, std::string const& line) :
 	client(client),
 	server(*client.server),
+	name(name),
 	args(CommandContext::split(line, ' '))
 {
 }

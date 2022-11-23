@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 02:38:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/22 23:29:21 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/23 02:22:51 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void cmd_oper(CommandContext& context)
 
 	if (args.size() < 2)
 	{
-		client.reply<ERR_NEEDMOREPARAMS>("OPER");
+		client.reply<ERR_NEEDMOREPARAMS>(context.name);
 		return;
 	}
 

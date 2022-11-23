@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:40:51 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 01:28:12 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/23 02:21:19 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,10 @@ struct CommandContext
 
 	Client& client;
 	Server& server;
+	std::string name;
 	ArgumentList args;
 
-	CommandContext(Client& client, std::string const& line);
+	CommandContext(Client& client, std::string const& name, std::string const& line);
 	~CommandContext();
 
 	static ArgumentList split(std::string const& line, char delim = ' ');
