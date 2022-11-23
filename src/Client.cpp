@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 14:40:46 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/23 02:55:28 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ void Client::tryLogin()
 		this->reply<RPL_WELCOME>(this->nickname, this->info.username, this->info.hostname);
 		this->reply<RPL_YOURHOST>();
 		this->reply<RPL_CREATED>(this->server->startDate);
-		this->reply<RPL_MYINFO>();
+		this->reply<RPL_MYINFO>(this->server->name);
 	}
 }
 

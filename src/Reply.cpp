@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 18:04:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/22 22:44:32 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/23 02:56:41 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,9 @@ std::string ReplyFactory<RPL_CREATED>::makeReply(std::string const& startDate)
 	return "This server was created " + startDate;
 };
 
-std::string ReplyFactory<RPL_MYINFO>::makeReply()
+std::string ReplyFactory<RPL_MYINFO>::makeReply(std::string const& serverName)
 {
-	return ""; // TODO
+	return serverName + " " VERSION " o O"; // TODO add channel modes
 };
 
 std::string ReplyFactory<RPL_LIST>::makeReply(std::string const& channel, std::string const& visibleClients, std::string const& topic)
