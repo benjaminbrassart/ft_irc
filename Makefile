@@ -6,7 +6,7 @@
 #    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/11/21 13:26:58 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/11/23 01:30:17 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,6 +16,7 @@ CC		=	c++
 
 DEFINES += -DVERSION_COMMIT="$(COMMIT)"
 DEFINES += -DBUILD_DATE="$(BUILD_DATE)"
+DEFINES += -D_GLIBCXX_DEBUG
 
 FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98 $(DEFINES)
 
@@ -25,7 +26,6 @@ SRC		+= cmds/cmd_nick.cpp
 SRC		+= cmds/cmd_pass.cpp
 SRC		+= cmds/cmd_quit.cpp
 SRC		+= cmds/cmd_part.cpp
-SRC		+= cmds/cmd_ignore.cpp
 SRC		+= cmds/cmd_join.cpp
 SRC		+= cmds/cmd_motd.cpp
 SRC		+= cmds/cmd_oper.cpp
