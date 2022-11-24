@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:11:06 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/22 23:27:12 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/23 02:22:51 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void cmd_part(CommandContext& context)
 
 	if (args.empty())
 	{
-		client.reply<ERR_NEEDMOREPARAMS>("PART");
+		client.reply<ERR_NEEDMOREPARAMS>(context.name);
 		return;
 	}
 
