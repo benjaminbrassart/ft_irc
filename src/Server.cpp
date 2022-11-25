@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/25 03:40:36 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 09:01:12 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,22 +57,14 @@ void	Server::create_socket(int port) {
 		throw Server::IoException("client", errno);
 }
 
-Channel& Server::getOrCreateChannel(std::string const& channelName)
+Server::ChannelList::iterator Server::getChannel(std::string const& channelName)
 {
-	Channel channel = Channel(*this, channelName);
+	ChannelList::iterator it;
 
-	return const_cast<Channel&>(*this->channels.insert(channel).first);
-}
-
-Channel* Server::getChannel(std::string const& channelName)
-{
-	Channel channel = Channel(*this, channelName);
-	ChannelList::const_iterator it;
-
-	it = this->channels.find(channel);
-	if (it != this->channels.end())
-		return const_cast<Channel*>(&*it);
-	return 0;
+	for (it = this->channels.begin(); it != this->channels.end(); ++it)
+		if (it->name == channelName)
+			break;
+	return it;
 }
 
 void Server::processCommand(Client& client, std::string const& line)
@@ -83,7 +75,7 @@ void Server::processCommand(Client& client, std::string const& line)
 	std::string::const_iterator it;
 
 	if (line.empty())
-			return;
+		return;
 	begin = line.begin();
 
 	// extract prefix if any
@@ -105,13 +97,22 @@ void Server::processCommand(Client& client, std::string const& line)
 
 	std::cout
 		<< std::setfill(' ')
-		<< " \033[32m< INPUT\033[0m  \033[37m|\033[0m "
-		<< "\033[33m"
+		<< " " GREEN "< INPUT" END "  " WHITE "|" END " " YELLOW
 		<< std::setw(15) << std::left
-		<< client.address << "\033[0m" << " \033[37m|\033[0m "
-		<< line << "\r\n";
+		<< client.address << END " " WHITE "|" END " " GREEN
+		<< line << END << "\r\n";
 	// execute the command with the given arguments
 	this->commands.dispatch(client, prefix, std::string(begin, it), params);
+}
+
+void Server::removeClient(Client& client)
+{
+	(void)client; // TODO
+}
+
+bool Server::addNickname(std::string const& nickname)
+{
+	return this->nicknames.insert(nickname).second;
 }
 
 void Server::loadOperatorFile(std::string const& file)
@@ -139,6 +140,26 @@ void Server::shutdown()
 	// TODO
 }
 
+Client* Server::getClient(int fd)
+{
+	ClientList::iterator it;
+
+	for (it = this->clients.begin(); it != this->clients.end(); ++it)
+		if (it->sock_fd == fd)
+			return &*it;
+	return NULL;
+}
+
+Client* Server::getClient(std::string const& nickname)
+{
+	ClientList::iterator it;
+
+	for (it = this->clients.begin(); it != this->clients.end(); ++it)
+		if (it->nickname == nickname)
+			return &*it;
+	return NULL;
+}
+
 void Server::__acceptClient()
 {
 	int fd;
@@ -154,39 +175,33 @@ void Server::__acceptClient()
 		return;
 	}
 
-	this->clients.insert(Client(*this, fd, address));
+	this->clients.push_back(Client(*this, fd, address));
 }
 
 void Server::__readFromClient(int fd)
 {
-	ClientList::const_iterator it;
-	Client client(*this);
+	Client* client;
 
-	client.sock_fd = fd;
-	it = this->clients.find(client);
-	if (it == this->clients.end())
+	client = this->getClient(fd);
+	if (client != NULL)
+		client->readFrom();
+	else
 	{
 		// TODO log error, client not found
-		return;
 	}
-
-	const_cast<Client&>(*it).readFrom();
 }
 
 void Server::__writeToClient(int fd)
 {
-	ClientList::const_iterator it;
-	Client client(*this);
+	Client* client;
 
-	client.sock_fd = fd;
-	it = this->clients.find(client);
-	if (it == this->clients.end())
+	client = this->getClient(fd);
+	if (client != NULL)
+		client->writeTo();
+	else
 	{
 		// TODO log error, client not found
-		return;
 	}
-
-	const_cast<Client&>(*it).writeTo();
 }
 
 std::string Server::__getStartDate()

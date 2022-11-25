@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 03:40:15 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 08:29:44 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@
 #include "CommandMap.hpp"
 #include <iostream>
 #include <string>
+#include <vector>
 #include <set>
 #include <algorithm>
 #include "colours.h"
@@ -70,8 +71,9 @@ class Server {
 		Server();
 		~Server();
 
-		typedef std::set< Client, ClientComparator > ClientList;
-		typedef std::set< Channel, ChannelComparator > ChannelList;
+		typedef std::vector< Client > ClientList;
+		typedef std::vector< Channel > ChannelList;
+		typedef std::set< std::string > NicknameList;
 		typedef std::vector< OperatorEntry > OperatorPasswordList;
 
 		const int	&getsocketfd() const;
@@ -82,8 +84,7 @@ class Server {
 		void		create_socket(int port);
 		void		loadOperatorFile(std::string const& file);
 
-		Channel*	getChannel(std::string const& channelName);
-		Channel&	getOrCreateChannel(std::string const& channelName);
+		ChannelList::iterator getChannel(std::string const& channelName);
 
 		/**
 		 * Process a line and break it into a command, then execute it if possible
@@ -92,6 +93,15 @@ class Server {
 		 * @param line the command line to process
 		 */
 		void		processCommand(Client& client, std::string const& line);
+
+		Client*		getClient(int fd);
+		Client*		getClient(std::string const& nickname);
+
+		void		removeClient(Client& client);
+
+		bool		addNickname(std::string const& nickname);
+		bool		removeNickname(std::string const& nickname);
+		bool		hasNickname(std::string const& nickname);
 
 		class IoException : public std::exception {
 			public:
@@ -119,6 +129,7 @@ class Server {
 		std::string motdFileName;
 		ChannelList	channels;
 		ClientList	clients;
+		NicknameList nicknames;
 		OperatorPasswordList operatorPasswords;
 
 	private:
@@ -140,7 +151,7 @@ class Server {
 		void __readFromClient(int fd);
 
 		/**
-		 * Write data to the client (if any)
+		 * Write data to the client (if buffer has data)
 		 *
 		 * @param fd the socket file descriptor of the client
 		 */

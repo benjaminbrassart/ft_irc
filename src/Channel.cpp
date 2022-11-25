@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/22 22:46:22 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 09:09:43 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,23 +113,34 @@ bool	Channel::setChanModes(std::string modes) {
    ========================================================================== */
 
 void	Channel::broadcast(Client &sender, std::string const msg) {
+	(void)sender;
+	(void)msg;
 
-	ClientList::iterator	i = allClients.begin();
-
-	for (; i != allClients.end(); i++) {
-		if (&sender != *i)
-			std::cout << sender.nickname << ": \"" << msg << "\"";
-	 }
+	// TODO
 }
 
-bool 	Channel::addClient(Client &newClient) {
-	return this->allClients.insert(&newClient).second;
+void	Channel::addClient(Client &client, ChannelPrivilege privilege) {
+	ClientPrivilege const entry = {&client, privilege};
+
+	this->allClients.push_back(entry);
 }
 
-bool Channel::removeClient(Client &client) {
-	return this->allClients.erase(&client) > 0;
+void Channel::removeClient(Client &client) {
+	ClientList::iterator it;
+
+	for (it = this->allClients.begin(); it != this->allClients.end(); ++it)
+		if (it->client == &client)
+		{
+			this->allClients.erase(it);
+			return;
+		}
 }
 
 bool Channel::hasClient(Client &client) const {
-	return allClients.find(&client) != allClients.end();
+	ClientList::const_iterator it;
+
+	for (it = this->allClients.begin(); it != this->allClients.end(); ++it)
+		if (it->client == &client)
+			return true;
+	return false;
 }

@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 03:13:16 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 09:09:38 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,67 +65,60 @@ Client		&Client::operator=(Client const &rhs) {
 
 void Client::quit(std::string const& message)
 {
-	Server& server = *this->server;
-	Server::ClientList::const_iterator it;
-
 	(void)message;
-	for (it = server.clients.begin(); it != server.clients.end(); ++it)
-	{
-		if (&*it != this)
-		{
-			// TODO
-		}
-	}
+	// TODO
 }
 
 void Client::readFrom()
 {
-	{
-		int res;
-		char bytes[2048];
+	int errnum;
+	int res;
+	char bytes[2048];
 
-		res = ::recv(this->sock_fd, bytes, sizeof (bytes), 0);
-		if (res == -1)
-		{
-			// TODO log error
-		}
-		else if (res == 0)
-		{
-			// connection has been closed by client
-			this->closeConnection();
-			this->server->clients.erase(*this);
-		}
-		else
-		{
-			// TODO log what was read (into log file)
-			this->readBuffer += std::string(&bytes[0], &bytes[res]); // range constructor
-			this->__processReadBuffer();
-		}
+	res = ::recv(this->sock_fd, bytes, sizeof (bytes), 0);
+	if (res == -1)
+	{
+		errnum = errno;
+		std::cerr << "Error: unable to recv from " << this->address << ": " << ::strerror(errnum) << '\n';
+	}
+	else if (res == 0)
+	{
+		// connection has been closed by client
+		this->closeConnection();
+		this->server->removeClient(*this);
+	}
+	else
+	{
+		// TODO log what was read (into log file)
+		this->readBuffer += std::string(&bytes[0], &bytes[res]); // range constructor
+		this->__processReadBuffer();
 	}
 }
 
 void Client::writeTo()
 {
+	int errnum;
 	int res;
 
 	res = ::send(this->sock_fd, this->writeBuffer.c_str(), this->writeBuffer.size(), 0);
 	if (res == -1)
 	{
-		// TODO log error
+		errnum = errno;
+		std::cerr << "Error: unable to send to " << this->address << ": " << ::strerror(errnum) << '\n';
 		return;
 	}
 	this->writeBuffer.clear();
 }
 
 void Client::send(std::string const& command) {
-	// TODO send to socket
 	this->writeBuffer += command + "\r\n";
-	std::cout << "Server -> Client |   " << command << '\n';
+
+	std::cout << std::setfill(' ') << RED " > OUTPUT" END " " WHITE "|" END " " YELLOW << std::left << std::setw(15) << this->address << END " " WHITE "|" END " " RED << command << END << "\r\n";
 }
 
 void Client::closeConnection() {
-	// TODO close socket
-	std::cout << "Server terminated connection to client\n";
+	::close(this->sock_fd);
+	std::cout << std::setfill(' ') << YELLOW " * CLOSED" END " " WHITE "|" END " " YELLOW << std::left << std::setw(15) << this->address << END " " WHITE "|" END << "\r\n";
 }
 
 void Client::tryLogin()
@@ -172,30 +165,22 @@ void Client::joinChannel(Channel& channel)
 	Channel::ClientList::iterator it;
 	std::string const prefix = this->asPrefix();
 
-	channel.addClient(*this);
+	channel.addClient(*this, PRIV_NONE);
 	for (it = channel.allClients.begin(); it != channel.allClients.end(); ++it)
-		(*it)->send(prefix + " JOIN :" + channel.name);
+		it->client->send(prefix + " JOIN :" + channel.name);
 	this->reply<RPL_TOPIC>(channel.name, channel.topic);
 }
 
 void Client::leaveChannel(Channel& channel, std::string const& message)
 {
+	std::string const prefix = this->asPrefix();
 	Channel::ClientList::iterator it;
 
 	channel.removeClient(*this);
 	this->channels.erase(&channel);
 
-	if (channel.allClients.empty())
-	{
-		// TODO delete channel
-	}
-	else
-	{
-		std::string const prefix = this->asPrefix();
-
-		for (it = channel.allClients.begin(); it != channel.allClients.end(); ++it)
-			(*it)->send(prefix + " PART " + channel.name + " :" + message);
-	}
+	for (it = channel.allClients.begin(); it != channel.allClients.end(); ++it)
+		it->client->send(prefix + " PART " + channel.name + " :" + message);
 }
 
 void Client::leaveAllChannels(std::string const& message)
@@ -203,7 +188,7 @@ void Client::leaveAllChannels(std::string const& message)
 	ChannelList::iterator it;
 
 	for (it = this->channels.begin(); it != this->channels.end(); ++it)
-		leaveChannel(const_cast<Channel&>(**it), message);
+		leaveChannel(**it, message);
 }
 
 std::string Client::asPrefix()
@@ -219,7 +204,7 @@ void Client::__replyRaw(Reply code, std::string const& message)
 	std::stringstream ss;
 
 	ss << std::setfill('0') << std::setw(3) << code << std::setw(0) << ' ' << message << "\r\n";
-	std::cout << std::setfill(' ') << " \033[31m> OUTPUT\033[0m \033[37m|\033[0m " << "\033[33m" << std::left << std::setw(15) << this->address << "\033[0m" << " \033[37m|\033[0m " << "\033[36m" << std::setfill('0') << std::setw(3) << std::right << code << "\033[0m" << std::setw(0) << ' ' << message << "\r\n";
+	std::cout << std::setfill(' ') << RED " > OUTPUT" END " " WHITE "|" END " " YELLOW << std::left << std::setw(15) << this->address << END " " WHITE "|" WHITE " " RED_BG << std::setfill('0') << std::setw(3) << std::right << code << END << std::setw(0) << " " RED << message << END << "\r\n";
 
 	// std::cout << "> " << std::setfill('0') << std::setw(3) << code << " \"" << message << "\"\n";
 	this->writeBuffer += ss.str();
