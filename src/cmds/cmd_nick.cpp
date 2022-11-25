@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/22 23:25:51 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 03:30:17 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,19 +54,33 @@ void cmd_nick(CommandContext& context)
 		else
 		{
 			client.nickname = args[0];
-			client.setState(CLIENT_STATE_NICK);
-			client.tryLogin();
+			if (!client.checkState(CLIENT_STATE_NICK))
+			{
+				client.setState(CLIENT_STATE_NICK);
+				client.tryLogin();
+			}
 		}
 	}
 }
 
-static bool __is_char_valid(char c)
+static bool __is_special_char(char c)
 {
-	static char const SC[] = "-[]\\`_^{}|";
-	static char const* const SC_BEGIN = &*&SC[0];
-	static char const* const SC_END = &SC[sizeof (SC) - 1];
-
-	return std::find(SC_BEGIN, SC_END, c) != SC_END;
+	switch (c)
+	{
+		case '-':
+		case '[':
+		case ']':
+		case '\\':
+		case '`':
+		case '_':
+		case '^':
+		case '{':
+		case '}':
+		case '|':
+			return true;
+		default:
+			return false;
+	}
 }
 
 static bool __is_nickname_valid(std::string const& nickname)
@@ -83,7 +97,7 @@ static bool __is_nickname_valid(std::string const& nickname)
 			is_valid = std::isalpha(c);
 		else
 			is_valid = std::isalnum(c);
-		is_valid |= __is_char_valid(c);
+		is_valid |= __is_special_char(c);
 	}
 	return is_valid;
 }
