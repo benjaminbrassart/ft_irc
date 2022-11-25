@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 02:48:28 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 03:40:15 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,6 @@
 # else
 #  define SET_NON_BLOCKING(fd)
 # endif
-
-using					std::string;
 
 #include "OperatorEntry.hpp"
 #include "CommandMap.hpp"
@@ -105,13 +103,13 @@ class Server {
 				 * @see errno(3)
 				 * @see strerror(3)
 				 */
-				IoException(string const& syscallName, int errnum);
+				IoException(std::string const& syscallName, int errnum);
 				~IoException() throw();
 
 				virtual const char*	what() const throw();
 
 			private:
-				string	_what;
+				std::string	_what;
 		};
 
 		std::string startDate;

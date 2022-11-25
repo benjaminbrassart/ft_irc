@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/25 03:08:44 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 03:40:36 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,8 @@ Server::Server() :
 
 Server::~Server() {}
 
-Server::IoException::IoException(string const& syscall, int err): _what(syscall + ": " + std::strerror(err)) {}
+Server::IoException::IoException(std::string const& syscall, int err):
+	_what(syscall + ": " + std::strerror(err)) {}
 
 Server::IoException::~IoException() throw() {}
 
