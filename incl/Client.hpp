@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 09:17:28 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 03:09:51 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,6 +100,13 @@ class Client {
 		void					setState(ClientState state);
 
 		/**
+		 * Make this user join a channel
+		 *
+		 * @param channel the channel to join
+		 */
+		void					joinChannel(Channel& channel);
+
+		/**
 		 * Make this user leave a channel
 		 *
 		 * @param channel the channel to leave
@@ -114,15 +121,14 @@ class Client {
 		 */
 		void					leaveAllChannels(std::string const& message);
 
-		struct Info {
-			std::string 		username;
-			std::string 		hostname;
-			std::string 		realname;
-		};
+		std::string				asPrefix();
 
 		Server* 				server;
 		ChannelList 			channels;
-		Info					info;
+		std::string				username;
+		std::string				hostname;
+		std::string				realname;
+		std::string				hostAddress;
 		int 					sock_fd;
 		std::string				nickname;
 		::sockaddr_in			address;

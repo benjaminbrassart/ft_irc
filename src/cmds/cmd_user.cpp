@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:01:23 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 02:22:51 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 00:40:24 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ void cmd_user(CommandContext& context)
 		client.reply<ERR_NEEDMOREPARAMS>(context.name);
 	else
 	{
-		client.info.username = args[0];
+		client.username = args[0];
 		mode = args[1];
-		client.info.hostname = args[2];
-		client.info.realname = args[3];
+		client.hostname = args[2];
+		client.realname = args[3];
 		client.setState(CLIENT_STATE_USER);
 		client.tryLogin();
 		// TODO do something with `mode`

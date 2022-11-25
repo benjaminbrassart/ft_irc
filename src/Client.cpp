@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 02:55:28 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 03:13:16 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,9 @@ Client		&Client::operator=(Client const &rhs) {
 		this->_state = rhs._state;
 		this->server = rhs.server;
 		this->channels = rhs.channels;
-		this->info = rhs.info;
+		this->username = rhs.username;
+		this->hostname = rhs.hostname;
+		this->realname = rhs.realname;
 		this->sock_fd = rhs.sock_fd;
 		this->nickname = rhs.nickname;
 		this->address = rhs.address;
@@ -117,6 +119,7 @@ void Client::writeTo()
 
 void Client::send(std::string const& command) {
 	// TODO send to socket
+	this->writeBuffer += command + "\r\n";
 	std::cout << "Server -> Client |   " << command << '\n';
 }
 
@@ -129,7 +132,7 @@ void Client::tryLogin()
 {
 	if (this->checkState(CLIENT_STATE_LOGGED))
 	{
-		this->reply<RPL_WELCOME>(this->nickname, this->info.username, this->info.hostname);
+		this->reply<RPL_WELCOME>(this->nickname, this->username, this->hostname);
 		this->reply<RPL_YOURHOST>();
 		this->reply<RPL_CREATED>(this->server->startDate);
 		this->reply<RPL_MYINFO>(this->server->name);
@@ -164,10 +167,35 @@ void Client::sendMotd()
 		this->reply<ERR_NOMOTD>();
 }
 
+void Client::joinChannel(Channel& channel)
+{
+	Channel::ClientList::iterator it;
+	std::string const prefix = this->asPrefix();
+
+	channel.addClient(*this);
+	for (it = channel.allClients.begin(); it != channel.allClients.end(); ++it)
+		(*it)->send(prefix + " JOIN :" + channel.name);
+	this->reply<RPL_TOPIC>(channel.name, channel.topic);
+}
+
 void Client::leaveChannel(Channel& channel, std::string const& message)
 {
-	(void)message;
+	Channel::ClientList::iterator it;
+
+	channel.removeClient(*this);
 	this->channels.erase(&channel);
+
+	if (channel.allClients.empty())
+	{
+		// TODO delete channel
+	}
+	else
+	{
+		std::string const prefix = this->asPrefix();
+
+		for (it = channel.allClients.begin(); it != channel.allClients.end(); ++it)
+			(*it)->send(prefix + " PART " + channel.name + " :" + message);
+	}
 }
 
 void Client::leaveAllChannels(std::string const& message)
@@ -176,6 +204,14 @@ void Client::leaveAllChannels(std::string const& message)
 
 	for (it = this->channels.begin(); it != this->channels.end(); ++it)
 		leaveChannel(const_cast<Channel&>(**it), message);
+}
+
+std::string Client::asPrefix()
+{
+	std::stringstream ss;
+
+	ss << ':' << this->nickname << '!' << this->username << '@' << this->address;
+	return ss.str();
 }
 
 void Client::__replyRaw(Reply code, std::string const& message)

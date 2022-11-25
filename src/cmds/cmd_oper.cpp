@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 02:38:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 02:34:01 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 00:42:39 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ void cmd_oper(CommandContext& context)
 
 	for (it = server.operatorPasswords.begin(); it != server.operatorPasswords.end(); ++it)
 	{
-		if (name == it->name && wildcardMatch(it->host, client.info.hostname) && password == it->password)
+		if (name == it->name && wildcardMatch(it->host, client.hostname) && password == it->password)
 		{
 			client.reply<RPL_YOUREOPER>();
 			client.setState(CLIENT_STATE_OPERATOR);
