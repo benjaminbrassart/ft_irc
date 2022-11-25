@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:42:27 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 05:07:19 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 03:32:44 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ int main(int argc, char const* argv[])
 	Client client = Client(server);
 	std::ifstream input;
 	std::string line;
+
+	client.address.sin_addr.s_addr = inet_addr("127.0.0.1");
 
 	server.name = "ft_ble";
 	server.password = "farzar";

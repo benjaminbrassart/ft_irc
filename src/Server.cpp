@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/23 02:49:36 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 03:08:44 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,6 @@ bool ChannelComparator::operator()(Channel const& lhs, Channel const& rhs) const
 
 std::ostream& operator<<(std::ostream& os, sockaddr_in& address)
 {
-	os << inet_ntoa(reinterpret_cast<in_addr&>(address));
+	os << inet_ntoa(address.sin_addr);
 	return os;
 }
