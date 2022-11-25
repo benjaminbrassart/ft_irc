@@ -6,7 +6,7 @@
 /*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/23 13:05:43 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/11/25 23:03:31 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,26 +36,8 @@ const char*	Server::IoException::what() const throw() {
 	return this->_what.c_str();
 }
 
-void	Server::create_socket(int port) {
+void	Server::__poll() {
 
-	int	val = 1;
-	_socketfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (_socketfd == -1)
-		throw Server::IoException("socket", errno);
-	std::cout << "* socket created * ✅ " << "\n";
-	if (setsockopt(_socketfd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof val))
-		throw Server::IoException("used_address", errno);
-	sockaddr_in	serv_addr;
-	bzero((char *) &serv_addr, sizeof(serv_addr));
-	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_port = htons(port);
-	if (bind(_socketfd, (sockaddr*)&serv_addr, sizeof(serv_addr)) != 0)
-		throw Server::IoException("bind", errno);
-	std::cout << "* socket bound * ✅ " << "\n";
-	if (listen(_socketfd, SOMAXCONN) != 0)
-		throw Server::IoException("listen", errno);
-	std::cout << "* listening to client * ✅ " << "\n";
 	pollfd	fd_serv;
 	bzero((int *) &fd_serv, sizeof(fd_serv));
 	fd_serv.fd = _socketfd;
@@ -70,18 +52,49 @@ void	Server::create_socket(int port) {
 		std::vector<pollfd>::const_iterator	it;
 		for (it = _clientfd.begin(); it != _clientfd.end(); it++) {
 			if (it->revents == POLLIN) {
-				if (it->fd == _socketfd)
-					__acceptClient();
-				else
-					__readFromClient(it->fd);
+				if (it->fd == _socketfd) {
+					std::cout << "* POLLIN accept client * ✅ " << "\n";
+					Server::__acceptClient();
+				}
+				else {
+					std::cout << "* POLLIN read from client * ✅ " << "\n";
+					Server::__readFromClient(it->fd);
+				}
 			}
-			else if (it->revents == POLLOUT)
-				__writeToClient(it->fd);
+			else if (it->revents == POLLOUT) {
+				std::cout << "* POLLOUT write to client * ✅ " << "\n";
+				Server::__writeToClient(it->fd);
+			}
 			else {
-				// TODO finding possible error
+				throw Server::IoException("pollerr", errno);
 			}
 		}
 	}
+}
+
+void	Server::__socket(int port) {
+
+	int	val = 1;
+	_socketfd = socket(AF_INET, SOCK_STREAM, 0);
+	if (_socketfd == -1)
+		throw Server::IoException("socket", errno);
+	std::cout << "* socket created * ✅ " << "\n";
+	if (setsockopt(_socketfd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof val))
+		throw Server::IoException("used_address", errno);
+
+	sockaddr_in	serv_addr;
+	bzero((char *) &serv_addr, sizeof(serv_addr));
+	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	serv_addr.sin_family = AF_INET;
+	serv_addr.sin_port = htons(port);
+
+	if (bind(_socketfd, (sockaddr*)&serv_addr, sizeof(serv_addr)) != 0)
+		throw Server::IoException("bind", errno);
+	std::cout << "* socket bound * ✅ " << "\n";
+	if (listen(_socketfd, SOMAXCONN) != 0)
+		throw Server::IoException("listen", errno);
+	std::cout << "* listening to client * ✅ " << "\n";
+	Server::__poll();
 	// sockaddr_in	client_add;
 	// socklen_t client_taille = sizeof(client_add);
 	// _clientfd = accept(_socketfd, (sockaddr*)&client_add, &client_taille);
