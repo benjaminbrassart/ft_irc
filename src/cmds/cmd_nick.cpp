@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 03:30:17 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 04:50:45 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,6 @@
  */
 static bool __is_nickname_valid(std::string const& nickname);
 
-/**
- * Check if a given nickname has already been taken on a server
- *
- * @param server the server to retreive the logged users
- * @param nickname the nickname to check
- * @return true if the nickname is available on this server, false otherwise
- */
-static bool __is_nickname_available(Server& server, std::string const& nickname);
-
 // valid nickname characters:
 // []\`_^{}|a-zZ-Z0-9-
 // first character must not be a digit
@@ -40,20 +31,22 @@ static bool __is_nickname_available(Server& server, std::string const& nickname)
 void cmd_nick(CommandContext& context)
 {
 	Client& client = context.client;
+	Server& server = context.server;
 	CommandContext::ArgumentList& args = context.args;
-	std::string nickname;
 
 	if (args.empty())
 		client.reply<ERR_NONICKNAMEGIVEN>();
 	else
 	{
-		if (!__is_nickname_valid(args[0]))
-			client.reply<ERR_ERRONEUSNICKNAME>(args[0]);
-		else if (!__is_nickname_available(*client.server, args[0]))
-			client.reply<ERR_NICKNAMEINUSE>(args[0]);
+		std::string const& nickname = args[0];
+
+		if (!__is_nickname_valid(nickname))
+			client.reply<ERR_ERRONEUSNICKNAME>(nickname);
+		else if (!server.addNickname(nickname))
+			client.reply<ERR_NICKNAMEINUSE>(nickname);
 		else
 		{
-			client.nickname = args[0];
+			client.nickname = nickname;
 			if (!client.checkState(CLIENT_STATE_NICK))
 			{
 				client.setState(CLIENT_STATE_NICK);
@@ -100,14 +93,4 @@ static bool __is_nickname_valid(std::string const& nickname)
 		is_valid |= __is_special_char(c);
 	}
 	return is_valid;
-}
-
-static bool __is_nickname_available(Server& server, std::string const& nickname)
-{
-	Server::ClientList::const_iterator it;
-	Client client(server);
-
-	client.nickname = nickname;
-	it = server.clients.find(client);
-	return it == server.clients.end();
 }

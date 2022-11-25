@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 02:28:12 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 08:47:08 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ void cmd_join(CommandContext& context)
 	CommandContext::ArgumentList& args = context.args;
 	std::vector < std::string > channels;
 	std::vector < std::string > keys;
-	std::vector < std::string >::const_iterator chan_it;
-	std::vector < std::string >::const_iterator key_it;
+	std::vector < std::string >::const_iterator chanNameIt;
+	std::vector < std::string >::const_iterator keyIt;
 
 	if (args.empty())
 	{
@@ -42,7 +42,7 @@ void cmd_join(CommandContext& context)
 
 	if (args[0] == "0")
 	{
-		client.leaveAllChannels(""); // TODO
+		client.leaveAllChannels("");
 		return;
 	}
 
@@ -52,21 +52,37 @@ void cmd_join(CommandContext& context)
 	else
 		keys = CommandContext::splitList(args[1]);
 
-	chan_it = channels.begin();
-	key_it = keys.begin();
+	chanNameIt = channels.begin();
+	keyIt = keys.begin();
 
-	for (; chan_it != channels.end(); ++chan_it)
+	for (; chanNameIt != channels.end(); ++chanNameIt)
 	{
-		Channel& chan = server.getOrCreateChannel(*chan_it);
+		Server::ChannelList::iterator chanIt = server.getChannel(*chanNameIt);
+		Channel* chanPtr;
+		ChannelPrivilege priv;
+
+		if (chanIt == server.channels.end())
+		{
+			server.channels.push_back(Channel(server, *chanNameIt));
+			chanPtr = &server.channels.back();
+			priv = PRIV_UNIQOP;
+		}
+		else
+		{
+			chanPtr = &*chanIt;
+			priv = PRIV_NONE;
+		}
+
+		Channel& chan = *chanPtr;
 		std::string key;
 
-		if (key_it != keys.end())
-			key = *key_it++;
+		if (keyIt != keys.end())
+			key = *keyIt++;
 
-		if (chan.passwd == key)
+		if (key.empty() || chan.passwd == key)
 		{
-			client.joinChannel(chan); // TODO
-			chan.addClient(client);
+			client.joinChannel(chan);
+			chan.addClient(client, priv);
 		}
 		else
 			client.reply<ERR_PASSWDMISMATCH>();

@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:11:06 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 02:22:51 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 09:20:11 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@
 void cmd_part(CommandContext& context)
 {
 	Client& client = context.client;
+	Server& server = context.server;
 	CommandContext::ArgumentList& args = context.args;
-	std::string::const_iterator chan_it;
-	std::string const* message_ptr;
+	CommandContext::ArgumentList::const_iterator chanNameIt;
+	std::string const* messagePtr;
 
 	if (args.empty())
 	{
@@ -28,12 +29,27 @@ void cmd_part(CommandContext& context)
 	}
 
 	if (args.size() < 2)
-		message_ptr = &client.nickname;
+		messagePtr = &client.nickname;
 	else
-		message_ptr = &args[1];
+		messagePtr = &args[1];
 
-	for (chan_it = args[0].begin(); chan_it != args[0].end(); ++chan_it)
+	CommandContext::ArgumentList channels = CommandContext::splitList(args[0]);
+	std::vector< Channel* > removedChannels;
+
+	for (chanNameIt = channels.begin(); chanNameIt != channels.end(); ++chanNameIt)
 	{
-		(void)message_ptr;
+		Server::ChannelList::iterator chanIt = server.getChannel(*chanNameIt);
+
+		if (chanIt == server.channels.end())
+			client.reply<ERR_NOSUCHCHANNEL>(*chanNameIt);
+		else if (!chanIt->hasClient(client))
+			client.reply<ERR_NOTONCHANNEL>(chanIt->name);
+		else
+		{
+			client.leaveChannel(*chanIt, *messagePtr);
+			chanIt->removeClient(client);
+			if (chanIt->allClients.empty())
+				server.channels.erase(chanIt);
+		}
 	}
 }
