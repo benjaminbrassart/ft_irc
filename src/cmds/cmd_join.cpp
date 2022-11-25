@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 02:22:51 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 02:28:12 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,11 @@ void cmd_join(CommandContext& context)
 		return;
 	}
 
-	channels = CommandContext::split(args[0], ',');
-	keys = CommandContext::split(args[1], ',');
+	channels = CommandContext::splitList(args[0]);
+	if (args.size() < 2)
+		keys = CommandContext::ArgumentList();
+	else
+		keys = CommandContext::splitList(args[1]);
 
 	chan_it = channels.begin();
 	key_it = keys.begin();
@@ -62,7 +65,7 @@ void cmd_join(CommandContext& context)
 
 		if (chan.passwd == key)
 		{
-			// client.joinChanel(chan); // TODO
+			client.joinChannel(chan); // TODO
 			chan.addClient(client);
 		}
 		else
