@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/25 09:01:12 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 11:26:47 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 #include <sstream>
 
 Server::Server() :
-	startDate(Server::__getStartDate())
+	startDate(Server::__getStartDate()),
+	clients()
  {}
 
 Server::~Server() {}
@@ -157,6 +158,24 @@ Client* Server::getClient(std::string const& nickname)
 	for (it = this->clients.begin(); it != this->clients.end(); ++it)
 		if (it->nickname == nickname)
 			return &*it;
+	return NULL;
+}
+
+Recipient* Server::getRecipient(std::string const& identifier)
+{
+	std::cout << this->clients.size() << '\n';
+
+	if (identifier.empty())
+		return NULL;
+	if (identifier[0] == '#')
+	{
+		ChannelList::iterator it = this->getChannel(identifier);
+
+		if (it != this->channels.end())
+			return &*it;
+	}
+	else
+		return this->getClient(identifier); // TODO does not work :(
 	return NULL;
 }
 

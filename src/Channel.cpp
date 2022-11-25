@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 09:09:43 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 10:48:47 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ ChannelMode const Channel::DEFAULT_MODE = 0;
 								COPLIEN AFORM
    ========================================================================== */
 
-Channel::Channel() :
-	server(NULL),
+Channel::Channel(Server& server) : Recipient(server),
 	mode(Channel::DEFAULT_MODE),
 	name(),
 	topic(),
@@ -31,8 +30,7 @@ Channel::Channel() :
 	invitationMasks()
 {}
 
-Channel::Channel(Server& server, std::string name, std::string passwd) :
-	server(&server),
+Channel::Channel(Server& server, std::string name, std::string passwd) : Recipient(server),
 	mode(Channel::DEFAULT_MODE),
 	name(name),
 	topic(),
@@ -44,8 +42,7 @@ Channel::Channel(Server& server, std::string name, std::string passwd) :
 	invitationMasks()
 {}
 
-Channel::Channel(Channel const& rhs) :
-	server(rhs.server),
+Channel::Channel(Channel const& rhs) : Recipient(*rhs.server),
 	mode(rhs.mode),
 	name(rhs.name),
 	topic(rhs.topic),
@@ -143,4 +140,20 @@ bool Channel::hasClient(Client &client) const {
 		if (it->client == &client)
 			return true;
 	return false;
+}
+
+std::string const& Channel::getIdentifier() const
+{
+	return this->name;
+}
+
+void Channel::sendMessage(Client& sender, std::string const& message)
+{
+	ClientList::iterator it;
+
+	for (it = this->allClients.begin(); it != this->allClients.end(); ++it)
+	{
+		if (&sender != it->client)
+			it->client->sendMessage(sender, message);
+	}
 }

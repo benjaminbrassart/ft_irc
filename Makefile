@@ -6,7 +6,7 @@
 #    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/11/23 03:01:18 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/11/25 09:51:22 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,22 @@ DEFINES += -D_GLIBCXX_DEBUG
 
 FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98 $(DEFINES)
 
-SRC		= bbrassar.cpp Client.cpp CommandContext.cpp Channel.cpp Server.cpp CommandMap.cpp Reply.cpp OperatorEntry.cpp wildcard.cpp
+# main
+SRC		= bbrassar.cpp
+
+# classes
+SRC		+= Logger.cpp
+SRC		+= Recipient.cpp
+SRC		+= Client.cpp
+SRC		+= CommandContext.cpp
+SRC		+= Channel.cpp
+SRC		+= Server.cpp
+SRC		+= CommandMap.cpp
+SRC		+= Reply.cpp
+SRC		+= OperatorEntry.cpp
+SRC		+= wildcard.cpp
+
+# commands
 SRC		+= cmds/cmd_user.cpp
 SRC		+= cmds/cmd_nick.cpp
 SRC		+= cmds/cmd_pass.cpp
@@ -31,6 +46,9 @@ SRC		+= cmds/cmd_motd.cpp
 SRC		+= cmds/cmd_oper.cpp
 SRC		+= cmds/cmd_die.cpp
 SRC		+= cmds/cmd_kill.cpp
+SRC		+= cmds/cmd_privmsg.cpp
+SRC		+= cmds/cmd_notice.cpp
+SRC		+= cmds/cmd_msg_common.cpp
 # SRC		+= cmds/cmd_mode.cpp
 
 OBJ		:=	$(addprefix ./obj/,$(SRC:%.cpp=%.o))

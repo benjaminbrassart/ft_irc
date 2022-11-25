@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 07:53:23 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 10:48:17 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,14 +17,16 @@
 # include "Channel.hpp"
 # include "Reply.hpp"
 # include "ClientState.hpp"
+# include "Recipient.hpp"
 
 # include <string>
 # include <netinet/in.h>
 
 class Channel;
 class Server;
+class Recipient;
 
-class Client {
+class Client : public Recipient {
 
 	public:
 		Client(Server& server);
@@ -121,7 +123,9 @@ class Client {
 
 		std::string				asPrefix();
 
-		Server* 				server;
+		std::string const& getIdentifier() const;
+		void sendMessage(Client& sender, std::string const& message);
+
 		ChannelList 			channels;
 		std::string				username;
 		std::string				hostname;

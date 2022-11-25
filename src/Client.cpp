@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 09:09:38 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 10:49:41 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,14 +23,12 @@ int const Client::READ_BUFFER_SIZE = 2048;
 								COPLIEN FORM
    ========================================================================== */
 
-Client::Client(Server& server) :
-	server(&server),
+Client::Client(Server& server) : Recipient(server),
 	sock_fd(-1),
 	_state(CLIENT_STATE_INIT)
 {}
 
-Client::Client(Server& server, int fd, sockaddr_in& addr) :
-	server(&server),
+Client::Client(Server& server, int fd, sockaddr_in& addr) : Recipient(server),
 	sock_fd(fd),
 	address(addr),
 	_state(CLIENT_STATE_INIT)
@@ -38,7 +36,7 @@ Client::Client(Server& server, int fd, sockaddr_in& addr) :
 
 Client::~Client() {}
 
-Client::Client(Client const &src) {
+Client::Client(Client const &src) : Recipient(*src.server) {
 	*this = src;
 }
 
@@ -197,6 +195,18 @@ std::string Client::asPrefix()
 
 	ss << ':' << this->nickname << '!' << this->username << '@' << this->address;
 	return ss.str();
+}
+
+std::string const& Client::getIdentifier() const
+{
+	return this->nickname;
+}
+
+void Client::sendMessage(Client& sender, std::string const& message)
+{
+	(void)sender;
+	(void)message;
+	// TODO
 }
 
 void Client::__replyRaw(Reply code, std::string const& message)

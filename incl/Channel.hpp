@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:34:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 09:09:18 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 10:48:12 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "ChannelPrivilege.hpp"
 # include "Client.hpp"
 # include "Server.hpp"
+# include "Recipient.hpp"
 
 # include <map>
 # include <string>
@@ -25,8 +26,9 @@
 
 class Client;
 class Server;
+class Recipient;
 
-class Channel {
+class Channel : public Recipient {
 
 	private:
 		struct ClientPrivilege
@@ -36,7 +38,7 @@ class Channel {
 		};
 
 	public:
-		Channel();
+		Channel(Server& server);
 		Channel(Server& server, std::string name = std::string(), std::string passwd = std::string());
 		Channel(Channel const &src);
 		~Channel();
@@ -46,7 +48,6 @@ class Channel {
 		typedef std::vector< ClientPrivilege > ClientList;
 		typedef std::set< std::string >	MaskList;
 
-		Server				*server;
 		ChannelMode			mode;
 		std::string const	name;
 		std::string			topic;
@@ -64,6 +65,9 @@ class Channel {
 		void	addClient(Client &newClient, ChannelPrivilege privilege);
 		void	removeClient(Client &client);
 		bool	hasClient(Client &client) const;
+
+		std::string const& getIdentifier() const;
+		void sendMessage(Client& sender, std::string const& message);
 
 		/**
 		 * Send a message from a client to all other clients in this channel

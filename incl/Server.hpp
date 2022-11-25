@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 08:29:44 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 09:40:06 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 # include "Client.hpp"
 # include "Channel.hpp"
+# include "Recipient.hpp"
 
 # include <algorithm>
 # include <string>
@@ -102,6 +103,8 @@ class Server {
 		bool		addNickname(std::string const& nickname);
 		bool		removeNickname(std::string const& nickname);
 		bool		hasNickname(std::string const& nickname);
+
+		Recipient*	getRecipient(std::string const& identifier);
 
 		class IoException : public std::exception {
 			public:
