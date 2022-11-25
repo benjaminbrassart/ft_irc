@@ -6,7 +6,7 @@
 /*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 13:06:01 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/11/25 23:06:34 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@
 #  define SET_NON_BLOCKING(fd)
 # endif
 
-using					std::string;
+using	std::string;
 
 #include "OperatorEntry.hpp"
 #include "CommandMap.hpp"
@@ -55,7 +55,7 @@ class Client;
 class Channel;
 class CommandRegistry;
 
-// sort by socket file descriptor
+//sort by socket file descriptor
 struct ClientComparator : public std::binary_function< Client, Client, bool >
 {
 	bool operator()(Client const& lhs, Client const& rhs) const;
@@ -82,7 +82,8 @@ class Server {
 
 		void		shutdown();
 
-		void		create_socket(int port);
+		void		__socket(int port);
+		void		__poll();
 		void		loadOperatorFile(std::string const& file);
 
 		Channel*	getChannel(std::string const& channelName);

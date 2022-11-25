@@ -6,7 +6,7 @@
 /*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 00:55:38 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/22 20:46:59 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/11/25 23:07:12 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,14 +44,14 @@ int	main(int ac, char **av) {
 		return 1;
 	try
 	{
-		server.create_socket(port);
+		server.__socket(port);
 	}
 	catch (Server::IoException const& e)
 	{
 		std::cerr << "I/O error: " << e.what() << std::endl;
 	}
 	close(server.getsocketfd());
-	close(server.getclientfd());
+	// close(server.getclientfd());
 	return 0;
 }
 

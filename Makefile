@@ -6,7 +6,7 @@
 #    By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/11/23 13:06:26 by estoffel         ###   ########.fr        #
+#    Updated: 2022/11/25 23:07:49 by estoffel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,7 @@ CC		=	c++
 
 FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98 #$(DEFINES)
 
-SRC		= bbrassar.cpp Client.cpp CommandContext.cpp Channel.cpp Server.cpp CommandMap.cpp Reply.cpp OperatorEntry.cpp wildcard.cpp
+SRC		= main.cpp Server.cpp Client.cpp CommandContext.cpp Channel.cpp  CommandMap.cpp Reply.cpp OperatorEntry.cpp wildcard.cpp
 SRC		+= cmds/cmd_user.cpp
 SRC		+= cmds/cmd_nick.cpp
 SRC		+= cmds/cmd_pass.cpp
@@ -31,7 +31,7 @@ SRC		+= cmds/cmd_motd.cpp
 SRC		+= cmds/cmd_oper.cpp
 SRC		+= cmds/cmd_die.cpp
 SRC		+= cmds/cmd_kill.cpp
-# SRC		+= cmds/cmd_mode.cpp
+SRC		+= cmds/cmd_mode.cpp
 
 OBJ		:=	$(addprefix ./obj/,$(SRC:%.cpp=%.o))
 
