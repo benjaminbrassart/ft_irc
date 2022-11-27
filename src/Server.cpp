@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/23 13:05:43 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/11/27 01:59:52 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void	Server::create_socket(int port) {
 	int	poll_ret;
 	while (1) {
 
-		poll_ret = poll(_clientfd.begin().base(), _clientfd.size(), -1);
+		poll_ret = poll(&*_clientfd.begin(), _clientfd.size(), -1);
 		if (poll_ret == -1)
 			throw Server::IoException("poll", errno); // TODO: gerer les signaux
 		std::vector<pollfd>::const_iterator	it;
