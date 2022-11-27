@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/27 02:04:07 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/27 02:04:37 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	Server::create_socket(int port) {
 	int	poll_ret;
 	while (1) {
 
-		poll_ret = poll(_clientfd.begin().base(), _clientfd.size(), -1);
+		poll_ret = poll(&*_clientfd.begin(), _clientfd.size(), -1);
 		if (poll_ret == -1)
 			throw Server::IoException("poll", errno); // TODO: gerer les signaux
 		std::vector<pollfd>::const_iterator	it;
