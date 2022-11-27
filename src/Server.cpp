@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/25 11:26:47 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/25 21:14:12 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,8 +163,6 @@ Client* Server::getClient(std::string const& nickname)
 
 Recipient* Server::getRecipient(std::string const& identifier)
 {
-	std::cout << this->clients.size() << '\n';
-
 	if (identifier.empty())
 		return NULL;
 	if (identifier[0] == '#')
