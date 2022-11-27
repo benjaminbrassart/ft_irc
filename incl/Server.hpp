@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 09:40:06 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/27 02:03:55 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # include <sys/stat.h>
 # include <arpa/inet.h>
 # include <netinet/in.h>
-# include <sys/epoll.h>
+# include <poll.h>
 # include <fcntl.h>
 # include <cstdlib>
 # include <signal.h>
@@ -34,6 +34,7 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <cstring>
+# include <errno.h>
 
 # if defined(__APPLE__) || defined(__MACH__)
 #  define SET_NON_BLOCKING(fd) ::fcntl(fd, F_SETFL, O_NONBLOCK);
@@ -78,7 +79,7 @@ class Server {
 		typedef std::vector< OperatorEntry > OperatorPasswordList;
 
 		const int	&getsocketfd() const;
-		const int	&getclientfd() const;
+		const std::vector<pollfd>	&getclientfd() const;
 
 		void		shutdown();
 
@@ -136,8 +137,8 @@ class Server {
 		OperatorPasswordList operatorPasswords;
 
 	private:
-		int			_socketfd;
-		int			_clientfd;
+		int					_socketfd;
+		std::vector<pollfd>	_clientfd;
 
 		/**
 		 * Accept a client and add it to the client list

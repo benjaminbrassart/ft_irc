@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/25 21:14:12 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/27 02:04:07 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ Server::IoException::~IoException() throw() {}
 
 const int	&Server::getsocketfd() const {return this->_socketfd;}
 
-const int	&Server::getclientfd() const {return this->_clientfd;}
+const std::vector<pollfd>	&Server::getclientfd() const {return this->_clientfd;}
 
 const char*	Server::IoException::what() const throw() {
 
@@ -40,22 +40,56 @@ const char*	Server::IoException::what() const throw() {
 
 void	Server::create_socket(int port) {
 
+	int	val = 1;
 	_socketfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (_socketfd != 0)
+	if (_socketfd == -1)
 		throw Server::IoException("socket", errno);
-	sockaddr_in	sockadd_in;
-	sockadd_in.sin_addr.s_addr = htonl(INADDR_ANY);
-	sockadd_in.sin_family = AF_INET;
-	sockadd_in.sin_port = htons(port);
-	if (bind(_socketfd, (sockaddr*)&sockadd_in, sizeof(sockadd_in)) != 0)
+	std::cout << "* socket created * ✅ " << "\n";
+	if (setsockopt(_socketfd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof val))
+		throw Server::IoException("used_address", errno);
+	sockaddr_in	serv_addr;
+	bzero((char *) &serv_addr, sizeof(serv_addr));
+	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	serv_addr.sin_family = AF_INET;
+	serv_addr.sin_port = htons(port);
+	if (bind(_socketfd, (sockaddr*)&serv_addr, sizeof(serv_addr)) != 0)
 		throw Server::IoException("bind", errno);
+	std::cout << "* socket bound * ✅ " << "\n";
 	if (listen(_socketfd, SOMAXCONN) != 0)
 		throw Server::IoException("listen", errno);
-	sockaddr_in	client_add;
-	socklen_t client_taille = sizeof(client_add);
-	_clientfd = accept(_socketfd, (sockaddr*)&client_add, &client_taille);
-	if (_clientfd == -1)
-		throw Server::IoException("client", errno);
+	std::cout << "* listening to client * ✅ " << "\n";
+	pollfd	fd_serv;
+	bzero((int *) &fd_serv, sizeof(fd_serv));
+	fd_serv.fd = _socketfd;
+	fd_serv.events = POLLIN;
+	_clientfd.push_back(fd_serv);
+	int	poll_ret;
+	while (1) {
+
+		poll_ret = poll(_clientfd.begin().base(), _clientfd.size(), -1);
+		if (poll_ret == -1)
+			throw Server::IoException("poll", errno); // TODO: gerer les signaux
+		std::vector<pollfd>::const_iterator	it;
+		for (it = _clientfd.begin(); it != _clientfd.end(); it++) {
+			if (it->revents == POLLIN) {
+				if (it->fd == _socketfd)
+					__acceptClient();
+				else
+					__readFromClient(it->fd);
+			}
+			else if (it->revents == POLLOUT)
+				__writeToClient(it->fd);
+			else {
+				// TODO finding possible error
+			}
+		}
+	}
+	// sockaddr_in	client_add;
+	// socklen_t client_taille = sizeof(client_add);
+	// _clientfd = accept(_socketfd, (sockaddr*)&client_add, &client_taille);
+	// if (_clientfd == -1)
+	// 	throw Server::IoException("client", errno);
+	std::cout << "* client accepted * ✅ " << "\n";
 }
 
 Server::ChannelList::iterator Server::getChannel(std::string const& channelName)

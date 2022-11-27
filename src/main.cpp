@@ -6,7 +6,7 @@
 /*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 00:55:38 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/16 23:35:08 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/11/22 20:46:59 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	main(int ac, char **av) {
 	Server	server;
 
 	port = parsing_input(ac, av[1]);
-	if (port == -1);
+	if (port == -1)
 		return 1;
 	try
 	{
