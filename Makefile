@@ -6,7 +6,7 @@
 #    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/11/25 09:51:22 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/11/27 01:58:13 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,6 @@ FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98 $(DEFINES)
 SRC		= bbrassar.cpp
 
 # classes
-SRC		+= Logger.cpp
 SRC		+= Recipient.cpp
 SRC		+= Client.cpp
 SRC		+= CommandContext.cpp
