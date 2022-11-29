@@ -6,7 +6,7 @@
 #    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/11/27 02:04:42 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/11/29 08:13:17 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -33,6 +33,7 @@ SRC		+= CommandMap.cpp
 SRC		+= Reply.cpp
 SRC		+= OperatorEntry.cpp
 SRC		+= wildcard.cpp
+SRC		+= Logger.cpp
 
 # commands
 SRC		+= cmds/cmd_user.cpp
