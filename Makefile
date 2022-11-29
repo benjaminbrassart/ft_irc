@@ -6,7 +6,7 @@
 #    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/11/29 09:40:56 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/11/29 12:41:01 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ DEFINES += -D_GLIBCXX_DEBUG
 FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98 $(DEFINES)
 
 # main
-SRC		= bbrassar.cpp
+SRC		= main.cpp
 
 # classes
 SRC		+= Recipient.cpp
@@ -47,6 +47,8 @@ SRC		+= cmds/cmd_oper.cpp
 SRC		+= cmds/cmd_die.cpp
 SRC		+= cmds/cmd_kill.cpp
 SRC		+= cmds/cmd_msg_common.cpp
+SRC		+= cmds/cmd_ping.cpp
+SRC		+= cmds/cmd_pong.cpp
 # SRC		+= cmds/cmd_mode.cpp
 
 OBJ		:=	$(addprefix ./obj/,$(SRC:%.cpp=%.o))
