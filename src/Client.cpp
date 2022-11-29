@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/29 08:10:47 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 08:14:14 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,6 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-
-int const Client::READ_BUFFER_SIZE = 2048;
 
 /* ==========================================================================
 								COPLIEN FORM

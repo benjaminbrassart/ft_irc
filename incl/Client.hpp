@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 10:48:17 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 08:14:17 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,8 +136,6 @@ class Client : public Recipient {
 		::sockaddr_in			address;
 		std::string				readBuffer;
 		std::string				writeBuffer;
-
-		static int const READ_BUFFER_SIZE;
 
 	private:
 		int _state;
