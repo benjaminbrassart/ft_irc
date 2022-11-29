@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/29 08:14:14 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 09:51:31 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,12 @@ bool Client::checkState(ClientState state)
 void Client::setState(ClientState state)
 {
 	this->_state |= state;
+}
+
+void Client::joinChannel(Channel& channel)
+{
+	(void)channel;
+	// TODO
 }
 
 void Client::leaveChannel(Channel& channel, std::string const& message)
