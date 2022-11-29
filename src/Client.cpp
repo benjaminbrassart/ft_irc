@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 10:49:41 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 08:10:47 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,35 +138,6 @@ bool Client::checkState(ClientState state)
 void Client::setState(ClientState state)
 {
 	this->_state |= state;
-}
-
-void Client::sendMotd()
-{
-	std::ifstream file;
-	std::string line;
-
-	file.open(this->server->motdFileName.c_str());
-
-	if (file)
-	{
-		this->reply<RPL_MOTDSTART>(this->server->name);
-		while (std::getline(file, line))
-			this->reply<RPL_MOTD>(line.substr(0, 80));
-		this->reply<RPL_ENDOFMOTD>();
-	}
-	else
-		this->reply<ERR_NOMOTD>();
-}
-
-void Client::joinChannel(Channel& channel)
-{
-	Channel::ClientList::iterator it;
-	std::string const prefix = this->asPrefix();
-
-	channel.addClient(*this, PRIV_NONE);
-	for (it = channel.allClients.begin(); it != channel.allClients.end(); ++it)
-		it->client->send(prefix + " JOIN :" + channel.name);
-	this->reply<RPL_TOPIC>(channel.name, channel.topic);
 }
 
 void Client::leaveChannel(Channel& channel, std::string const& message)

@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 00:23:13 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/19 00:44:02 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 08:09:24 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,21 @@
 #include "Reply.hpp"
 #include <fstream>
 
-#define MOTD_FILE "motd.txt"
-
 void cmd_motd(CommandContext& context)
 {
-	context.client.sendMotd();
+	Client& client = context.client;
+	Server& server = context.server;
+	std::ifstream file;
+	std::string line;
+
+	file.open(server.motdFileName.c_str());
+	if (file)
+	{
+		client.reply<RPL_MOTDSTART>(server.name);
+		while (std::getline(file, line))
+			client.reply<RPL_MOTD>(line.substr(0, 80));
+		client.reply<RPL_ENDOFMOTD>();
+	}
+	else
+		client.reply<ERR_NOMOTD>();
 }
