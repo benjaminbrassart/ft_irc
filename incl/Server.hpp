@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/29 07:49:53 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 11:35:57 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,6 +85,7 @@ class Server {
 		void		shutdown();
 
 		void		create_socket(int port);
+		void		initCommands();
 		void		loadOperatorFile(std::string const& file);
 
 		ChannelList::iterator getChannel(std::string const& channelName);
@@ -141,6 +142,8 @@ class Server {
 	private:
 		int					_socketfd;
 		std::vector<pollfd>	_clientfd;
+		std::vector<pollfd>	_newConnections;
+		bool				_running;
 
 		/**
 		 * Accept a client and add it to the client list

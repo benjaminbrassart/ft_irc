@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/29 07:49:47 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 13:14:41 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,32 +65,42 @@ void	Server::create_socket(int port) {
 	fd_serv.events = POLLIN;
 	_clientfd.push_back(fd_serv);
 	int	poll_ret;
-	while (1) {
-
+	while (this->_running) {
 		poll_ret = poll(&*_clientfd.begin(), _clientfd.size(), -1);
 		if (poll_ret == -1)
+		{
+			if (errno == EINTR)
+			{
+				std::cout << '\n' << "Shutting down gracefully, press Ctrl+C again to force." << '\n';
+				break;
+			}
 			throw Server::IoException("poll", errno); // TODO: gerer les signaux
+		}
 		std::vector<pollfd>::const_iterator	it;
 		for (it = _clientfd.begin(); it != _clientfd.end(); it++) {
-			if (it->revents == POLLIN) {
+			if (it->revents & POLLERR)
+			{
+				std::cerr << "Error on fd " << it->fd << '\n';
+				continue;
+			}
+			if (it->revents & POLLIN) {
 				if (it->fd == _socketfd)
 					__acceptClient();
 				else
 					__readFromClient(it->fd);
 			}
-			else if (it->revents == POLLOUT)
+			if (it->revents & POLLOUT)
 				__writeToClient(it->fd);
-			else {
-				// TODO finding possible error
-			}
 		}
+		this->_clientfd.insert(this->_clientfd.end(), this->_newConnections.begin(), this->_newConnections.end());
+		this->_newConnections.clear();
 	}
 	// sockaddr_in	client_add;
 	// socklen_t client_taille = sizeof(client_add);
 	// _clientfd = accept(_socketfd, (sockaddr*)&client_add, &client_taille);
 	// if (_clientfd == -1)
 	// 	throw Server::IoException("client", errno);
-	std::cout << "* client accepted * ✅ " << "\n";
+	// std::cout << "* client accepted * ✅ " << "\n";
 }
 
 Server::ChannelList::iterator Server::getChannel(std::string const& channelName)
@@ -101,6 +111,25 @@ Server::ChannelList::iterator Server::getChannel(std::string const& channelName)
 		if (it->name == channelName)
 			break;
 	return it;
+}
+
+void Server::initCommands()
+{
+	this->commands.put("CAP", NULL);
+	this->commands.put("PASS", cmd_pass);
+	this->commands.put("USER", cmd_user, CLIENT_STATE_PASS);
+	this->commands.put("NICK", cmd_nick, CLIENT_STATE_PASS);
+	this->commands.put("QUIT", cmd_quit, CLIENT_STATE_LOGGED);
+	this->commands.put("MOTD", cmd_motd, CLIENT_STATE_LOGGED);
+	this->commands.put("OPER", cmd_oper, CLIENT_STATE_LOGGED);
+	this->commands.put("JOIN", cmd_join, CLIENT_STATE_LOGGED);
+	this->commands.put("PART", cmd_part, CLIENT_STATE_LOGGED);
+	this->commands.put("DIE", cmd_die, CLIENT_STATE_LOGGED);
+	this->commands.put("KILL", cmd_kill, CLIENT_STATE_LOGGED);
+	this->commands.put("NOTICE", cmd_msg_common, CLIENT_STATE_LOGGED);
+	this->commands.put("PRIVMSG", cmd_msg_common, CLIENT_STATE_LOGGED);
+	this->commands.put("PING", cmd_ping);
+	this->commands.put("PONG", cmd_pong);
 }
 
 void Server::processCommand(Client& client, std::string const& line)
@@ -173,7 +202,7 @@ void Server::loadOperatorFile(std::string const& file)
 
 void Server::shutdown()
 {
-	// TODO
+	this->_running = false;
 }
 
 Client* Server::getClient(int fd)
@@ -227,7 +256,19 @@ void Server::__acceptClient()
 		return;
 	}
 
-	this->clients.push_back(Client(*this, fd, address));
+	Client client = Client(*this, fd, address);
+
+	if (this->password.empty())
+		client.setState(CLIENT_STATE_PASS);
+
+	this->clients.push_back(client);
+
+	pollfd newPollFd;
+
+	newPollFd.fd = fd;
+	newPollFd.events = POLLIN | POLLOUT;
+
+	this->_newConnections.push_back(newPollFd);
 }
 
 void Server::__readFromClient(int fd)
