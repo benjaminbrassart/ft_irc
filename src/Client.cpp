@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/29 09:51:31 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 12:55:08 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,8 @@ void Client::writeTo()
 	int errnum;
 	int res;
 
+	if (this->writeBuffer.empty())
+		return;
 	res = ::send(this->sock_fd, this->writeBuffer.c_str(), this->writeBuffer.size(), 0);
 	if (res == -1)
 	{
@@ -122,9 +124,9 @@ void Client::tryLogin()
 	if (this->checkState(CLIENT_STATE_LOGGED))
 	{
 		this->reply<RPL_WELCOME>(this->nickname, this->username, this->hostname);
-		this->reply<RPL_YOURHOST>();
-		this->reply<RPL_CREATED>(this->server->startDate);
-		this->reply<RPL_MYINFO>(this->server->name);
+		this->reply<RPL_YOURHOST>(this->nickname);
+		this->reply<RPL_CREATED>(this->nickname, this->server->startDate);
+		this->reply<RPL_MYINFO>(this->nickname, this->server->name);
 	}
 }
 
@@ -200,16 +202,13 @@ void Client::__processReadBuffer()
 	std::string::size_type offset;
 	std::string::iterator it;
 
-	it = this->readBuffer.begin();
-	while (it != this->readBuffer.end())
+	do
 	{
+		it = this->readBuffer.begin();
 		offset = this->readBuffer.find("\r\n");
-		if ((it + offset) == this->readBuffer.end())
-		{
-			this->readBuffer = std::string(it, it + offset);
+		if (offset == std::string::npos)
 			break;
-		}
 		this->server->processCommand(*this, std::string(it, it + offset));
-		it += (offset + 2);
-	}
+		this->readBuffer = this->readBuffer.substr(offset + 2);
+	} while (it != this->readBuffer.end());
 }
