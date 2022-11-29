@@ -6,7 +6,7 @@
 #    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/11/25 09:51:22 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/11/27 02:04:42 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,8 +14,8 @@ NAME	=	ircserv
 
 CC		=	c++
 
-DEFINES += -DVERSION_COMMIT="$(COMMIT)"
-DEFINES += -DBUILD_DATE="$(BUILD_DATE)"
+# DEFINES += -DVERSION_COMMIT="$(COMMIT)"
+# DEFINES += -DBUILD_DATE="$(BUILD_DATE)"
 DEFINES += -D_GLIBCXX_DEBUG
 
 FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98 $(DEFINES)
@@ -24,7 +24,6 @@ FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98 $(DEFINES)
 SRC		= bbrassar.cpp
 
 # classes
-SRC		+= Logger.cpp
 SRC		+= Recipient.cpp
 SRC		+= Client.cpp
 SRC		+= CommandContext.cpp
@@ -57,8 +56,8 @@ DEP		=	$(OBJ:%.o=%.d)
 
 RM		=	rm -rf
 
-COMMIT	:= $(shell git rev-parse --short HEAD)
-BUILD_DATE := $(shell date +'%Y-%m-%d %H:%M:%S')
+# COMMIT	:= $(shell git rev-parse --short HEAD)
+# BUILD_DATE := $(shell date +'%Y-%m-%d %H:%M:%S')
 
 all: $(NAME)
 
