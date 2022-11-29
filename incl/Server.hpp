@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 09:40:06 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 07:44:46 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "Client.hpp"
 # include "Channel.hpp"
 # include "Recipient.hpp"
+# include "Logger.hpp"
 
 # include <algorithm>
 # include <string>
@@ -134,6 +135,7 @@ class Server {
 		ClientList	clients;
 		NicknameList nicknames;
 		OperatorPasswordList operatorPasswords;
+		Logger logger;
 
 	private:
 		int			_socketfd;
