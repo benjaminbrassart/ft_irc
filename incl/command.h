@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:40:51 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 09:50:21 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 09:19:06 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,9 +50,6 @@ void cmd_motd(CommandContext& context);
 void cmd_oper(CommandContext& context);
 void cmd_die(CommandContext& context);
 void cmd_kill(CommandContext& context);
-void cmd_privmsg(CommandContext& context);
-void cmd_notice(CommandContext& context);
-
-void cmd_msg_common(std::string const& command, CommandContext& ctx);
+void cmd_msg_common(CommandContext& ctx); // for both PRIVMSG and NOTICE
 
 #endif // COMMAND_H

@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:42:27 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 10:55:45 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 09:36:01 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 #include <algorithm>
 
 #include "config.h"
-
 
 int main(int argc, char const* argv[])
 {
@@ -73,8 +72,8 @@ int main(int argc, char const* argv[])
 	server.commands.put("PART", cmd_part, CLIENT_STATE_LOGGED);
 	server.commands.put("DIE", cmd_die, CLIENT_STATE_LOGGED);
 	server.commands.put("KILL", cmd_kill, CLIENT_STATE_LOGGED);
-	server.commands.put("NOTICE", cmd_notice, CLIENT_STATE_LOGGED);
-	server.commands.put("PRIVMSG", cmd_privmsg, CLIENT_STATE_LOGGED);
+	server.commands.put("NOTICE", cmd_msg_common, CLIENT_STATE_LOGGED);
+	server.commands.put("PRIVMSG", cmd_msg_common, CLIENT_STATE_LOGGED);
 
 	server.clients.push_back(client);
 

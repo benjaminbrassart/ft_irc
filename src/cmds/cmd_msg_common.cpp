@@ -6,15 +6,16 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 09:49:31 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 10:49:47 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 09:18:41 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 #include "command.h"
 
-void cmd_msg_common(std::string const& command, CommandContext& ctx)
+void cmd_msg_common(CommandContext& ctx)
 {
+	std::string const& command = ctx.name;
 	Client& client = ctx.client;
 	Server& server = ctx.server;
 	CommandContext::ArgumentList& args = ctx.args;
