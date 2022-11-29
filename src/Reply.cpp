@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 18:04:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 02:56:41 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 12:56:12 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,22 +15,22 @@
 
 std::string ReplyFactory<RPL_WELCOME>::makeReply(std::string const& nickname, std::string const& username, std::string const& hostname)
 {
-	return "Welcome to the Internet Relay Network " + nickname + '!' + username + '@' + hostname;
+	return nickname + " Welcome to the Internet Relay Network " + nickname + '!' + username + '@' + hostname;
 }
 
-std::string ReplyFactory<RPL_YOURHOST>::makeReply()
+std::string ReplyFactory<RPL_YOURHOST>::makeReply(std::string const& nickname)
 {
-	return "Your host is " SERVER_NAME ", running version " VERSION;
+	return nickname + " Your host is " SERVER_NAME ", running version " VERSION;
 };
 
-std::string ReplyFactory<RPL_CREATED>::makeReply(std::string const& startDate)
+std::string ReplyFactory<RPL_CREATED>::makeReply(std::string const& nickname, std::string const& startDate)
 {
-	return "This server was created " + startDate;
+	return nickname + " This server was created " + startDate;
 };
 
-std::string ReplyFactory<RPL_MYINFO>::makeReply(std::string const& serverName)
+std::string ReplyFactory<RPL_MYINFO>::makeReply(std::string const& nickname, std::string const& serverName)
 {
-	return serverName + " " VERSION " o O"; // TODO add channel modes
+	return nickname + " " + serverName + " " VERSION " o O"; // TODO add channel modes
 };
 
 std::string ReplyFactory<RPL_LIST>::makeReply(std::string const& channel, std::string const& visibleClients, std::string const& topic)
