@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:40:51 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/29 09:19:06 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 12:45:17 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ void cmd_motd(CommandContext& context);
 void cmd_oper(CommandContext& context);
 void cmd_die(CommandContext& context);
 void cmd_kill(CommandContext& context);
+void cmd_ping(CommandContext& context);
+void cmd_pong(CommandContext& context);
 void cmd_msg_common(CommandContext& ctx); // for both PRIVMSG and NOTICE
 
 #endif // COMMAND_H
