@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 00:55:38 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/22 20:46:59 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/11/29 12:36:52 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 #include "Client.hpp"
 #include "Server.hpp"
+#include <csignal>
 
 long	parsing_input(int ac, char *str) {
 
@@ -33,6 +34,9 @@ long	parsing_input(int ac, char *str) {
 	return l;
 }
 
+static void __handleSignal(int sig);
+static void __setupSignal();
+
 //./ircserv <port> <password>
 int	main(int ac, char **av) {
 
@@ -44,6 +48,9 @@ int	main(int ac, char **av) {
 		return 1;
 	try
 	{
+		__setupSignal();
+		server.password = av[2];
+		server.initCommands();
 		server.create_socket(port);
 	}
 	catch (Server::IoException const& e)
@@ -51,8 +58,20 @@ int	main(int ac, char **av) {
 		std::cerr << "I/O error: " << e.what() << std::endl;
 	}
 	close(server.getsocketfd());
-	close(server.getclientfd());
+	// close(server.getclientfd());
 	return 0;
+}
+
+static void __handleSignal(int sig)
+{
+	// Ignore signal, then reset to its default action
+	std::signal(sig, SIG_DFL);
+}
+
+static void __setupSignal()
+{
+	// Install signal handlers
+	std::signal(SIGINT, __handleSignal);
 }
 
 //void	dispatch(int fd);
