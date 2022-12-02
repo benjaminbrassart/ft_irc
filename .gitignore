@@ -1,3 +1,4 @@
 /obj/
 /ircserv
 *.old
+.nfs*
