@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:45:50 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/30 20:07:52 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 10:12:13 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ CommandMap::~CommandMap()
 void CommandMap::put(std::string const& command, CommandMap::Handler handler, ClientState requiredFlags)
 {
 	this->_commands[command] = std::make_pair(handler, requiredFlags);
-	this->server.logger.log(DEBUG, "Registered command " + command);
+	this->server.logger.log(DEBUG, "+ " + command);
 }
 
 void CommandMap::dispatch(Client& client, std::string const& prefix, std::string const& command, std::string const& line)

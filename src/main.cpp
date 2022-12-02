@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 00:55:38 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/02 10:01:50 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 10:41:40 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,8 @@
 #include <fstream>
 #include <stdexcept>
 #include <algorithm>
+
+static Logger* __logger;
 
 volatile sig_atomic_t KEEP_RUNNING;
 
@@ -54,6 +56,8 @@ int	main(int ac, char **av) {
 
 	Server	server;
 	long	port;
+
+	__logger = &server.logger;
 
 	port = parsing_input(ac, av[1]);
 	if (port == -1)
@@ -88,8 +92,9 @@ int	main(int ac, char **av) {
 
 static void __handleSignal(int sig)
 {
-	std::cout << '\n' << "Press Ctrl+C again to force shutdown." << '\n';
-	KEEP_RUNNING = false;
-	// Ignore signal, then reset to its default action
-	std::signal(sig, SIG_DFL);
+	std::cout << "\b\b"; // remove ^C from terminal
+	__logger->log(INFO, "Press Ctrl+C again to force shutdown");
+	KEEP_RUNNING = false; // stop the server as soon as possible
+	std::signal(sig, SIG_DFL); // reset signal handler
+	__logger->log(DEBUG, "Reset signal handler");
 }

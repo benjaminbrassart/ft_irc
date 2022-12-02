@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/01 02:00:15 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 10:11:57 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,7 @@ Server::ChannelList::iterator Server::getChannel(std::string const& channelName)
 
 void Server::initCommands()
 {
+	this->logger.log(DEBUG, "Registering commands");
 	this->commands.put("CAP", NULL);
 	this->commands.put("PASS", cmd_pass);
 	this->commands.put("USER", cmd_user);
@@ -233,12 +234,14 @@ void Server::loadOperatorFile(std::string const& file)
 	in.open(file.c_str());
 	if (in)
 	{
+		this->logger.log(DEBUG, "Registering operators");
 		while (std::getline(in, line))
 		{
 			ss << line;
 			ss >> entry.name >> entry.host >> entry.password;
 			ss.clear();
 			this->operatorPasswords.push_back(entry);
+			this->logger.log(DEBUG, "+ " + entry.name + "@" + entry.host);
 		}
 	}
 	else
