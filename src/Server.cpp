@@ -6,14 +6,21 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/02 15:28:02 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 15:43:37 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+
+#include "command.h"
 #include "ft_irc.h"
-#include <algorithm>
+
+#include <arpa/inet.h>
+
 #include <cerrno>
+#include <cstring>
+
+#include <algorithm>
 #include <fstream>
 #include <iomanip>
 #include <sstream>

@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 15:28:55 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 15:42:54 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,46 +15,17 @@
 
 # include "class/NicknameManager.hpp"
 # include "class/exception/IOException.hpp"
-
-# include "Client.hpp"
 # include "Channel.hpp"
-# include "Recipient.hpp"
+# include "Client.hpp"
+# include "CommandMap.hpp"
 # include "Logger.hpp"
-// # include "ft_irc.h"
+# include "OperatorEntry.hpp"
+# include "Recipient.hpp"
 
-# include <algorithm>
-# include <string>
-# include <vector>
-# include <iostream>
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <sys/stat.h>
-# include <arpa/inet.h>
 # include <netinet/in.h>
 # include <poll.h>
-# include <fcntl.h>
-# include <cstdlib>
-# include <signal.h>
-# include <netdb.h>
-# include <unistd.h>
-# include <stdio.h>
-# include <cstring>
-# include <errno.h>
 
-# if defined(__APPLE__) || defined(__MACH__)
-#  define SET_NON_BLOCKING(fd) ::fcntl(fd, F_SETFL, O_NONBLOCK);
-# else
-#  define SET_NON_BLOCKING(fd)
-# endif
-
-#include "OperatorEntry.hpp"
-#include "CommandMap.hpp"
-#include <iostream>
-#include <string>
-#include <vector>
-#include <set>
-#include <algorithm>
-#include "colours.h"
+# include <vector>
 
 class Client;
 class Channel;
