@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/02 17:52:10 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 18:24:43 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,11 +42,11 @@ void	Server::__poll() {
 	fd_serv.fd = sockFd;
 	fd_serv.events = POLLIN;
 
-	_clientfd.push_back(fd_serv);
+	_pollFds.push_back(fd_serv);
 
 	while (KEEP_RUNNING)
 	{
-		poll_ret = poll(&*_clientfd.begin(), _clientfd.size(), -1);
+		poll_ret = poll(&*_pollFds.begin(), _pollFds.size(), -1);
 		if (poll_ret == -1)
 		{
 			if (errno == EINTR)
@@ -54,7 +54,7 @@ void	Server::__poll() {
 			throw IOException("poll", errno); // TODO: gerer les signaux
 		}
 
-		for (it = _clientfd.begin(); KEEP_RUNNING && it != _clientfd.end();)
+		for (it = _pollFds.begin(); KEEP_RUNNING && it != _pollFds.end();)
 		{
 			if (it->revents & POLLERR)
 			{
@@ -73,7 +73,7 @@ void	Server::__poll() {
 					this->clientManager.removeClient(clientIt);
 				}
 
-				this->_clientfd.erase(it);
+				this->_pollFds.erase(it);
 				continue;
 			}
 			else if (it->revents & POLLIN)
@@ -90,14 +90,14 @@ void	Server::__poll() {
 						this->clientManager.removeClient(clientIt);
 					}
 
-					this->_clientfd.erase(it);
+					this->_pollFds.erase(it);
 					continue;
 				}
 			} else if (it->revents & POLLOUT)
 				__writeToClient(it->fd);
 			++it;
 		}
-		this->_clientfd.insert(this->_clientfd.end(), this->_newConnections.begin(), this->_newConnections.end());
+		this->_pollFds.insert(this->_pollFds.end(), this->_newConnections.begin(), this->_newConnections.end());
 		this->_newConnections.clear();
 	}
 	this->__shutdown();

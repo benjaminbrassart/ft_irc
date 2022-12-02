@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 18:08:45 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 18:24:46 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,18 +51,18 @@ class Server {
 
 		int sockFd;
 		std::string startDate;
-		CommandMap commandMap;
 		std::string password;
 		OperatorPasswordList operatorPasswords;
-		Logger logger;
 
 		// managers
+		CommandMap commandMap;
 		NicknameManager nickManager;
 		ClientManager clientManager;
 		ChannelManager channelManager;
+		Logger logger;
 
 	private:
-		PollFdList	_clientfd;
+		PollFdList	_pollFds;
 		PollFdList	_newConnections;
 
 		/**
