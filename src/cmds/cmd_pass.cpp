@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:50:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/29 21:47:33 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 11:12:55 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void cmd_pass(CommandContext& context)
 	CommandContext::ArgumentList& args = context.args;
 	std::string const& password = args[0];
 
-	if (!client.password.empty() || client.checkState(CLIENT_STATE_NICK) || client.checkState(CLIENT_STATE_USER))
+	if (client.checkState(CLIENT_STATE_NICK) || client.checkState(CLIENT_STATE_USER))
 		client.reply<ERR_ALREADYREGISTRED>();
 	else if (args.empty())
 		client.reply<ERR_NEEDMOREPARAMS>(context.name);
