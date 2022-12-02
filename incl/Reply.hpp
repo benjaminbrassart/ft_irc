@@ -6,12 +6,12 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:45:10 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/01 02:15:27 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 10:57:15 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef REPLY_H
-# define REPLY_H
+#ifndef REPLY_HPP
+# define REPLY_HPP
 
 # include <string>
 
