@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 18:04:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/01 02:11:28 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 14:41:42 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -311,7 +311,7 @@ std::string const ReplyFactory<ERR_NEEDMOREPARAMS>::NAME = "ERR_NEEDMOREPARAMS";
 std::string ReplyFactory<ERR_NEEDMOREPARAMS>::makeReply(Client& client, std::string const& command)
 {
 	(void)client;
-	return client.nickname + " " + command + " :Not enough parameters";
+	return command + " :Not enough parameters";
 }
 
 std::string const ReplyFactory<ERR_ALREADYREGISTRED>::NAME = "ERR_ALREADYREGISTRED";
