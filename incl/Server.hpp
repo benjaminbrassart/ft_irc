@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 15:18:06 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 15:28:55 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define SERVER_HPP
 
 # include "class/NicknameManager.hpp"
+# include "class/exception/IOException.hpp"
 
 # include "Client.hpp"
 # include "Channel.hpp"
@@ -107,25 +108,6 @@ class Server {
 		void		removeClient(Client& client);
 
 		Recipient*	getRecipient(std::string const& identifier);
-
-		class IoException : public std::exception {
-			public:
-				/**
-				 * Construct a new IoException
-				 *
-				 * @param syscallName the name of the system call that failed
-				 * @param errnum the code of the error
-				 * @see errno(3)
-				 * @see strerror(3)
-				 */
-				IoException(std::string const& syscallName, int errnum);
-				~IoException() throw();
-
-				virtual const char*	what() const throw();
-
-			private:
-				std::string	_what;
-		};
 
 		std::string startDate;
 		CommandMap commands;

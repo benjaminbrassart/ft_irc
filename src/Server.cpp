@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/02 10:11:57 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 15:28:02 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,9 @@ Server::Server() :
 
 Server::~Server() {}
 
-Server::IoException::IoException(std::string const& syscall, int err):
-	_what(syscall + ": " + std::strerror(err)) {}
-
-Server::IoException::~IoException() throw() {}
-
 const int	&Server::getsocketfd() const {return this->_socketfd;}
 
 const std::vector<pollfd>	&Server::getclientfd() const {return this->_clientfd;}
-
-const char*	Server::IoException::what() const throw() {
-
-	return this->_what.c_str();
-}
 
 void	Server::__poll() {
 
@@ -62,7 +52,7 @@ void	Server::__poll() {
 		{
 			if (errno == EINTR)
 				break;
-			throw Server::IoException("poll", errno); // TODO: gerer les signaux
+			throw IOException("poll", errno); // TODO: gerer les signaux
 		}
 
 		for (it = _clientfd.begin(); KEEP_RUNNING && it != _clientfd.end();)
@@ -72,7 +62,17 @@ void	Server::__poll() {
 				errnum_len = sizeof (errnum);
 				getsockopt(it->fd, SOL_SOCKET, SO_ERROR, &errnum, &errnum_len);
 				this->logger.log(ERROR, std::string("Error on socket ") + it->fd + ": " + std::strerror(errnum));
-				// TODO remove client and pollfd
+				for (clientIt = this->clients.begin(); clientIt != this->clients.end(); ++it)
+				{
+					if (clientIt->sock_fd == it->fd)
+					{
+						this->nickManager.unregisterNickname(clientIt->nickname);
+						this->clients.erase(clientIt);
+						break;
+					}
+				}
+				this->_clientfd.erase(it);
+				continue;
 			}
 			else if (it->revents & POLLIN)
 			{
@@ -84,6 +84,7 @@ void	Server::__poll() {
 					{
 						if (clientIt->sock_fd == it->fd)
 						{
+							this->nickManager.unregisterNickname(clientIt->nickname);
 							this->clients.erase(clientIt);
 							break;
 						}
@@ -107,10 +108,10 @@ void	Server::__socket(int port) {
 	int	val = 1;
 	_socketfd = socket(AF_INET, SOCK_STREAM, 0);
 	if (_socketfd == -1)
-		throw Server::IoException("socket", errno);
+		throw IOException("socket", errno);
 	this->logger.log(DEBUG, "Socket created");
 	if (setsockopt(_socketfd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof val))
-		throw Server::IoException("used_address", errno);
+		throw IOException("used_address", errno);
 
 	sockaddr_in	serv_addr;
 	bzero((char *) &serv_addr, sizeof(serv_addr));
@@ -119,10 +120,10 @@ void	Server::__socket(int port) {
 	serv_addr.sin_port = htons(port);
 
 	if (bind(_socketfd, (sockaddr*)&serv_addr, sizeof(serv_addr)) != 0)
-		throw Server::IoException("bind", errno);
+		throw IOException("bind", errno);
 	this->logger.log(DEBUG, "Socket bound");
 	if (listen(_socketfd, SOMAXCONN) != 0)
-		throw Server::IoException("listen", errno);
+		throw IOException("listen", errno);
 	this->logger.log(INFO, std::string("Listening on port ") + port);
 	Server::__poll();
 }
@@ -217,11 +218,6 @@ void Server::removeClient(Client& client)
 	{
 		// TODO log error
 	}
-}
-
-bool Server::addNickname(std::string const& nickname)
-{
-	return this->nicknames.insert(nickname).second;
 }
 
 void Server::loadOperatorFile(std::string const& file)
