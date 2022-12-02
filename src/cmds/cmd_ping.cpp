@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/29 12:39:48 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/29 12:48:45 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 11:16:17 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,5 +24,5 @@ void cmd_ping(CommandContext& ctx)
 		return;
 	}
 
-	client.send("PONG " + args[0]);
+	client.send("PONG :" + args[0]);
 }
