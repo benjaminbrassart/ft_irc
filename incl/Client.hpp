@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/29 08:14:17 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 09:46:07 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "Reply.hpp"
 # include "ClientState.hpp"
 # include "Recipient.hpp"
+# include "Logger.hpp"
 
 # include <string>
 # include <netinet/in.h>
@@ -25,6 +26,7 @@
 class Channel;
 class Server;
 class Recipient;
+class Logger;
 
 class Client : public Recipient {
 
@@ -63,9 +65,10 @@ class Client : public Recipient {
 		/**
 		 * Read data from the client's socket
 		 *
+		 * @return true if client closed the connection, false otherwise
 		 * @warning make sure the file descriptor is polled AND ready!
 		 */
-		void					readFrom();
+		bool					readFrom();
 
 		/**
 		 * Write data to the client's socket
@@ -136,13 +139,20 @@ class Client : public Recipient {
 		::sockaddr_in			address;
 		std::string				readBuffer;
 		std::string				writeBuffer;
+		std::string				password;
 
 	private:
 		int _state;
 
+		template< Reply code >
+		void __replyRaw(std::string const& message);
 		void __replyRaw(Reply code, std::string const& message);
 		void __processReadBuffer();
+		void __log(LogLevel level, std::string const& message);
 };
+
+bool operator==(Client const& lhs, Client const& rhs);
+bool operator!=(Client const& lhs, Client const& rhs);
 
 # include "template/Client.tpp"
 

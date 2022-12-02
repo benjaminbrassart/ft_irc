@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:45:50 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 02:21:38 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/30 20:07:52 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 #include "CommandMap.hpp"
 #include "Reply.hpp"
 
-CommandMap::CommandMap() :
-	_commands()
+CommandMap::CommandMap(Server& server) :
+	_commands(),
+	server(server)
 {}
 
 CommandMap::CommandMap(CommandMap const& x) :
-	_commands(x._commands)
+	_commands(x._commands),
+	server(x.server)
 {}
 
 CommandMap& CommandMap::operator=(CommandMap const& x)
@@ -34,6 +36,7 @@ CommandMap::~CommandMap()
 void CommandMap::put(std::string const& command, CommandMap::Handler handler, ClientState requiredFlags)
 {
 	this->_commands[command] = std::make_pair(handler, requiredFlags);
+	this->server.logger.log(DEBUG, "Registered command " + command);
 }
 
 void CommandMap::dispatch(Client& client, std::string const& prefix, std::string const& command, std::string const& line)
@@ -47,11 +50,13 @@ void CommandMap::dispatch(Client& client, std::string const& prefix, std::string
 	else if (!(it->second.first == NULL || !client.checkState(it->second.second)))
 	{
 		CommandContext ctx(client, command, line);
+		this->server.logger.log(DEBUG, "<" + client.address + "> '" + command + " " + line + "'");
 		it->second.first(ctx);
 	}
 }
 
 void CommandMap::handleUnknownCommand(Client& client, std::string const& command)
 {
+	this->server.logger.log(DEBUG, "<" + client.address + "> Unknown command '" + command + "'");
 	client.reply<ERR_UNKNOWNCOMMAND>(command);
 }

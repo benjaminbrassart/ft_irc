@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 04:50:45 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/30 18:27:05 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,12 +46,15 @@ void cmd_nick(CommandContext& context)
 			client.reply<ERR_NICKNAMEINUSE>(nickname);
 		else
 		{
-			client.nickname = nickname;
 			if (!client.checkState(CLIENT_STATE_NICK))
 			{
+				server.logger.log(DEBUG, "<" + client.address + "> Registered nickname " + nickname);
 				client.setState(CLIENT_STATE_NICK);
 				client.tryLogin();
 			}
+			else
+				server.logger.log(DEBUG, "<" + client.address + "> " + client.nickname + " Changed nickname to " + nickname);
+			client.nickname = nickname;
 		}
 	}
 }

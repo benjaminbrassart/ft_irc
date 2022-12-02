@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/29 12:55:08 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 09:49:02 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void Client::quit(std::string const& message)
 	// TODO
 }
 
-void Client::readFrom()
+bool Client::readFrom()
 {
 	int errnum;
 	int res;
@@ -76,19 +76,22 @@ void Client::readFrom()
 	{
 		errnum = errno;
 		std::cerr << "Error: unable to recv from " << this->address << ": " << ::strerror(errnum) << '\n';
+		this->closeConnection();
+		return true;
 	}
-	else if (res == 0)
+
+	if (res == 0)
 	{
 		// connection has been closed by client
+		this->server->logger.log(DEBUG, "<" + address + "> Connection closed by client");
 		this->closeConnection();
-		this->server->removeClient(*this);
+		return true;
 	}
-	else
-	{
-		// TODO log what was read (into log file)
-		this->readBuffer += std::string(&bytes[0], &bytes[res]); // range constructor
-		this->__processReadBuffer();
-	}
+
+	this->server->logger.log(DEBUG, "<" + address + "> Read " + res + " bytes of data");
+	this->readBuffer += std::string(&bytes[0], &bytes[res]); // range constructor
+	this->__processReadBuffer();
+	return false;
 }
 
 void Client::writeTo()
@@ -105,28 +108,38 @@ void Client::writeTo()
 		std::cerr << "Error: unable to send to " << this->address << ": " << ::strerror(errnum) << '\n';
 		return;
 	}
+	this->server->logger.log(DEBUG, "<" + this->address + "> Sent " + res + " bytes of data");
 	this->writeBuffer.clear();
 }
 
 void Client::send(std::string const& command) {
 	this->writeBuffer += command + "\r\n";
 
-	std::cout << std::setfill(' ') << RED " > OUTPUT" END " " WHITE "|" END " " YELLOW << std::left << std::setw(15) << this->address << END " " WHITE "|" END " " RED << command << END << "\r\n";
+	// std::cout << std::setfill(' ') << RED " > OUTPUT" END " " WHITE "|" END " " YELLOW << std::left << std::setw(15) << this->address << END " " WHITE "|" END " " RED << command << END << "\r\n";
 }
 
 void Client::closeConnection() {
 	::close(this->sock_fd);
-	std::cout << std::setfill(' ') << YELLOW " * CLOSED" END " " WHITE "|" END " " YELLOW << std::left << std::setw(15) << this->address << END " " WHITE "|" END << "\r\n";
+	// std::cout << std::setfill(' ') << YELLOW " * CLOSED" END " " WHITE "|" END " " YELLOW << std::left << std::setw(15) << this->address << END " " WHITE "|" END << "\r\n";
 }
 
 void Client::tryLogin()
 {
 	if (this->checkState(CLIENT_STATE_LOGGED))
 	{
-		this->reply<RPL_WELCOME>(this->nickname, this->username, this->hostname);
-		this->reply<RPL_YOURHOST>(this->nickname);
-		this->reply<RPL_CREATED>(this->nickname, this->server->startDate);
-		this->reply<RPL_MYINFO>(this->nickname, this->server->name);
+		if (this->password == this->server->password)
+		{
+			this->reply<RPL_WELCOME>(this->nickname, this->username, this->hostname);
+			this->reply<RPL_YOURHOST>();
+			this->reply<RPL_CREATED>(this->server->startDate);
+			this->reply<RPL_MYINFO>(this->server->name);
+			this->server->logger.log(DEBUG, "<" + this->address + "> Logged in as " + this->asPrefix());
+		}
+		else
+		{
+			this->server->logger.log(DEBUG, "<" + this->address + "> Wrong password");
+			this->reply<ERR_PASSWDMISMATCH>();
+		}
 	}
 }
 
@@ -191,9 +204,6 @@ void Client::__replyRaw(Reply code, std::string const& message)
 	std::stringstream ss;
 
 	ss << std::setfill('0') << std::setw(3) << code << std::setw(0) << ' ' << message << "\r\n";
-	std::cout << std::setfill(' ') << RED " > OUTPUT" END " " WHITE "|" END " " YELLOW << std::left << std::setw(15) << this->address << END " " WHITE "|" WHITE " " RED_BG << std::setfill('0') << std::setw(3) << std::right << code << END << std::setw(0) << " " RED << message << END << "\r\n";
-
-	// std::cout << "> " << std::setfill('0') << std::setw(3) << code << " \"" << message << "\"\n";
 	this->writeBuffer += ss.str();
 }
 
@@ -211,4 +221,19 @@ void Client::__processReadBuffer()
 		this->server->processCommand(*this, std::string(it, it + offset));
 		this->readBuffer = this->readBuffer.substr(offset + 2);
 	} while (it != this->readBuffer.end());
+}
+
+void Client::__log(LogLevel level, std::string const& message)
+{
+	this->server->logger.log(level, "<" + this->address + "> " + message);
+}
+
+bool operator==(Client const& lhs, Client const& rhs)
+{
+	return &lhs == &rhs || lhs.sock_fd == rhs.sock_fd || lhs.nickname == rhs.nickname;
+}
+
+bool operator!=(Client const& lhs, Client const& rhs)
+{
+	return !(lhs == rhs);
 }

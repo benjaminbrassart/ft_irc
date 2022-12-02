@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 04:54:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 05:04:17 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 21:48:33 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,27 +15,28 @@
 
 # include <string>
 
+enum LogLevel
+{
+	DEBUG,
+	INFO,
+	NOTICE,
+	WARNING,
+	ERROR,
+};
+
 class Logger
 {
 public:
-	enum Level
-	{
-		DEBUG,
-		INFO,
-		NOTICE,
-		WARNING,
-		ERROR,
-	};
 
 public:
-	Logger::Level level;
+	LogLevel level;
 
 public:
-	Logger(Logger::Level level);
+	Logger(LogLevel level);
 	~Logger();
 
 public:
-	void log(Logger::Level level, std::string const& message);
+	void log(LogLevel level, std::string const& message);
 };
 
 #endif // LOGGER_HPP

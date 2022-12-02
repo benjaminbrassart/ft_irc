@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 00:55:38 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/29 14:16:22 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 21:47:33 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,19 @@
 #include "Client.hpp"
 #include "Reply.hpp"
 #include "Server.hpp"
+#include "Logger.hpp"
 #include <csignal>
 
 #include "wildcard.h"
 #include "config.h"
+#include "ft_irc.h"
 
 #include <iostream>
 #include <fstream>
 #include <stdexcept>
 #include <algorithm>
+
+volatile sig_atomic_t KEEP_RUNNING;
 
 long	parsing_input(int ac, char *str) {
 
@@ -44,98 +48,50 @@ long	parsing_input(int ac, char *str) {
 }
 
 static void __handleSignal(int sig);
-static void __setupSignal();
 
 //./ircserv <port> <password>
 int	main(int ac, char **av) {
 
-	long	port;
 	Server	server;
-
-	std::cout
-		<< "Starting ircserv version " << VERSION << '\n'
-		<< "Build date: " << STR(BUILD_DATE) << '\n';
-
-	// 	__testWildcard("*", "ABC");
-	// 	__testWildcard("*", "");
-	// 	__testWildcard("", "A");
-	// 	__testWildcard("DDD", "ABC");
-	// 	__testWildcard("AB?", "ABC");
-	// 	__testWildcard("A?C", "ABC");
-	// 	__testWildcard("*@bbrassar.fr", "benjamin@bbrassar.fr");
-	// 	__testWildcard("*.fr", "benjamin@bbrassar.fr");
-	// 	__testWildcard("*.fr", "benjamin@test.bbrassar.fr");
-	// 	__testWildcard("????", "ABC");
-	// 	__testWildcard("****", "ABC");
-	// 	__testWildcard("*@*.*", "benjamin@localhost");
-	// 	__testWildcard("*@*.*", "benjamin@localhost.local");
-	// 	__testWildcard("*?", "ABC");
-	// 	__testWildcard("?*", "ABC");
-	// 	__testWildcard("A?C", "ABC");
-
-	// std::cout << "  IN/OUT  \033[37m|\033[0m     IP ADDR     \033[37m|\033[0m          COMMAND" << '\n';
-
-	Client client = Client(server);
-	std::ifstream input;
-	std::string line;
-
-	server.name = "ft_ble";
-	server.password = "farzar";
-	server.motdFileName = "motd.txt";
-
-	server.loadOperatorFile("operators.txt");
+	long	port;
 
 	port = parsing_input(ac, av[1]);
 	if (port == -1)
 		return 1;
+
+	server.logger.log(INFO, "Starting " + server.name + " version " + VERSION);
+	server.logger.log(INFO, std::string("Build date ") + STR(BUILD_DATE));
+
+	server.name = "ft_ble";
+	server.motdFileName = "motd.txt";
+
+	server.loadOperatorFile("operators.txt");
+
+	KEEP_RUNNING = true;
+
+	server.password = av[2];
+	server.initCommands();
+
+	std::signal(SIGINT, __handleSignal);
+	server.logger.log(DEBUG, "Signal handlers setup");
+
 	try
 	{
-		__setupSignal();
-		server.password = av[2];
-		server.initCommands();
 		server.__socket(port);
 	}
 	catch (Server::IoException const& e)
 	{
-		std::cerr << "I/O error: " << e.what() << std::endl;
+		server.logger.log(ERROR, std::string("I/O error: ") + e.what());
+		// std::cerr << "I/O error: " << e.what() << std::endl;
 	}
-
-	server.commands.put("CAP", NULL);
-	server.commands.put("PASS", cmd_pass);
-	server.commands.put("USER", cmd_user, CLIENT_STATE_PASS);
-	server.commands.put("NICK", cmd_nick, CLIENT_STATE_PASS);
-	server.commands.put("QUIT", cmd_quit, CLIENT_STATE_LOGGED);
-	server.commands.put("MOTD", cmd_motd, CLIENT_STATE_LOGGED);
-	server.commands.put("OPER", cmd_oper, CLIENT_STATE_LOGGED);
-	server.commands.put("JOIN", cmd_join, CLIENT_STATE_LOGGED);
-	server.commands.put("PART", cmd_part, CLIENT_STATE_LOGGED);
-	server.commands.put("DIE", cmd_die, CLIENT_STATE_LOGGED);
-	server.commands.put("KILL", cmd_kill, CLIENT_STATE_LOGGED);
-
-	input.open("input.txt", std::ifstream::in);
-	if (input.fail())
-	{
-		input.close();
-		std::cerr << "Failed to open " << av[1] << '\n';
-		return 1;
-	}
-
-	while (std::getline(input, line))
-		server.processCommand(client, line);
-
 	close(server.getsocketfd());
-	// close(server.getclientfd());
 	return 0;
 }
 
 static void __handleSignal(int sig)
 {
+	std::cout << '\n' << "Press Ctrl+C again to force shutdown." << '\n';
+	KEEP_RUNNING = false;
 	// Ignore signal, then reset to its default action
 	std::signal(sig, SIG_DFL);
-}
-
-static void __setupSignal()
-{
-	// Install signal handlers
-	std::signal(SIGINT, __handleSignal);
 }

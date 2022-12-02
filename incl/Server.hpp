@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/29 14:17:37 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/01 00:08:44 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include "Channel.hpp"
 # include "Recipient.hpp"
 # include "Logger.hpp"
+// # include "ft_irc.h"
 
 # include <algorithm>
 # include <string>
@@ -55,6 +56,7 @@
 class Client;
 class Channel;
 class CommandRegistry;
+class Logger;
 
 //sort by socket file descriptor
 struct ClientComparator : public std::binary_function< Client, Client, bool >
@@ -74,15 +76,14 @@ class Server {
 		Server();
 		~Server();
 
+		typedef std::vector< pollfd > PollFdList;
 		typedef std::vector< Client > ClientList;
 		typedef std::vector< Channel > ChannelList;
 		typedef std::set< std::string > NicknameList;
 		typedef std::vector< OperatorEntry > OperatorPasswordList;
 
 		const int	&getsocketfd() const;
-		const std::vector<pollfd>	&getclientfd() const;
-
-		void		shutdown();
+		const PollFdList	&getclientfd() const;
 
 		void		initCommands();
 		void		__socket(int port);
@@ -141,10 +142,10 @@ class Server {
 		Logger logger;
 
 	private:
-		int					_socketfd;
-		std::vector<pollfd>	_clientfd;
-		std::vector<pollfd>	_newConnections;
-		bool				_running;
+		int			_socketfd;
+		PollFdList	_clientfd;
+		PollFdList	_newConnections;
+		bool		_running;
 
 		/**
 		 * Accept a client and add it to the client list
@@ -157,8 +158,9 @@ class Server {
 		 * Read data from a polled client
 		 *
 		 * @param fd the socket file descriptor of the client
+		 * @return true if the client closed the connection, false otherwise
 		 */
-		void __readFromClient(int fd);
+		bool __readFromClient(int fd);
 
 		/**
 		 * Write data to the client (if buffer has data)
@@ -167,9 +169,17 @@ class Server {
 		 */
 		void __writeToClient(int fd);
 
+		/**
+		 * Kill all active connections
+		 */
+		void __shutdown();
+
 		static std::string __getStartDate();
 }; // class Server
 
 std::ostream& operator<<(std::ostream& os, sockaddr_in& address);
+std::string operator+(std::string const& str, int n);
+std::string operator+(std::string const& str, sockaddr_in& addr);
+std::string operator+(sockaddr_in& addr, std::string const& str);
 
 #endif // SERVER_HPP

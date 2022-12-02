@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 05:03:51 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/29 07:46:34 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 21:46:53 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,25 @@
 
 static std::string __now()
 {
-	return "";
+	char buffer[10];
+	time_t timestamp;
+	tm* timeinfo;
+	size_t res;
+
+	time(&timestamp);
+	timeinfo = localtime(&timestamp);
+	res = strftime(buffer, sizeof (buffer), "%H:%M:%S", timeinfo);
+	return std::string(buffer, res);
 }
 
-Logger::Logger(Logger::Level level) :
+Logger::Logger(LogLevel level) :
 	level(level)
 {}
 
 Logger::~Logger()
 {}
 
-void Logger::log(Logger::Level level, std::string const& message)
+void Logger::log(LogLevel level, std::string const& message)
 {
 	std::string color;
 	std::string levelName;
@@ -69,6 +77,6 @@ void Logger::log(Logger::Level level, std::string const& message)
 
 	*stream_p
 		<< "[" << __now() << "] "
-		<< color << std::setw(7) << levelName << END << " |"
+		<< color << std::left << std::setw(7) << levelName << END << " | "
 		<< message << '\n';
 }

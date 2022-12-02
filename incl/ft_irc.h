@@ -1,25 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_die.cpp                                        :+:      :+:    :+:   */
+/*   ft_irc.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/23 02:46:53 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/29 14:51:20 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/11/29 14:37:14 by bbrassar          #+#    #+#             */
+/*   Updated: 2022/11/29 15:00:03 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_irc.h"
-#include "command.h"
-#include "Client.hpp"
+#ifndef FT_IRC_H
+# define FT_IRC_H
 
-void cmd_die(CommandContext& context)
-{
-	Client& client = context.client;
+# include <csignal>
 
-	if (client.checkState(CLIENT_STATE_OPERATOR))
-		KEEP_RUNNING = false;
-	else
-		client.reply<ERR_NOPRIVILEGES>();
-}
+extern volatile sig_atomic_t KEEP_RUNNING;
+
+#endif

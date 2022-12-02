@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:38:48 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 11:50:35 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/11/29 18:12:02 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <string>
 
 class Client;
+class Server;
 
 class CommandMap
 {
@@ -30,9 +31,10 @@ public:
 
 private:
 	MapType _commands;
+	Server& server;
 
 public:
-	CommandMap(void);
+	CommandMap(Server& server);
 	CommandMap(CommandMap const &x);
 	CommandMap &operator=(CommandMap const &x);
 	~CommandMap();
