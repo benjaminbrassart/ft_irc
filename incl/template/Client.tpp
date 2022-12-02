@@ -10,7 +10,8 @@ void Client::__replyRaw(std::string const& message)
 	std::stringstream ss;
 
 	ss
-		<< std::setfill('0') << std::setw(3) << code
+		<< std::setfill('0') << std::setw(3) << code << " "
+		<< this->nickname << " "
 		<< std::setfill(' ') << std::setw(0) << message
 		<< "\r\n";
 	this->writeBuffer += ss.str();
