@@ -6,23 +6,22 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 15:41:12 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 16:37:39 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CLIENT_HPP
-# define CLIENT_HPP
+#pragma once
 
-# include "Server.hpp"
-# include "Channel.hpp"
-# include "Reply.hpp"
-# include "ClientState.hpp"
-# include "Recipient.hpp"
-# include "Logger.hpp"
+#include "Server.hpp"
+#include "Channel.hpp"
+#include "Reply.hpp"
+#include "ClientState.hpp"
+#include "Recipient.hpp"
+#include "Logger.hpp"
 
-# include <ctime>
-# include <string>
-# include <netinet/in.h>
+#include <ctime>
+#include <string>
+#include <netinet/in.h>
 
 class Channel;
 class Server;
@@ -32,8 +31,8 @@ class Logger;
 class Client : public Recipient {
 
 	public:
-		Client(Server& server);
-		Client(Server& server, int fd, sockaddr_in& addr);
+		Client(Server* server = NULL);
+		Client(Server* server, int fd, sockaddr_in& addr);
 		Client(Client const &src);
 		~Client();
 
@@ -133,6 +132,4 @@ class Client : public Recipient {
 bool operator==(Client const& lhs, Client const& rhs);
 bool operator!=(Client const& lhs, Client const& rhs);
 
-# include "template/Client.tpp"
-
-#endif
+#include "template/Client.tpp"

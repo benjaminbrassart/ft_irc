@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 09:26:25 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 10:50:08 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 16:12:04 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ class Recipient
 public:
 	Server* server;
 
-	Recipient(Server& server);
+	Recipient(Server* server);
 	virtual ~Recipient();
 
 public:

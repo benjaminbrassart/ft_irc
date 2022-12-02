@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 14:08:03 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 16:21:19 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void cmd_join(CommandContext& context)
 
 		if (chanIt == server.channels.end())
 		{
-			server.channels.push_back(Channel(server, *chanNameIt));
+			server.channels.push_back(Channel(&server, *chanNameIt));
 			chanPtr = &server.channels.back();
 			priv = PRIV_UNIQOP;
 		}

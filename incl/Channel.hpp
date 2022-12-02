@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:34:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 11:35:23 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 16:21:02 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,8 +38,8 @@ class Channel : public Recipient {
 		};
 
 	public:
-		Channel(Server& server);
-		Channel(Server& server, std::string name = std::string(), std::string passwd = std::string());
+		Channel(Server* server);
+		Channel(Server* server, std::string name = std::string(), std::string passwd = std::string());
 		Channel(Channel const &src);
 		~Channel();
 

@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 15:36:06 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 16:20:44 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ ChannelMode const Channel::DEFAULT_MODE = 0;
 								COPLIEN AFORM
    ========================================================================== */
 
-Channel::Channel(Server& server) : Recipient(server),
+Channel::Channel(Server* server) : Recipient(server),
 	mode(Channel::DEFAULT_MODE),
 	name(),
 	topic(),
@@ -31,7 +31,7 @@ Channel::Channel(Server& server) : Recipient(server),
 	invitationMasks()
 {}
 
-Channel::Channel(Server& server, std::string name, std::string passwd) : Recipient(server),
+Channel::Channel(Server* server, std::string name, std::string passwd) : Recipient(server),
 	mode(Channel::DEFAULT_MODE),
 	name(name),
 	topic(),
@@ -43,7 +43,7 @@ Channel::Channel(Server& server, std::string name, std::string passwd) : Recipie
 	invitationMasks()
 {}
 
-Channel::Channel(Channel const& rhs) : Recipient(*rhs.server),
+Channel::Channel(Channel const& rhs) : Recipient(rhs.server),
 	mode(rhs.mode),
 	name(rhs.name),
 	topic(rhs.topic),

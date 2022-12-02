@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 15:45:40 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 16:42:47 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,12 +25,12 @@
 								COPLIEN FORM
    ========================================================================== */
 
-Client::Client(Server& server) : Recipient(server),
+Client::Client(Server* server) : Recipient(server),
 	sock_fd(-1),
 	_state(CLIENT_STATE_INIT)
 {}
 
-Client::Client(Server& server, int fd, sockaddr_in& addr) : Recipient(server),
+Client::Client(Server* server, int fd, sockaddr_in& addr) : Recipient(server),
 	sock_fd(fd),
 	address(addr),
 	_state(CLIENT_STATE_INIT)
@@ -38,7 +38,7 @@ Client::Client(Server& server, int fd, sockaddr_in& addr) : Recipient(server),
 
 Client::~Client() {}
 
-Client::Client(Client const &src) : Recipient(*src.server) {
+Client::Client(Client const &src) : Recipient(src.server) {
 	*this = src;
 }
 
@@ -189,6 +189,7 @@ void Client::__processReadBuffer()
 {
 	std::string::size_type offset;
 	std::string::iterator it;
+	std::string line;
 
 	do
 	{
@@ -196,8 +197,9 @@ void Client::__processReadBuffer()
 		offset = this->readBuffer.find("\r\n");
 		if (offset == std::string::npos)
 			break;
-		this->server->processCommand(*this, std::string(it, it + offset));
+		line = std::string(it, it + offset);
 		this->readBuffer = this->readBuffer.substr(offset + 2);
+		this->server->commandMap.process(*this, line);
 	} while (it != this->readBuffer.end());
 }
 
