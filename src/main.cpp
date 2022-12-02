@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 00:55:38 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/02 15:27:51 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 15:33:24 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ long	parsing_input(int ac, char *str) {
 		std::cerr << "Port number is out of range" << std::endl;
 		return -1;
 	}
-	if (strcmp(buf, "\0")) {
+	if (*buf == '\0')
+	{
 		std::cerr << "Port number is rubbish!" << std::endl;
 		return -1;
 	}
