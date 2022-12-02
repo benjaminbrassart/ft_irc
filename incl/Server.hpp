@@ -6,12 +6,14 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/01 00:08:44 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 15:18:06 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
+
+# include "class/NicknameManager.hpp"
 
 # include "Client.hpp"
 # include "Channel.hpp"
@@ -79,7 +81,6 @@ class Server {
 		typedef std::vector< pollfd > PollFdList;
 		typedef std::vector< Client > ClientList;
 		typedef std::vector< Channel > ChannelList;
-		typedef std::set< std::string > NicknameList;
 		typedef std::vector< OperatorEntry > OperatorPasswordList;
 
 		const int	&getsocketfd() const;
@@ -104,10 +105,6 @@ class Server {
 		Client*		getClient(std::string const& nickname);
 
 		void		removeClient(Client& client);
-
-		bool		addNickname(std::string const& nickname);
-		bool		removeNickname(std::string const& nickname);
-		bool		hasNickname(std::string const& nickname);
 
 		Recipient*	getRecipient(std::string const& identifier);
 
@@ -137,15 +134,16 @@ class Server {
 		std::string motdFileName;
 		ChannelList	channels;
 		ClientList	clients;
-		NicknameList nicknames;
 		OperatorPasswordList operatorPasswords;
 		Logger logger;
+
+		// managers
+		NicknameManager nickManager;
 
 	private:
 		int			_socketfd;
 		PollFdList	_clientfd;
 		PollFdList	_newConnections;
-		bool		_running;
 
 		/**
 		 * Accept a client and add it to the client list

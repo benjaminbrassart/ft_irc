@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/30 18:27:05 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 15:17:29 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void cmd_nick(CommandContext& context)
 
 		if (!__is_nickname_valid(nickname))
 			client.reply<ERR_ERRONEUSNICKNAME>(nickname);
-		else if (!server.addNickname(nickname))
+		else if (!server.nickManager.hasNickname(nickname))
 			client.reply<ERR_NICKNAMEINUSE>(nickname);
 		else
 		{
