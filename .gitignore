@@ -2,3 +2,4 @@
 /ircserv
 *.old
 .nfs*
+massif.out.*
