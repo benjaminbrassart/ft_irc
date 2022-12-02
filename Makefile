@@ -6,7 +6,7 @@
 #    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/12/02 15:25:59 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/12/02 16:11:18 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,6 +23,7 @@ SRC		= main.cpp
 
 # classes
 SRC		+= class/NicknameManager.cpp
+SRC		+= class/ClientManager.cpp
 SRC		+= class/exception/IOException.cpp
 
 SRC		+= Recipient.cpp

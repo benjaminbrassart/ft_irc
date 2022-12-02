@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:38:48 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/29 18:12:02 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 16:43:46 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ public:
 
 public:
 	void put(std::string const& name, Handler handler, ClientState requiredFlags = CLIENT_STATE_INIT);
+	void process(Client& client, std::string const& line);
 	void dispatch(Client& client, std::string const& prefix, std::string const& name, std::string const& line);
 
 public:

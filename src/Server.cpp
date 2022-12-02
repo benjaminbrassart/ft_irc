@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/02 15:43:37 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 16:46:08 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@
 
 Server::Server() :
 	startDate(Server::__getStartDate()),
-	commands(*this),
-	clients(),
+	commandMap(*this),
 	logger(DEBUG)
  {}
 
@@ -41,9 +40,6 @@ const std::vector<pollfd>	&Server::getclientfd() const {return this->_clientfd;}
 void	Server::__poll() {
 
 	PollFdList::iterator it;
-	ClientList::iterator clientIt;
-	int errnum;
-	socklen_t errnum_len;
 	int poll_ret;
 	pollfd fd_serv;
 
@@ -66,18 +62,21 @@ void	Server::__poll() {
 		{
 			if (it->revents & POLLERR)
 			{
+				int errnum;
+				socklen_t errnum_len;
+
 				errnum_len = sizeof (errnum);
 				getsockopt(it->fd, SOL_SOCKET, SO_ERROR, &errnum, &errnum_len);
 				this->logger.log(ERROR, std::string("Error on socket ") + it->fd + ": " + std::strerror(errnum));
-				for (clientIt = this->clients.begin(); clientIt != this->clients.end(); ++it)
+
+				ClientManager::iterator clientIt = this->clientManager.getClient(it->fd);
+
+				if (clientIt != this->clientManager.end())
 				{
-					if (clientIt->sock_fd == it->fd)
-					{
-						this->nickManager.unregisterNickname(clientIt->nickname);
-						this->clients.erase(clientIt);
-						break;
-					}
+					this->nickManager.unregisterNickname(clientIt->second.nickname);
+					this->clientManager.removeClient(clientIt);
 				}
+
 				this->_clientfd.erase(it);
 				continue;
 			}
@@ -87,15 +86,14 @@ void	Server::__poll() {
 					this->__acceptClient();
 				else if (__readFromClient(it->fd))
 				{
-					for (clientIt = this->clients.begin(); clientIt != this->clients.end(); ++it)
+					ClientManager::iterator clientIt = this->clientManager.getClient(it->fd);
+
+					if (clientIt != this->clientManager.end())
 					{
-						if (clientIt->sock_fd == it->fd)
-						{
-							this->nickManager.unregisterNickname(clientIt->nickname);
-							this->clients.erase(clientIt);
-							break;
-						}
+						this->nickManager.unregisterNickname(clientIt->second.nickname);
+						this->clientManager.removeClient(clientIt);
 					}
+
 					this->_clientfd.erase(it);
 					continue;
 				}
@@ -106,8 +104,7 @@ void	Server::__poll() {
 		this->_clientfd.insert(this->_clientfd.end(), this->_newConnections.begin(), this->_newConnections.end());
 		this->_newConnections.clear();
 	}
-	if (!KEEP_RUNNING)
-		this->__shutdown();
+	this->__shutdown();
 }
 
 void	Server::__socket(int port) {
@@ -148,83 +145,21 @@ Server::ChannelList::iterator Server::getChannel(std::string const& channelName)
 void Server::initCommands()
 {
 	this->logger.log(DEBUG, "Registering commands");
-	this->commands.put("CAP", NULL);
-	this->commands.put("PASS", cmd_pass);
-	this->commands.put("USER", cmd_user);
-	this->commands.put("NICK", cmd_nick);
-	this->commands.put("QUIT", cmd_quit, CLIENT_STATE_LOGGED);
-	this->commands.put("MOTD", cmd_motd, CLIENT_STATE_LOGGED);
-	this->commands.put("OPER", cmd_oper, CLIENT_STATE_LOGGED);
-	this->commands.put("JOIN", cmd_join, CLIENT_STATE_LOGGED);
-	this->commands.put("PART", cmd_part, CLIENT_STATE_LOGGED);
-	this->commands.put("DIE", cmd_die, CLIENT_STATE_LOGGED);
-	this->commands.put("KILL", cmd_kill, CLIENT_STATE_LOGGED);
-	this->commands.put("NOTICE", cmd_msg_common, CLIENT_STATE_LOGGED);
-	this->commands.put("PRIVMSG", cmd_msg_common, CLIENT_STATE_LOGGED);
-	this->commands.put("PING", cmd_ping);
-	this->commands.put("PONG", cmd_pong);
-}
-
-void Server::processCommand(Client& client, std::string const& line)
-{
-	std::string prefix;
-	std::string params;
-	std::string::const_iterator begin;
-	std::string::const_iterator it;
-
-	if (line.empty())
-		return;
-	begin = line.begin();
-
-	// extract prefix if any
-	if (*begin == ':')
-	{
-		it = std::find(begin, line.end(), ' ');
-		prefix = std::string(begin, it);
-		begin = it;
-		if (begin != line.end())
-			++begin;
-	}
-
-	// extract command name
-	it = std::find(begin, line.end(), ' ');
-
-	// extract the rest of the line if any
-	if (it != line.end())
-		params = std::string(it + 1, line.end());
-
-	// std::cout
-	// 	<< std::setfill(' ')
-	// 	<< " " GREEN "< INPUT" END "  " WHITE "|" END " " YELLOW
-	// 	<< std::setw(15) << std::left
-	// 	<< client.address << END " " WHITE "|" END " " GREEN
-	// 	<< line << END << "\r\n";
-	// execute the command with the given arguments
-	this->commands.dispatch(client, prefix, std::string(begin, it), params);
-}
-
-void Server::removeClient(Client& client)
-{
-	ClientList::iterator clientIt;
-	PollFdList::iterator pollfdIt;
-
-	clientIt = std::find(this->clients.begin(), this->clients.end(), client);
-	if (clientIt != this->clients.end())
-	{
-		for (pollfdIt = this->_clientfd.begin(); pollfdIt != this->_clientfd.end(); ++pollfdIt)
-		{
-			if (pollfdIt->fd == clientIt->sock_fd)
-			{
-				this->_clientfd.erase(pollfdIt);
-				break;
-			}
-		}
-		this->clients.erase(clientIt);
-	}
-	else
-	{
-		// TODO log error
-	}
+	this->commandMap.put("CAP", NULL);
+	this->commandMap.put("PASS", cmd_pass);
+	this->commandMap.put("USER", cmd_user);
+	this->commandMap.put("NICK", cmd_nick);
+	this->commandMap.put("QUIT", cmd_quit, CLIENT_STATE_LOGGED);
+	this->commandMap.put("MOTD", cmd_motd, CLIENT_STATE_LOGGED);
+	this->commandMap.put("OPER", cmd_oper, CLIENT_STATE_LOGGED);
+	this->commandMap.put("JOIN", cmd_join, CLIENT_STATE_LOGGED);
+	this->commandMap.put("PART", cmd_part, CLIENT_STATE_LOGGED);
+	this->commandMap.put("DIE", cmd_die, CLIENT_STATE_LOGGED);
+	this->commandMap.put("KILL", cmd_kill, CLIENT_STATE_LOGGED);
+	this->commandMap.put("NOTICE", cmd_msg_common, CLIENT_STATE_LOGGED);
+	this->commandMap.put("PRIVMSG", cmd_msg_common, CLIENT_STATE_LOGGED);
+	this->commandMap.put("PING", cmd_ping);
+	this->commandMap.put("PONG", cmd_pong);
 }
 
 void Server::loadOperatorFile(std::string const& file)
@@ -254,26 +189,6 @@ void Server::loadOperatorFile(std::string const& file)
 	}
 }
 
-Client* Server::getClient(int fd)
-{
-	ClientList::iterator it;
-
-	for (it = this->clients.begin(); it != this->clients.end(); ++it)
-		if (it->sock_fd == fd)
-			return &*it;
-	return NULL;
-}
-
-Client* Server::getClient(std::string const& nickname)
-{
-	ClientList::iterator it;
-
-	for (it = this->clients.begin(); it != this->clients.end(); ++it)
-		if (it->nickname == nickname)
-			return &*it;
-	return NULL;
-}
-
 Recipient* Server::getRecipient(std::string const& identifier)
 {
 	if (identifier.empty())
@@ -286,7 +201,12 @@ Recipient* Server::getRecipient(std::string const& identifier)
 			return &*it;
 	}
 	else
-		return this->getClient(identifier); // TODO does not work :(
+	{
+		ClientManager::iterator it = this->clientManager.getClient(identifier);
+
+		if (it != this->clientManager.end())
+			return &it->second;
+	}
 	return NULL;
 }
 
@@ -308,9 +228,7 @@ void Server::__acceptClient()
 	}
 	this->logger.log(DEBUG, "<" + address + "> Accepted client");
 
-	Client client = Client(*this, fd, address);
-
-	this->clients.push_back(client);
+	this->clientManager.addClient(Client(this, fd, address));
 
 	pollfd newPollFd;
 
@@ -322,22 +240,20 @@ void Server::__acceptClient()
 
 bool Server::__readFromClient(int fd)
 {
-	Client* client;
+	ClientManager::iterator it = this->clientManager.getClient(fd);
 
-	client = this->getClient(fd);
-	if (client != NULL)
-		return client->readFrom();
+	if (it != this->clientManager.end())
+		return it->second.readFrom();
 	this->logger.log(ERROR, std::string("No such client for socket file descriptor ") + fd);
 	return false;
 }
 
 void Server::__writeToClient(int fd)
 {
-	Client* client;
+	ClientManager::iterator it = this->clientManager.getClient(fd);
 
-	client = this->getClient(fd);
-	if (client != NULL)
-		client->writeTo();
+	if (it != this->clientManager.end())
+		it->second.writeTo();
 	else
 	{
 		// TODO log error, client not found
@@ -359,11 +275,11 @@ std::string Server::__getStartDate()
 
 void Server::__shutdown()
 {
-	ClientList::iterator it;
+	ClientManager::iterator it;
 
 	this->logger.log(INFO, "Shutting down...");
-	for (it = this->clients.begin(); it != this->clients.end(); ++it)
-		::close(it->sock_fd);
+	for (it = this->clientManager.begin(); it != this->clientManager.end(); ++it)
+		it->second.closeConnection();
 }
 
 std::ostream& operator<<(std::ostream& os, sockaddr_in& address)
