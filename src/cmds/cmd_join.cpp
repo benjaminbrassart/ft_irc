@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 10:21:42 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 14:08:03 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void cmd_join(CommandContext& context)
 
 	if (args[0] == "0")
 	{
-		client.leaveAllChannels("");
+		// TODO loop through channels, remove client and clear client's channels
 		return;
 	}
 
@@ -82,7 +82,7 @@ void cmd_join(CommandContext& context)
 		if (key.empty() || chan.passwd == key)
 		{
 			chan.addClient(client, priv);
-			client.joinChannel(chan);
+			// TODO loop throught clients and send JOIN
 		}
 		else
 			client.reply<ERR_PASSWDMISMATCH>();
