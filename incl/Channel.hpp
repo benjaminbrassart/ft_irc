@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:34:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 10:48:12 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 11:35:23 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class Recipient;
 
 class Channel : public Recipient {
 
-	private:
+	public:
 		struct ClientPrivilege
 		{
 			Client* client;
