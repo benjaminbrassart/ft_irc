@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 08:47:08 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 10:21:42 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,8 +81,8 @@ void cmd_join(CommandContext& context)
 
 		if (key.empty() || chan.passwd == key)
 		{
-			client.joinChannel(chan);
 			chan.addClient(client, priv);
+			client.joinChannel(chan);
 		}
 		else
 			client.reply<ERR_PASSWDMISMATCH>();
