@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 13:04:37 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 13:33:07 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 10:01:04 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,16 +22,6 @@
 # define _STR(S) #S
 # define STR(S) _STR(S)
 
-# ifdef VERSION_COMMIT
-#  define VERSION_SUFFIX "-" STR(VERSION_COMMIT)
-# else
-#  define VERSION_SUFFIX "(unknown)"
-# endif
-
-# ifndef BUILD_DATE
-#  define BUILD_DATE "(unknown)"
-# endif
-
-# define VERSION "" STR(VERSION_MAJOR) "." STR(VERSION_MINOR) "." STR(VERSION_PATCH) VERSION_SUFFIX
+# define VERSION "" STR(VERSION_MAJOR) "." STR(VERSION_MINOR) "." STR(VERSION_PATCH)
 
 #endif // CONFIG_H

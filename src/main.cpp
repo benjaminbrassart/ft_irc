@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 00:55:38 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/29 21:47:33 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 10:01:50 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,12 +59,10 @@ int	main(int ac, char **av) {
 	if (port == -1)
 		return 1;
 
-	server.logger.log(INFO, "Starting " + server.name + " version " + VERSION);
-	server.logger.log(INFO, std::string("Build date ") + STR(BUILD_DATE));
-
 	server.name = "ft_ble";
 	server.motdFileName = "motd.txt";
 
+	server.logger.log(INFO, "Starting " + server.name + " version " + VERSION);
 	server.loadOperatorFile("operators.txt");
 
 	KEEP_RUNNING = true;
