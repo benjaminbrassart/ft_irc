@@ -6,16 +6,20 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 09:49:02 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 15:45:40 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
+
+#include <cstring>
 #include <ctime>
+
+#include <fstream>
 #include <iomanip>
 #include <iostream>
-#include <fstream>
 #include <sstream>
+#include <unistd.h>
 
 /* ==========================================================================
 								COPLIEN FORM
@@ -75,7 +79,7 @@ bool Client::readFrom()
 	if (res == -1)
 	{
 		errnum = errno;
-		std::cerr << "Error: unable to recv from " << this->address << ": " << ::strerror(errnum) << '\n';
+		std::cerr << "Error: unable to recv from " << this->address << ": " << std::strerror(errnum) << '\n';
 		this->closeConnection();
 		return true;
 	}
@@ -151,32 +155,6 @@ bool Client::checkState(ClientState state)
 void Client::setState(ClientState state)
 {
 	this->_state |= state;
-}
-
-void Client::joinChannel(Channel& channel)
-{
-	(void)channel;
-	// TODO
-}
-
-void Client::leaveChannel(Channel& channel, std::string const& message)
-{
-	std::string const prefix = this->asPrefix();
-	Channel::ClientList::iterator it;
-
-	channel.removeClient(*this);
-	this->channels.erase(&channel);
-
-	for (it = channel.allClients.begin(); it != channel.allClients.end(); ++it)
-		it->client->send(prefix + " PART " + channel.name + " :" + message);
-}
-
-void Client::leaveAllChannels(std::string const& message)
-{
-	ChannelList::iterator it;
-
-	for (it = this->channels.begin(); it != this->channels.end(); ++it)
-		leaveChannel(**it, message);
 }
 
 std::string Client::asPrefix()

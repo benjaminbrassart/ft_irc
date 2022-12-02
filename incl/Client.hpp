@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 09:46:07 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 15:41:12 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include "Recipient.hpp"
 # include "Logger.hpp"
 
+# include <ctime>
 # include <string>
 # include <netinet/in.h>
 
@@ -102,28 +103,6 @@ class Client : public Recipient {
 		 */
 		void					setState(ClientState state);
 
-		/**
-		 * Make this user join a channel
-		 *
-		 * @param channel the channel to join
-		 */
-		void					joinChannel(Channel& channel);
-
-		/**
-		 * Make this user leave a channel
-		 *
-		 * @param channel the channel to leave
-		 * @param message the message to be displayed to other clients
-		 */
-		void					leaveChannel(Channel& channel, std::string const& message);
-
-		/**
-		 * Make this user leave all joined channels
-		 *
-		 * @param message the message to be displayed to other clients
-		 */
-		void					leaveAllChannels(std::string const& message);
-
 		std::string				asPrefix();
 
 		std::string const& getIdentifier() const;
@@ -134,7 +113,7 @@ class Client : public Recipient {
 		std::string				hostname;
 		std::string				realname;
 		std::string				hostAddress;
-		int 					sock_fd;
+		int						sock_fd;
 		std::string				nickname;
 		::sockaddr_in			address;
 		std::string				readBuffer;
