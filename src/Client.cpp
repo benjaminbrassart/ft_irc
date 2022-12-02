@@ -6,11 +6,13 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 16:42:47 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 17:37:10 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
+
+#include "config.h"
 
 #include <cstring>
 #include <ctime>
@@ -136,7 +138,7 @@ void Client::tryLogin()
 			this->reply<RPL_WELCOME>(this->nickname, this->username, this->hostname);
 			this->reply<RPL_YOURHOST>();
 			this->reply<RPL_CREATED>(this->server->startDate);
-			this->reply<RPL_MYINFO>(this->server->name);
+			this->reply<RPL_MYINFO>(SERVER_NAME);
 			this->server->logger.log(DEBUG, "<" + this->address + "> Logged in as " + this->asPrefix());
 		}
 		else

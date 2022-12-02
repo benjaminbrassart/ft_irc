@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:38:48 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 16:43:46 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 17:25:35 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,8 +35,6 @@ private:
 
 public:
 	CommandMap(Server& server);
-	CommandMap(CommandMap const &x);
-	CommandMap &operator=(CommandMap const &x);
 	~CommandMap();
 
 public:

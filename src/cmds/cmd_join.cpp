@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 16:21:19 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 18:06:53 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,31 +57,25 @@ void cmd_join(CommandContext& context)
 
 	for (; chanNameIt != channels.end(); ++chanNameIt)
 	{
-		Server::ChannelList::iterator chanIt = server.getChannel(*chanNameIt);
-		Channel* chanPtr;
+		ChannelManager::iterator chanIt = server.channelManager.getChannel(*chanNameIt);
 		ChannelPrivilege priv;
 
-		if (chanIt == server.channels.end())
+		if (chanIt == server.channelManager.end())
 		{
-			server.channels.push_back(Channel(&server, *chanNameIt));
-			chanPtr = &server.channels.back();
+			chanIt = server.channelManager.addChannel(Channel(&server, *chanNameIt));
 			priv = PRIV_UNIQOP;
 		}
 		else
-		{
-			chanPtr = &*chanIt;
 			priv = PRIV_NONE;
-		}
 
-		Channel& chan = *chanPtr;
 		std::string key;
 
 		if (keyIt != keys.end())
 			key = *keyIt++;
 
-		if (key.empty() || chan.passwd == key)
+		if (key.empty() || chanIt->passwd == key)
 		{
-			chan.addClient(client, priv);
+			chanIt->addClient(client, priv);
 			// TODO loop throught clients and send JOIN
 		}
 		else

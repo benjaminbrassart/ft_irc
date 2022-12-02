@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:11:06 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 15:38:07 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 18:07:03 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,9 @@ void cmd_part(CommandContext& context)
 
 	for (chanNameIt = channels.begin(); chanNameIt != channels.end(); ++chanNameIt)
 	{
-		Server::ChannelList::iterator chanIt = server.getChannel(*chanNameIt);
+		ChannelManager::iterator chanIt = server.channelManager.getChannel(*chanNameIt);
 
-		if (chanIt == server.channels.end())
+		if (chanIt == server.channelManager.end())
 			client.reply<ERR_NOSUCHCHANNEL>(*chanNameIt);
 		else if (!chanIt->hasClient(client))
 			client.reply<ERR_NOTONCHANNEL>(chanIt->name);
@@ -59,9 +59,9 @@ void cmd_part(CommandContext& context)
 			chanIt->removeClient(client);
 			client.channels.erase(&*chanIt);
 
-			// remove the channel if no client left
+			// remove the channel if there is no client left
 			if (chanIt->allClients.empty())
-				server.channels.erase(chanIt);
+				server.channelManager.removeChannel(chanIt);
 		}
 	}
 }

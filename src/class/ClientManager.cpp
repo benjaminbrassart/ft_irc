@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 16:07:30 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 16:36:39 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 17:50:31 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,6 @@ ClientManager::~ClientManager()
 ClientManager::iterator ClientManager::getClient(int sockFd)
 {
 	return this->_clients.find(sockFd);
-}
-
-ClientManager::iterator ClientManager::getClient(std::string const& nickname)
-{
-	(void)nickname;
-	return this->end(); // TODO
 }
 
 void ClientManager::addClient(Client const& client)

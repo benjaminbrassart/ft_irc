@@ -1,43 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   NicknameManager.hpp                                :+:      :+:    :+:   */
+/*   ChannelManager.hpp                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/02 15:11:05 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 17:51:52 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/12/02 14:56:48 by bbrassar          #+#    #+#             */
+/*   Updated: 2022/12/02 18:03:18 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
-#include <map>
-#include <set>
 #include <string>
+#include <vector>
 
-class Client;
+class Channel;
 
-class NicknameManager
+class ChannelManager
 {
 public:
-	typedef std::map< std::string, Client* > container_type;
+	typedef std::vector< Channel > container_type;
 	typedef container_type::iterator iterator;
+	typedef container_type::reverse_iterator reverse_iterator;
 
 private:
-	container_type _nicknames;
+	container_type _channels;
 
 public:
-	NicknameManager();
-	~NicknameManager();
+	ChannelManager();
+	~ChannelManager();
 
 public:
-	bool registerNickname(std::string const& nickname, Client* client);
-	bool unregisterNickname(std::string const& nickname);
-	bool hasNickname(std::string const& nickname);
-	iterator getClient(std::string const& nickname);
+	iterator getChannel(std::string const& name);
+	iterator addChannel(Channel const& channel);
+	bool removeChannel(std::string const& channelName);
+	bool removeChannel(iterator channel);
 
 public:
 	iterator begin();
 	iterator end();
-}; // class NicknameManager
+
+}; // class ChannelManager

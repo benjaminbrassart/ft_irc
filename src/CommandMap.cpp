@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:45:50 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 16:46:16 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 17:26:29 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,23 @@
 CommandMap::CommandMap(Server& server) :
 	_commands(),
 	server(server)
-{}
-
-CommandMap::CommandMap(CommandMap const& x) :
-	_commands(x._commands),
-	server(x.server)
-{}
-
-CommandMap& CommandMap::operator=(CommandMap const& x)
 {
-	this->_commands = x._commands;
-	return *this;
+	this->server.logger.log(DEBUG, "Registering commands");
+	this->put("CAP", NULL);
+	this->put("PASS", cmd_pass);
+	this->put("USER", cmd_user);
+	this->put("NICK", cmd_nick);
+	this->put("QUIT", cmd_quit, CLIENT_STATE_LOGGED);
+	this->put("MOTD", cmd_motd, CLIENT_STATE_LOGGED);
+	this->put("OPER", cmd_oper, CLIENT_STATE_LOGGED);
+	this->put("JOIN", cmd_join, CLIENT_STATE_LOGGED);
+	this->put("PART", cmd_part, CLIENT_STATE_LOGGED);
+	this->put("DIE", cmd_die, CLIENT_STATE_LOGGED);
+	this->put("KILL", cmd_kill, CLIENT_STATE_LOGGED);
+	this->put("NOTICE", cmd_msg_common, CLIENT_STATE_LOGGED);
+	this->put("PRIVMSG", cmd_msg_common, CLIENT_STATE_LOGGED);
+	this->put("PING", cmd_ping);
+	this->put("PONG", cmd_pong);
 }
 
 CommandMap::~CommandMap()

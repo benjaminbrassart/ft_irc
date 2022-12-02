@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/02 16:46:08 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 17:52:10 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,17 +33,13 @@ Server::Server() :
 
 Server::~Server() {}
 
-const int	&Server::getsocketfd() const {return this->_socketfd;}
-
-const std::vector<pollfd>	&Server::getclientfd() const {return this->_clientfd;}
-
 void	Server::__poll() {
 
 	PollFdList::iterator it;
 	int poll_ret;
 	pollfd fd_serv;
 
-	fd_serv.fd = _socketfd;
+	fd_serv.fd = sockFd;
 	fd_serv.events = POLLIN;
 
 	_clientfd.push_back(fd_serv);
@@ -82,7 +78,7 @@ void	Server::__poll() {
 			}
 			else if (it->revents & POLLIN)
 			{
-				if (it->fd == _socketfd)
+				if (it->fd == sockFd)
 					this->__acceptClient();
 				else if (__readFromClient(it->fd))
 				{
@@ -110,11 +106,11 @@ void	Server::__poll() {
 void	Server::__socket(int port) {
 
 	int	val = 1;
-	_socketfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (_socketfd == -1)
+	sockFd = socket(AF_INET, SOCK_STREAM, 0);
+	if (sockFd == -1)
 		throw IOException("socket", errno);
 	this->logger.log(DEBUG, "Socket created");
-	if (setsockopt(_socketfd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof val))
+	if (setsockopt(sockFd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof val))
 		throw IOException("used_address", errno);
 
 	sockaddr_in	serv_addr;
@@ -123,43 +119,13 @@ void	Server::__socket(int port) {
 	serv_addr.sin_family = AF_INET;
 	serv_addr.sin_port = htons(port);
 
-	if (bind(_socketfd, (sockaddr*)&serv_addr, sizeof(serv_addr)) != 0)
+	if (bind(sockFd, (sockaddr*)&serv_addr, sizeof(serv_addr)) != 0)
 		throw IOException("bind", errno);
 	this->logger.log(DEBUG, "Socket bound");
-	if (listen(_socketfd, SOMAXCONN) != 0)
+	if (listen(sockFd, SOMAXCONN) != 0)
 		throw IOException("listen", errno);
 	this->logger.log(INFO, std::string("Listening on port ") + port);
 	Server::__poll();
-}
-
-Server::ChannelList::iterator Server::getChannel(std::string const& channelName)
-{
-	ChannelList::iterator it;
-
-	for (it = this->channels.begin(); it != this->channels.end(); ++it)
-		if (it->name == channelName)
-			break;
-	return it;
-}
-
-void Server::initCommands()
-{
-	this->logger.log(DEBUG, "Registering commands");
-	this->commandMap.put("CAP", NULL);
-	this->commandMap.put("PASS", cmd_pass);
-	this->commandMap.put("USER", cmd_user);
-	this->commandMap.put("NICK", cmd_nick);
-	this->commandMap.put("QUIT", cmd_quit, CLIENT_STATE_LOGGED);
-	this->commandMap.put("MOTD", cmd_motd, CLIENT_STATE_LOGGED);
-	this->commandMap.put("OPER", cmd_oper, CLIENT_STATE_LOGGED);
-	this->commandMap.put("JOIN", cmd_join, CLIENT_STATE_LOGGED);
-	this->commandMap.put("PART", cmd_part, CLIENT_STATE_LOGGED);
-	this->commandMap.put("DIE", cmd_die, CLIENT_STATE_LOGGED);
-	this->commandMap.put("KILL", cmd_kill, CLIENT_STATE_LOGGED);
-	this->commandMap.put("NOTICE", cmd_msg_common, CLIENT_STATE_LOGGED);
-	this->commandMap.put("PRIVMSG", cmd_msg_common, CLIENT_STATE_LOGGED);
-	this->commandMap.put("PING", cmd_ping);
-	this->commandMap.put("PONG", cmd_pong);
 }
 
 void Server::loadOperatorFile(std::string const& file)
@@ -195,17 +161,17 @@ Recipient* Server::getRecipient(std::string const& identifier)
 		return NULL;
 	if (identifier[0] == '#')
 	{
-		ChannelList::iterator it = this->getChannel(identifier);
+		ChannelManager::iterator it = this->channelManager.getChannel(identifier);
 
-		if (it != this->channels.end())
+		if (it != this->channelManager.end())
 			return &*it;
 	}
 	else
 	{
-		ClientManager::iterator it = this->clientManager.getClient(identifier);
+		NicknameManager::iterator it = this->nickManager.getClient(identifier);
 
-		if (it != this->clientManager.end())
-			return &it->second;
+		if (it != this->nickManager.end())
+			return it->second;
 	}
 	return NULL;
 }
@@ -218,7 +184,7 @@ void Server::__acceptClient()
 	socklen_t addressLength;
 
 	addressLength = sizeof (address);
-	fd = ::accept(this->_socketfd, (sockaddr*)&address, &addressLength);
+	fd = ::accept(this->sockFd, (sockaddr*)&address, &addressLength);
 
 	if (fd == -1)
 	{

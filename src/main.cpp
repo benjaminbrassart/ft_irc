@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 00:55:38 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/02 15:33:24 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 17:37:58 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ long	parsing_input(int ac, char *str) {
 		std::cerr << "Port number is out of range" << std::endl;
 		return -1;
 	}
-	if (*buf == '\0')
+	if (*buf != '\0')
 	{
 		std::cerr << "Port number is rubbish!" << std::endl;
 		return -1;
@@ -55,25 +55,24 @@ static void __handleSignal(int sig);
 //./ircserv <port> <password>
 int	main(int ac, char **av) {
 
-	Server	server;
-	long	port;
-
-	__logger = &server.logger;
+	long port;
 
 	port = parsing_input(ac, av[1]);
 	if (port == -1)
 		return 1;
 
-	server.name = "ft_ble";
-	server.motdFileName = "motd.txt";
 
-	server.logger.log(INFO, "Starting " + server.name + " version " + VERSION);
+	Server server;
+
+	__logger = &server.logger;
+
+	server.logger.log(INFO, "Starting " SERVER_NAME " version " VERSION);
+
 	server.loadOperatorFile("operators.txt");
 
 	KEEP_RUNNING = true;
 
 	server.password = av[2];
-	server.initCommands();
 
 	std::signal(SIGINT, __handleSignal);
 	server.logger.log(DEBUG, "Signal handlers setup");
@@ -85,9 +84,9 @@ int	main(int ac, char **av) {
 	catch (IOException const& e)
 	{
 		server.logger.log(ERROR, std::string("I/O error: ") + e.what());
-		// std::cerr << "I/O error: " << e.what() << std::endl;
+		return 1;
 	}
-	close(server.getsocketfd());
+	close(server.sockFd);
 	return 0;
 }
 
