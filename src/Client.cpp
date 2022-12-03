@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 17:37:10 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/03 12:10:13 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ bool Client::readFrom()
 	return false;
 }
 
-void Client::writeTo()
+void Client::flushWriteBuffer()
 {
 	int errnum;
 	int res;

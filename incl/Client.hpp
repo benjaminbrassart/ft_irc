@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 17:22:58 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/03 12:10:13 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ class Client : public Recipient {
 		 *
 		 * @warning make sure the file descriptor is polled AND ready!
 		 */
-		void					writeTo();
+		void					flushWriteBuffer();
 
 		/**
 		 * Attempt to log in the client, does nothing if the client is not

@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/02 18:24:43 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/03 12:10:13 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,7 +219,7 @@ void Server::__writeToClient(int fd)
 	ClientManager::iterator it = this->clientManager.getClient(fd);
 
 	if (it != this->clientManager.end())
-		it->second.writeTo();
+		it->second.flushWriteBuffer();
 	else
 	{
 		// TODO log error, client not found

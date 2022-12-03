@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 18:24:46 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/03 12:24:49 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "class/ChannelManager.hpp"
 # include "class/ClientManager.hpp"
 # include "class/NicknameManager.hpp"
+# include "class/ConnectionManager.hpp"
 # include "class/exception/IOException.hpp"
 
 # include "Channel.hpp"
@@ -31,6 +32,9 @@
 
 class Channel;
 class ClientManager;
+class NicknameManager;
+class ChannelManager;
+class ConnectionManager;
 class CommandRegistry;
 class Logger;
 
@@ -59,6 +63,7 @@ class Server {
 		NicknameManager nickManager;
 		ClientManager clientManager;
 		ChannelManager channelManager;
+		ConnectionManager connectionManager;
 		Logger logger;
 
 	private:
