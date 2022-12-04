@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/03 12:10:13 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/04 11:17:59 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ class Client : public Recipient {
 		std::string				asPrefix();
 
 		std::string const& getIdentifier() const;
-		void sendMessage(Client& sender, std::string const& message);
+		void sendMessage(Client& sender, std::string const& command, std::string const& message);
 
 		ChannelList 			channels;
 		std::string				username;

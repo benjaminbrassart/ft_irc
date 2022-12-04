@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 09:26:25 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 16:12:04 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/04 11:17:48 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ public:
 
 public:
 	virtual std::string const& getIdentifier() const = 0;
-	virtual void sendMessage(Client& sender, std::string const& message) = 0;
+	virtual void sendMessage(Client& sender, std::string const& command, std::string const& message) = 0;
 }; // class Recipient
 
 #endif // RECIPIENT_HPP

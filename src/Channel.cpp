@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 16:20:44 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/04 11:46:42 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,13 +148,13 @@ std::string const& Channel::getIdentifier() const
 	return this->name;
 }
 
-void Channel::sendMessage(Client& sender, std::string const& message)
+void Channel::sendMessage(Client& sender, std::string const& command, std::string const& message)
 {
 	ClientList::iterator it;
 
 	for (it = this->allClients.begin(); it != this->allClients.end(); ++it)
 	{
 		if (&sender != it->client)
-			it->client->sendMessage(sender, message);
+			it->client->sendMessage(sender, command, message); // TODO sent to users here, target being #channel
 	}
 }

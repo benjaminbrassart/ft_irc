@@ -1,23 +1,21 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_msg_common.cpp                                 :+:      :+:    :+:   */
+/*   cmd_privmsg.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/25 09:49:31 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/29 09:18:41 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/12/04 11:33:25 by bbrassar          #+#    #+#             */
+/*   Updated: 2022/12/04 11:37:40 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 #include "command.h"
 
-void cmd_msg_common(CommandContext& ctx)
+void cmd_privmsg(CommandContext& ctx)
 {
-	std::string const& command = ctx.name;
 	Client& client = ctx.client;
-	Server& server = ctx.server;
 	CommandContext::ArgumentList& args = ctx.args;
 	CommandContext::ArgumentList recips;
 	CommandContext::ArgumentList::const_iterator recipIt;
@@ -25,17 +23,17 @@ void cmd_msg_common(CommandContext& ctx)
 
 	if (args.size() < 2)
 	{
-		client.reply<ERR_NEEDMOREPARAMS>(command);
+		client.reply<ERR_NEEDMOREPARAMS>(ctx.name);
 		return;
 	}
 
 	recips = CommandContext::splitList(args[0]);
 	for (recipIt = recips.begin(); recipIt != recips.end(); ++recipIt)
 	{
-		recipient = server.getRecipient(*recipIt);
+		recipient = ctx.server.getRecipient(*recipIt);
 		if (recipient == NULL)
 			client.reply<ERR_NOSUCHNICK>(*recipIt);
 		else
-			recipient->sendMessage(client, args[1]);
+			recipient->sendMessage(client, ctx.name, args[1]);
 	}
 }

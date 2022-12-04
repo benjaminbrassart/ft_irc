@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:45:50 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 17:26:29 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/04 11:36:35 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ CommandMap::CommandMap(Server& server) :
 	this->put("PART", cmd_part, CLIENT_STATE_LOGGED);
 	this->put("DIE", cmd_die, CLIENT_STATE_LOGGED);
 	this->put("KILL", cmd_kill, CLIENT_STATE_LOGGED);
-	this->put("NOTICE", cmd_msg_common, CLIENT_STATE_LOGGED);
-	this->put("PRIVMSG", cmd_msg_common, CLIENT_STATE_LOGGED);
+	this->put("NOTICE", cmd_notice, CLIENT_STATE_LOGGED);
+	this->put("PRIVMSG", cmd_privmsg, CLIENT_STATE_LOGGED);
 	this->put("PING", cmd_ping);
 	this->put("PONG", cmd_pong);
 }

@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:34:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 16:21:02 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/04 11:42:42 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,16 +66,10 @@ class Channel : public Recipient {
 		void	removeClient(Client &client);
 		bool	hasClient(Client &client) const;
 
+		// Recipient overloads
 		std::string const& getIdentifier() const;
-		void sendMessage(Client& sender, std::string const& message);
-
-		/**
-		 * Send a message from a client to all other clients in this channel
-		 *
-		 * @param sender the sender of the message
-		 * @param msg the message to send
-		 */
-		void broadcast(Client &sender, std::string const msg);
+		void sendMessage(Client& sender, std::string const& command, std::string const& message);
+		//
 };
 
 #endif
