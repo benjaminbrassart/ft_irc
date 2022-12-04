@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/03 12:24:49 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/03 12:40:13 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,11 +44,10 @@ class Server {
 		Server();
 		~Server();
 
-		typedef std::vector< pollfd > PollFdList;
 		typedef std::vector< OperatorEntry > OperatorPasswordList;
 
-		void		__socket(int port);
-		void		__poll();
+		void		createSocket(int port);
+		void		start();
 		void		loadOperatorFile(std::string const& file);
 
 		Recipient*	getRecipient(std::string const& identifier);
@@ -67,8 +66,6 @@ class Server {
 		Logger logger;
 
 	private:
-		PollFdList	_pollFds;
-		PollFdList	_newConnections;
 
 		/**
 		 * Accept a client and add it to the client list

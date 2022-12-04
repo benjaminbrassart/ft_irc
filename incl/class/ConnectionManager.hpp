@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 10:54:57 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/03 12:27:09 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/03 14:33:59 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include <poll.h>
 #include <vector>
 
+class Client;
 class Server;
 
 class ConnectionManager
@@ -25,6 +26,8 @@ public:
 
 private:
 	container_type _pollFds;
+	container_type _newConnections;
+	std::vector< int > _removedSockets;
 
 public:
 	ConnectionManager();
@@ -35,6 +38,7 @@ public:
 	void removeSocket(int sock);
 	void wait();
 	void handlePoll(Server& server);
+	void disconnectClient(Client& client);
 
 public:
 	iterator begin();
@@ -47,4 +51,6 @@ private:
 
 	void handlePollInServer(Server& server, iterator& it);
 	void handlePollInClient(Server& server, iterator& it);
+
+	void __eraseSockets();
 }; // class ConnectionManager

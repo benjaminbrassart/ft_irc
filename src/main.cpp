@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 00:55:38 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/02 17:37:58 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/04 11:44:11 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <algorithm>
+#include <unistd.h>
 
 static Logger* __logger;
 
@@ -61,7 +62,6 @@ int	main(int ac, char **av) {
 	if (port == -1)
 		return 1;
 
-
 	Server server;
 
 	__logger = &server.logger;
@@ -79,7 +79,8 @@ int	main(int ac, char **av) {
 
 	try
 	{
-		server.__socket(port);
+		server.createSocket(port);
+		server.start();
 	}
 	catch (IOException const& e)
 	{

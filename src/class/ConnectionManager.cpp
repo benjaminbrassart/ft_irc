@@ -6,18 +6,23 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 10:54:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/03 12:28:20 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/03 14:39:14 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "class/ConnectionManager.hpp"
 #include "class/exception/IOException.hpp"
+
+#include "ft_irc.h"
+#include "Client.hpp"
 #include "Server.hpp"
+
 #include <cerrno>
 #include <cstring>
 
 ConnectionManager::ConnectionManager() :
-	_pollFds()
+	_pollFds(),
+	_newConnections()
 {
 }
 
@@ -37,38 +42,45 @@ void ConnectionManager::setServer(Server& server)
 
 void ConnectionManager::removeSocket(int sock)
 {
-	for (iterator it = this->_pollFds.begin(); it != this->_pollFds.end(); ++it)
-	{
-		if (it->fd == sock)
-		{
-			this->_pollFds.erase(it);
-			return;
-		}
-	}
+	this->_removedSockets.push_back(sock);
 }
 
 void ConnectionManager::wait()
 {
 	int	poll_res;
+	pollfd* ptr = &this->_pollFds[0];
+	nfds_t nfds = this->_pollFds.size();
+	int timeout = -1;
 
-	poll_res = ::poll(&this->_pollFds[0], this->_pollFds.size(), -1);
+	poll_res = ::poll(ptr, nfds, timeout);
 	if (poll_res == -1)
 		throw IOException("poll", errno);
 }
 
 void ConnectionManager::handlePoll(Server& server)
 {
-	for (iterator it = this->begin(); it != this->end();)
+	iterator it;
+
+	for (it = this->begin(); KEEP_RUNNING && it != this->end();)
 	{
-		if (it->events & POLLERR)
+		if (it->revents & POLLERR)
 			this->handlePollErr(server, it);
-		else if (it->events & POLLIN)
+		else if (it->revents & POLLIN)
 			this->handlePollIn(server, it);
-		else if (it->events & POLLOUT)
+		else if (it->revents & POLLOUT)
 			this->handlePollOut(server, it);
 		else
 			++it;
 	}
+
+	this->__eraseSockets();
+	this->_pollFds.insert(this->_pollFds.end(), this->_newConnections.begin(), this->_newConnections.end());
+	this->_newConnections.clear();
+}
+
+void ConnectionManager::disconnectClient(Client& client)
+{
+	client.closeConnection();
 }
 
 void ConnectionManager::handlePollErr(Server& server, iterator& it)
@@ -106,7 +118,21 @@ void ConnectionManager::handlePollIn(Server& server, iterator& it)
 
 void ConnectionManager::handlePollInClient(Server& server, iterator& it)
 {
-	(void)server;
+	ClientManager::iterator clientIt = server.clientManager.getClient(it->fd);
+
+	if (clientIt != server.clientManager.end())
+	{
+		if (clientIt->second.readFrom())
+		{
+			server.clientManager.removeClient(clientIt);
+			this->removeSocket(it->fd);
+		}
+	}
+	else
+	{
+		server.logger.log(ERROR, "Internal error: unable to find connected client");
+		this->removeSocket(it->fd);
+	}
 	++it;
 }
 
@@ -128,7 +154,8 @@ void ConnectionManager::handlePollInServer(Server& server, iterator& it)
 	}
 	else
 	{
-		this->_pollFds.push_back(pfd);
+		server.logger.log(DEBUG, "<" + addr + "> New connection");
+		this->_newConnections.push_back(pfd);
 		server.clientManager.addClient(Client(&server, pfd.fd, addr));
 	}
 	++it;
@@ -140,7 +167,7 @@ void ConnectionManager::handlePollOut(Server& server, iterator& it)
 
 	if (clientIt == server.clientManager.end())
 	{
-		server.logger.log(ERROR, "Internal error: unable to connected client");
+		server.logger.log(ERROR, "Internal error: unable to find connected client");
 		this->_pollFds.erase(it);
 	}
 	else
@@ -158,4 +185,24 @@ ConnectionManager::iterator ConnectionManager::begin()
 ConnectionManager::iterator ConnectionManager::end()
 {
 	return this->_pollFds.end();
+}
+
+void ConnectionManager::__eraseSockets()
+{
+	std::vector< int >::iterator sockIt = this->_removedSockets.begin();
+
+	for (; sockIt != this->_removedSockets.end(); ++sockIt)
+	{
+		iterator it = this->_pollFds.begin();
+
+		for (; it != this->_pollFds.end(); ++it)
+		{
+			if (it->fd == *sockIt)
+			{
+				this->_pollFds.erase(it);
+				break;
+			}
+		}
+	}
+	this->_removedSockets.clear();
 }
