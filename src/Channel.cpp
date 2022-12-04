@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/04 11:46:42 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/04 12:34:17 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,13 +109,6 @@ bool	Channel::setChanModes(std::string modes) {
 /* ==========================================================================
 								MEMBER FUNCTIONS
    ========================================================================== */
-
-void	Channel::broadcast(Client &sender, std::string const msg) {
-	(void)sender;
-	(void)msg;
-
-	// TODO
-}
 
 void	Channel::addClient(Client &client, ChannelPrivilege privilege) {
 	ClientPrivilege const entry = {&client, privilege};
