@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 17:39:39 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/04 11:16:00 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void cmd_nick(CommandContext& context)
 			else
 				server.logger.log(DEBUG, "<" + client.address + "> " + client.nickname + " Changed nickname to " + nickname);
 			client.nickname = nickname;
+			server.nickManager.registerNickname(nickname, &client);
 		}
 	}
 }
