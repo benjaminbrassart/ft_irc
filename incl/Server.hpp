@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/03 12:40:13 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/05 17:17:49 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ class Server {
 
 		Recipient*	getRecipient(std::string const& identifier);
 
+		Logger logger;
+
 		int sockFd;
 		std::string startDate;
 		std::string password;
@@ -63,7 +65,6 @@ class Server {
 		ClientManager clientManager;
 		ChannelManager channelManager;
 		ConnectionManager connectionManager;
-		Logger logger;
 
 	private:
 

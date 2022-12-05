@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/05 14:20:01 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/05 17:17:38 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@
 #include <sstream>
 
 Server::Server() :
+	logger(Logger(DEBUG)),
 	startDate(Server::__getStartDate()),
-	commandMap(*this),
-	logger(Logger(DEBUG))
+	commandMap(*this)
  {}
 
 Server::~Server() {}

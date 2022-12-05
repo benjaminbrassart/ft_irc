@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 05:03:51 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/05 16:18:11 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/05 17:52:55 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,16 @@ static std::string __now()
 	return std::string(buffer, res);
 }
 
-Logger::Logger(LogLevel level)
-{
-	this->_level = level;
-}
+Logger::Logger(LogLevel level) :
+	_level(level)
+{}
 
 Logger::~Logger()
 {}
 
 void Logger::log(LogLevel level, std::string const& message)
 {
-	static LogContext __CONTEXTS[] = {
+	static LogContext const __CONTEXTS[] = {
 		{"DEBUG", GREEN, std::cout},
 		{"INFO", WHITE, std::cout},
 		{"NOTICE", CYAN, std::cout},
@@ -55,10 +54,10 @@ void Logger::log(LogLevel level, std::string const& message)
 	};
 
 	// TODO find out why valgrind reports uninitialized memory for this->_level
-	if (level < DEBUG)
+	if (level < this->_level)
 		return;
 
-	LogContext& ctx = __CONTEXTS[level];
+	LogContext const& ctx = __CONTEXTS[level];
 
 	ctx.stream
 		<< "[" << __now() << "] "
