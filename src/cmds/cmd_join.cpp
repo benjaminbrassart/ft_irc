@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/04 14:41:14 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/05 13:09:08 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,17 @@ void cmd_join(CommandContext& context)
 		{
 			chanIt->addClient(client, priv);
 
+			std::stringstream clientList;
+
 			for (clientIt = chanIt->allClients.begin(); clientIt != chanIt->allClients.end(); ++clientIt)
 			{
 				clientIt->client->send(prefix + " JOIN " + chanIt->name);
-				client.reply<RPL_NAMREPLY>();
+				if (clientIt != chanIt->allClients.begin())
+					clientList << ' ';
+				clientList << clientIt->client->nickname;
 			}
+			// TOOD see if we need to split this if there are too many clients
+			client.reply<RPL_NAMREPLY>(chanIt->name, "=", clientList.str());
 			client.reply<RPL_ENDOFNAMES>(chanIt->name);
 			client.reply<RPL_TOPIC>(chanIt->name, chanIt->topic);
 		}
