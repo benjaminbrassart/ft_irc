@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 10:54:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/05 14:15:13 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/05 15:48:36 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void ConnectionManager::handlePollErr(Server& server, iterator& it)
 		error += "Unknown error";
 	else
 		error += std::strerror(errnum);
-	server.logger.log(ERROR, error);
+	server.logger.log(FATAL, error);
 
 	ClientManager::iterator clientIt = server.clientManager.getClient(it->fd);
 

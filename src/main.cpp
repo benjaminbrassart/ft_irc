@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 00:55:38 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/04 11:44:11 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/05 15:49:40 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,9 @@ int	main(int ac, char **av) {
 	Server server;
 
 	__logger = &server.logger;
-
 	server.logger.log(INFO, "Starting " SERVER_NAME " version " VERSION);
-
 	server.loadOperatorFile("operators.txt");
-
 	KEEP_RUNNING = true;
-
 	server.password = av[2];
 
 	std::signal(SIGINT, __handleSignal);
@@ -84,7 +80,8 @@ int	main(int ac, char **av) {
 	}
 	catch (IOException const& e)
 	{
-		server.logger.log(ERROR, std::string("I/O error: ") + e.what());
+		server.logger.log(FATAL, std::string("I/O error: ") + e.what());
+		close(server.sockFd);
 		return 1;
 	}
 	close(server.sockFd);
