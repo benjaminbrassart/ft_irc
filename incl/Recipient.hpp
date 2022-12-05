@@ -1,27 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   config.h                                           :+:      :+:    :+:   */
+/*   Recipient.hpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/21 13:04:37 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 10:01:04 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/11/25 09:26:25 by bbrassar          #+#    #+#             */
+/*   Updated: 2022/12/04 11:17:48 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CONFIG_H
-# define CONFIG_H
+#ifndef RECIPIENT_HPP
+# define RECIPIENT_HPP
 
-# define SERVER_NAME "ft_ble"
+# include <string>
 
-# define VERSION_MAJOR 1
-# define VERSION_MINOR 0
-# define VERSION_PATCH 0
+class Server;
+class Client;
 
-# define _STR(S) #S
-# define STR(S) _STR(S)
+class Recipient
+{
+public:
+	Server* server;
 
-# define VERSION "" STR(VERSION_MAJOR) "." STR(VERSION_MINOR) "." STR(VERSION_PATCH)
+	Recipient(Server* server);
+	virtual ~Recipient();
 
-#endif // CONFIG_H
+public:
+	virtual std::string const& getIdentifier() const = 0;
+	virtual void sendMessage(Client& sender, std::string const& command, std::string const& message) = 0;
+}; // class Recipient
+
+#endif // RECIPIENT_HPP

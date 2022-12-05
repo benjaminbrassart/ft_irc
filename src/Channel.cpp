@@ -6,11 +6,12 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/22 22:46:22 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:27:16 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
+#include <iostream>
 
 ChannelMode const Channel::DEFAULT_MODE = 0;
 
@@ -18,8 +19,7 @@ ChannelMode const Channel::DEFAULT_MODE = 0;
 								COPLIEN AFORM
    ========================================================================== */
 
-Channel::Channel() :
-	server(NULL),
+Channel::Channel(Server* server) : Recipient(server),
 	mode(Channel::DEFAULT_MODE),
 	name(),
 	topic(),
@@ -31,8 +31,7 @@ Channel::Channel() :
 	invitationMasks()
 {}
 
-Channel::Channel(Server& server, std::string name, std::string passwd) :
-	server(&server),
+Channel::Channel(Server* server, std::string name, std::string passwd) : Recipient(server),
 	mode(Channel::DEFAULT_MODE),
 	name(name),
 	topic(),
@@ -44,8 +43,7 @@ Channel::Channel(Server& server, std::string name, std::string passwd) :
 	invitationMasks()
 {}
 
-Channel::Channel(Channel const& rhs) :
-	server(rhs.server),
+Channel::Channel(Channel const& rhs) : Recipient(rhs.server),
 	mode(rhs.mode),
 	name(rhs.name),
 	topic(rhs.topic),
@@ -112,24 +110,52 @@ bool	Channel::setChanModes(std::string modes) {
 								MEMBER FUNCTIONS
    ========================================================================== */
 
-void	Channel::broadcast(Client &sender, std::string const msg) {
+void	Channel::addClient(Client &client, ChannelPrivilege privilege) {
+	ClientPrivilege const entry = {&client, privilege};
 
-	ClientList::iterator	i = allClients.begin();
-
-	for (; i != allClients.end(); i++) {
-		if (&sender != *i)
-			std::cout << sender.nickname << ": \"" << msg << "\"";
-	 }
+	this->allClients.push_back(entry);
 }
 
-bool 	Channel::addClient(Client &newClient) {
-	return this->allClients.insert(&newClient).second;
-}
+void Channel::removeClient(Client &client) {
+	ClientList::iterator it;
 
-bool Channel::removeClient(Client &client) {
-	return this->allClients.erase(&client) > 0;
+	for (it = this->allClients.begin(); it != this->allClients.end(); ++it)
+		if (it->client == &client)
+		{
+			this->allClients.erase(it);
+			return;
+		}
 }
 
 bool Channel::hasClient(Client &client) const {
-	return allClients.find(&client) != allClients.end();
+	ClientList::const_iterator it;
+
+	for (it = this->allClients.begin(); it != this->allClients.end(); ++it)
+		if (it->client == &client)
+			return true;
+	return false;
+}
+
+std::string const& Channel::getIdentifier() const
+{
+	return this->name;
+}
+
+void Channel::sendMessage(Client& sender, std::string const& command, std::string const& message)
+{
+	ClientList::iterator it;
+
+	(void)command;
+	(void)message;
+
+	for (it = this->allClients.begin(); it != this->allClients.end(); ++it)
+	{
+		// TODO send to users here, target being #channel
+		// format:  ':<prefix> <command> #<channel> <message>'
+		// example: ':ben!Benjamin@10.0.7.125 PRIVMSG #ft_ble :Hello world'
+		if (&sender != it->client)
+		{
+			// it->client->sendMessage(sender, command, message);
+		}
+	}
 }

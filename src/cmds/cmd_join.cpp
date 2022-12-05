@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 02:22:51 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/05 13:09:08 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,11 @@ void cmd_join(CommandContext& context)
 	Client& client = context.client;
 	Server& server = context.server;
 	CommandContext::ArgumentList& args = context.args;
-	std::vector < std::string > channels;
-	std::vector < std::string > keys;
-	std::vector < std::string >::const_iterator chan_it;
-	std::vector < std::string >::const_iterator key_it;
+	std::vector< std::string > channels;
+	std::vector< std::string > keys;
+	std::vector< std::string >::const_iterator chanNameIt;
+	std::vector< std::string >::const_iterator keyIt;
+	Channel::ClientList::iterator clientIt;
 
 	if (args.empty())
 	{
@@ -42,28 +43,56 @@ void cmd_join(CommandContext& context)
 
 	if (args[0] == "0")
 	{
-		client.leaveAllChannels(""); // TODO
+		// TODO loop through channels, remove client and clear client's channels
 		return;
 	}
 
-	channels = CommandContext::split(args[0], ',');
-	keys = CommandContext::split(args[1], ',');
+	std::string const prefix = client.asPrefix();
 
-	chan_it = channels.begin();
-	key_it = keys.begin();
+	channels = CommandContext::splitList(args[0]);
+	if (args.size() < 2)
+		keys = CommandContext::ArgumentList();
+	else
+		keys = CommandContext::splitList(args[1]);
 
-	for (; chan_it != channels.end(); ++chan_it)
+	chanNameIt = channels.begin();
+	keyIt = keys.begin();
+
+	for (; chanNameIt != channels.end(); ++chanNameIt)
 	{
-		Channel& chan = server.getOrCreateChannel(*chan_it);
+		ChannelManager::iterator chanIt = server.channelManager.getChannel(*chanNameIt);
+		ChannelPrivilege priv;
+
+		if (chanIt == server.channelManager.end())
+		{
+			chanIt = server.channelManager.addChannel(Channel(&server, *chanNameIt));
+			priv = PRIV_UNIQOP;
+		}
+		else
+			priv = PRIV_NONE;
+
 		std::string key;
 
-		if (key_it != keys.end())
-			key = *key_it++;
+		if (keyIt != keys.end())
+			key = *keyIt++;
 
-		if (chan.passwd == key)
+		if (key.empty() || chanIt->passwd == key)
 		{
-			// client.joinChanel(chan); // TODO
-			chan.addClient(client);
+			chanIt->addClient(client, priv);
+
+			std::stringstream clientList;
+
+			for (clientIt = chanIt->allClients.begin(); clientIt != chanIt->allClients.end(); ++clientIt)
+			{
+				clientIt->client->send(prefix + " JOIN " + chanIt->name);
+				if (clientIt != chanIt->allClients.begin())
+					clientList << ' ';
+				clientList << clientIt->client->nickname;
+			}
+			// TOOD see if we need to split this if there are too many clients
+			client.reply<RPL_NAMREPLY>(chanIt->name, "=", clientList.str());
+			client.reply<RPL_ENDOFNAMES>(chanIt->name);
+			client.reply<RPL_TOPIC>(chanIt->name, chanIt->topic);
 		}
 		else
 			client.reply<ERR_PASSWDMISMATCH>();

@@ -53,6 +53,5 @@
 		"ranges": "cpp",
 		"sstream": "cpp",
 		"cinttypes": "cpp",
-		"ctime": "cpp"
+	"editor.insertSpaces": false
 	}
-}

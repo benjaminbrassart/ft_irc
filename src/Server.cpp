@@ -3,161 +3,73 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/11/25 23:03:31 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/12/04 11:07:16 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-#include <algorithm>
+
+#include "command.h"
+#include "ft_irc.h"
+
+#include <arpa/inet.h>
+
 #include <cerrno>
+#include <cstring>
+
+#include <algorithm>
 #include <fstream>
 #include <iomanip>
 #include <sstream>
 
 Server::Server() :
-	startDate(Server::__getStartDate())
+	startDate(Server::__getStartDate()),
+	commandMap(*this),
+	logger(DEBUG)
  {}
 
 Server::~Server() {}
 
-Server::IoException::IoException(string const& syscall, int err): _what(syscall + ": " + std::strerror(err)) {}
-
-Server::IoException::~IoException() throw() {}
-
-const int	&Server::getsocketfd() const {return this->_socketfd;}
-
-const std::vector<pollfd>	&Server::getclientfd() const {return this->_clientfd;}
-
-const char*	Server::IoException::what() const throw() {
-
-	return this->_what.c_str();
-}
-
-void	Server::__poll() {
-
-	pollfd	fd_serv;
-	bzero((int *) &fd_serv, sizeof(fd_serv));
-	fd_serv.fd = _socketfd;
-	fd_serv.events = POLLIN;
-	_clientfd.push_back(fd_serv);
-	int	poll_ret;
-	while (1) {
-
-		poll_ret = poll(_clientfd.begin().base(), _clientfd.size(), -1);
-		if (poll_ret == -1)
-			throw Server::IoException("poll", errno); // TODO: gerer les signaux
-		std::vector<pollfd>::const_iterator	it;
-		for (it = _clientfd.begin(); it != _clientfd.end(); it++) {
-			if (it->revents == POLLIN) {
-				if (it->fd == _socketfd) {
-					std::cout << "* POLLIN accept client * ✅ " << "\n";
-					Server::__acceptClient();
-				}
-				else {
-					std::cout << "* POLLIN read from client * ✅ " << "\n";
-					Server::__readFromClient(it->fd);
-				}
-			}
-			else if (it->revents == POLLOUT) {
-				std::cout << "* POLLOUT write to client * ✅ " << "\n";
-				Server::__writeToClient(it->fd);
-			}
-			else {
-				throw Server::IoException("pollerr", errno);
-			}
-		}
-	}
-}
-
-void	Server::__socket(int port) {
-
-	int	val = 1;
-	_socketfd = socket(AF_INET, SOCK_STREAM, 0);
-	if (_socketfd == -1)
-		throw Server::IoException("socket", errno);
-	std::cout << "* socket created * ✅ " << "\n";
-	if (setsockopt(_socketfd, SOL_SOCKET, SO_REUSEADDR, &val, sizeof val))
-		throw Server::IoException("used_address", errno);
-
-	sockaddr_in	serv_addr;
-	bzero((char *) &serv_addr, sizeof(serv_addr));
-	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_port = htons(port);
-
-	if (bind(_socketfd, (sockaddr*)&serv_addr, sizeof(serv_addr)) != 0)
-		throw Server::IoException("bind", errno);
-	std::cout << "* socket bound * ✅ " << "\n";
-	if (listen(_socketfd, SOMAXCONN) != 0)
-		throw Server::IoException("listen", errno);
-	std::cout << "* listening to client * ✅ " << "\n";
-	Server::__poll();
-	// sockaddr_in	client_add;
-	// socklen_t client_taille = sizeof(client_add);
-	// _clientfd = accept(_socketfd, (sockaddr*)&client_add, &client_taille);
-	// if (_clientfd == -1)
-	// 	throw Server::IoException("client", errno);
-	std::cout << "* client accepted * ✅ " << "\n";
-}
-
-Channel& Server::getOrCreateChannel(std::string const& channelName)
+void	Server::createSocket(int port)
 {
-	Channel channel = Channel(*this, channelName);
+	int const optval = 1;
+	::sockaddr_in addr = {
+		.sin_family = AF_INET,
+		.sin_port = ::htons(port),
+		.sin_addr = { .s_addr = ::htonl(INADDR_ANY) },
+		.sin_zero = { },
+	};
 
-	return const_cast<Channel&>(*this->channels.insert(channel).first);
+	this->sockFd = ::socket(AF_INET, SOCK_STREAM, 0);
+	if (this->sockFd == -1)
+		throw IOException("socket", errno);
+	this->logger.log(DEBUG, "Socket created");
+
+	if (::setsockopt(sockFd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof (optval)) == -1)
+		throw IOException("setsockopt(SO_REUSEADDR)", errno);
+
+	if (::bind(sockFd, reinterpret_cast< ::sockaddr* >(&addr), sizeof(addr)) == -1)
+		throw IOException("bind", errno);
+	this->logger.log(DEBUG, "Socket bound");
+
+	if (listen(sockFd, SOMAXCONN) == -1)
+		throw IOException("listen", errno);
+	this->logger.log(INFO, std::string("Listening on port ") + port);
 }
 
-Channel* Server::getChannel(std::string const& channelName)
+void Server::start()
 {
-	Channel channel = Channel(*this, channelName);
-	ChannelList::const_iterator it;
+	this->connectionManager.setServer(*this);
 
-	it = this->channels.find(channel);
-	if (it != this->channels.end())
-		return const_cast<Channel*>(&*it);
-	return 0;
-}
-
-void Server::processCommand(Client& client, std::string const& line)
-{
-	std::string prefix;
-	std::string params;
-	std::string::const_iterator begin;
-	std::string::const_iterator it;
-
-	if (line.empty())
-			return;
-	begin = line.begin();
-
-	// extract prefix if any
-	if (*begin == ':')
+	while (KEEP_RUNNING)
 	{
-		it = std::find(begin, line.end(), ' ');
-		prefix = std::string(begin, it);
-		begin = it;
-		if (begin != line.end())
-			++begin;
+		this->connectionManager.wait();
+		this->connectionManager.handlePoll(*this);
 	}
-
-	// extract command name
-	it = std::find(begin, line.end(), ' ');
-
-	// extract the rest of the line if any
-	if (it != line.end())
-		params = std::string(it + 1, line.end());
-
-	std::cout
-		<< std::setfill(' ')
-		<< " \033[32m< INPUT\033[0m  \033[37m|\033[0m "
-		<< "\033[33m"
-		<< std::setw(15) << std::left
-		<< client.address << "\033[0m" << " \033[37m|\033[0m "
-		<< line << "\r\n";
-	// execute the command with the given arguments
-	this->commands.dispatch(client, prefix, std::string(begin, it), params);
+	this->__shutdown();
 }
 
 void Server::loadOperatorFile(std::string const& file)
@@ -170,69 +82,42 @@ void Server::loadOperatorFile(std::string const& file)
 	in.open(file.c_str());
 	if (in)
 	{
+		this->logger.log(DEBUG, "Registering operators");
 		while (std::getline(in, line))
 		{
 			ss << line;
 			ss >> entry.name >> entry.host >> entry.password;
 			ss.clear();
 			this->operatorPasswords.push_back(entry);
+			this->logger.log(DEBUG, "+ " + entry.name + "@" + entry.host);
 		}
 	}
-}
-
-void Server::shutdown()
-{
-	// TODO
-}
-
-void Server::__acceptClient()
-{
-	int fd;
-	sockaddr_in address;
-	socklen_t addressLength;
-
-	addressLength = sizeof (address);
-	fd = ::accept(this->_socketfd, (sockaddr*)&address, &addressLength);
-
-	if (fd == -1)
+	else
 	{
-		// TODO log error, do not throw an exception because this is not fatal
-		return;
+		this->logger.log(WARNING, "Failed to load operator file '" + file + "'");
+		this->logger.log(WARNING, "There will be no operator for this server!");
 	}
-
-	this->clients.insert(Client(*this, fd, address));
 }
 
-void Server::__readFromClient(int fd)
+Recipient* Server::getRecipient(std::string const& identifier)
 {
-	ClientList::const_iterator it;
-	Client client(*this);
-
-	client.sock_fd = fd;
-	it = this->clients.find(client);
-	if (it == this->clients.end())
+	if (identifier.empty())
+		return NULL;
+	if (identifier[0] == '#')
 	{
-		// TODO log error, client not found
-		return;
+		ChannelManager::iterator it = this->channelManager.getChannel(identifier);
+
+		if (it != this->channelManager.end())
+			return &*it;
 	}
-
-	const_cast<Client&>(*it).readFrom();
-}
-
-void Server::__writeToClient(int fd)
-{
-	ClientList::const_iterator it;
-	Client client(*this);
-
-	client.sock_fd = fd;
-	it = this->clients.find(client);
-	if (it == this->clients.end())
+	else
 	{
-		// TODO log error, client not found
-		return;
-	}
+		NicknameManager::iterator it = this->nickManager.getClient(identifier);
 
-	const_cast<Client&>(*it).writeTo();
+		if (it != this->nickManager.end())
+			return it->second;
+	}
+	return NULL;
 }
 
 std::string Server::__getStartDate()
@@ -248,18 +133,41 @@ std::string Server::__getStartDate()
 	return std::string(buffer, res);
 }
 
-bool ClientComparator::operator()(Client const& lhs, Client const& rhs) const
+void Server::__shutdown()
 {
-	return lhs.sock_fd < rhs.sock_fd;
-}
+	ClientManager::iterator it;
 
-bool ChannelComparator::operator()(Channel const& lhs, Channel const& rhs) const
-{
-	return lhs.name < rhs.name;
+	this->logger.log(INFO, "Shutting down...");
+	for (it = this->clientManager.begin(); it != this->clientManager.end(); ++it)
+		it->second.closeConnection();
 }
 
 std::ostream& operator<<(std::ostream& os, sockaddr_in& address)
 {
-	os << inet_ntoa(reinterpret_cast<in_addr&>(address));
+	os << inet_ntoa(address.sin_addr);
 	return os;
+}
+
+std::string operator+(std::string const& str, sockaddr_in& addr)
+{
+	std::stringstream ss;
+
+	ss << str << addr;
+	return ss.str();
+}
+
+std::string operator+(sockaddr_in& addr, std::string const& str)
+{
+	std::stringstream ss;
+
+	ss << addr << str;
+	return ss.str();
+}
+
+std::string operator+(std::string const& str, int n)
+{
+	std::stringstream ss;
+
+	ss << str << n;
+	return ss.str();
 }

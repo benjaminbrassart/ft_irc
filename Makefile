@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+         #
+#    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/11/25 23:07:49 by estoffel         ###   ########.fr        #
+#    Updated: 2022/12/04 11:35:53 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,13 +14,32 @@ NAME	=	ircserv
 
 CC		=	c++
 
-# DEFINES += -DVERSION_COMMIT="$(COMMIT)"
-# DEFINES += -DBUILD_DATE="$(BUILD_DATE)"
-# DEFINES += -D_GLIBCXX_DEBUG
+DEFINES += -D_GLIBCXX_DEBUG
 
-FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98 #$(DEFINES)
+FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98 $(DEFINES)
 
-SRC		= main.cpp Server.cpp Client.cpp CommandContext.cpp Channel.cpp  CommandMap.cpp Reply.cpp OperatorEntry.cpp wildcard.cpp
+# main
+SRC		= main.cpp
+
+# classes
+SRC		+= class/NicknameManager.cpp
+SRC		+= class/ClientManager.cpp
+SRC		+= class/ChannelManager.cpp
+SRC		+= class/ConnectionManager.cpp
+SRC		+= class/exception/IOException.cpp
+
+SRC		+= Recipient.cpp
+SRC		+= Client.cpp
+SRC		+= CommandContext.cpp
+SRC		+= Channel.cpp
+SRC		+= Server.cpp
+SRC		+= CommandMap.cpp
+SRC		+= Reply.cpp
+SRC		+= OperatorEntry.cpp
+SRC		+= wildcard.cpp
+SRC		+= Logger.cpp
+
+# commands
 SRC		+= cmds/cmd_user.cpp
 SRC		+= cmds/cmd_nick.cpp
 SRC		+= cmds/cmd_pass.cpp
@@ -31,16 +50,17 @@ SRC		+= cmds/cmd_motd.cpp
 SRC		+= cmds/cmd_oper.cpp
 SRC		+= cmds/cmd_die.cpp
 SRC		+= cmds/cmd_kill.cpp
+SRC		+= cmds/cmd_ping.cpp
+SRC		+= cmds/cmd_pong.cpp
 SRC		+= cmds/cmd_mode.cpp
+SRC		+= cmds/cmd_privmsg.cpp
+SRC		+= cmds/cmd_notice.cpp
 
 OBJ		:=	$(addprefix ./obj/,$(SRC:%.cpp=%.o))
 
 DEP		=	$(OBJ:%.o=%.d)
 
 RM		=	rm -rf
-
-# COMMIT	:= $(shell git rev-parse --short HEAD)
-# BUILD_DATE := $(shell date +'%Y-%m-%d %H:%M:%S')
 
 all: $(NAME)
 

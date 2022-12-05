@@ -6,31 +6,34 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 09:17:28 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/04 11:17:59 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CLIENT_HPP
-# define CLIENT_HPP
+#pragma once
 
-# include "Server.hpp"
-# include "Channel.hpp"
-# include "Reply.hpp"
-# include "ClientState.hpp"
+#include "Server.hpp"
+#include "Channel.hpp"
+#include "Reply.hpp"
+#include "ClientState.hpp"
+#include "Recipient.hpp"
+#include "Logger.hpp"
 
-# include <string>
-# include <set>
-
-# include <netinet/in.h>
+#include <ctime>
+#include <string>
+#include <netinet/in.h>
+#include <set>
 
 class Channel;
 class Server;
+class Recipient;
+class Logger;
 
-class Client {
+class Client : public Recipient {
 
 	public:
-		Client(Server& server);
-		Client(Server& server, int fd, sockaddr_in& addr);
+		Client(Server* server = NULL);
+		Client(Server* server, int fd, sockaddr_in& addr);
 		Client(Client const &src);
 		~Client();
 
@@ -63,16 +66,17 @@ class Client {
 		/**
 		 * Read data from the client's socket
 		 *
+		 * @return true if client closed the connection, false otherwise
 		 * @warning make sure the file descriptor is polled AND ready!
 		 */
-		void					readFrom();
+		bool					readFrom();
 
 		/**
 		 * Write data to the client's socket
 		 *
 		 * @warning make sure the file descriptor is polled AND ready!
 		 */
-		void					writeTo();
+		void					flushWriteBuffer();
 
 		/**
 		 * Attempt to log in the client, does nothing if the client is not
@@ -99,45 +103,34 @@ class Client {
 		 */
 		void					setState(ClientState state);
 
-		/**
-		 * Make this user leave a channel
-		 *
-		 * @param channel the channel to leave
-		 * @param message the message to be displayed to other clients
-		 */
-		void					leaveChannel(Channel& channel, std::string const& message);
+		std::string				asPrefix();
 
-		/**
-		 * Make this user leave all joined channels
-		 *
-		 * @param message the message to be displayed to other clients
-		 */
-		void					leaveAllChannels(std::string const& message);
+		std::string const& getIdentifier() const;
+		void sendMessage(Client& sender, std::string const& command, std::string const& message);
 
-		struct Info {
-			std::string 		username;
-			std::string 		hostname;
-			std::string 		realname;
-		};
-
-		Server* 				server;
 		ChannelList 			channels;
-		Info					info;
-		int 					sock_fd;
+		std::string				username;
+		std::string				hostname;
+		std::string				realname;
+		std::string				hostAddress;
+		int						sock_fd;
 		std::string				nickname;
 		::sockaddr_in			address;
 		std::string				readBuffer;
 		std::string				writeBuffer;
-
-		static int const READ_BUFFER_SIZE;
+		std::string				password;
 
 	private:
 		int _state;
 
+		template< Reply code >
+		void __replyRaw(std::string const& message);
 		void __replyRaw(Reply code, std::string const& message);
 		void __processReadBuffer();
+		void __log(LogLevel level, std::string const& message);
 };
 
-# include "template/Client.tpp"
+bool operator==(Client const& lhs, Client const& rhs);
+bool operator!=(Client const& lhs, Client const& rhs);
 
-#endif
+#include "template/Client.tpp"

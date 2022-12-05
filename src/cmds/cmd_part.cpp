@@ -6,9 +6,11 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:11:06 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/23 02:22:51 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/02 18:07:03 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+#include "command.h"
 
 #include "Client.hpp"
 #include "CommandMap.hpp"
@@ -17,9 +19,11 @@
 void cmd_part(CommandContext& context)
 {
 	Client& client = context.client;
+	Server& server = context.server;
 	CommandContext::ArgumentList& args = context.args;
-	std::string::const_iterator chan_it;
-	std::string const* message_ptr;
+	CommandContext::ArgumentList::const_iterator chanNameIt;
+	Channel::ClientList::iterator clientIt;
+	std::string const* messagePtr;
 
 	if (args.empty())
 	{
@@ -28,12 +32,36 @@ void cmd_part(CommandContext& context)
 	}
 
 	if (args.size() < 2)
-		message_ptr = &client.nickname;
+		messagePtr = &client.nickname;
 	else
-		message_ptr = &args[1];
+		messagePtr = &args[1];
 
-	for (chan_it = args[0].begin(); chan_it != args[0].end(); ++chan_it)
+	CommandContext::ArgumentList channels = CommandContext::splitList(args[0]);
+	std::vector< Channel* > removedChannels;
+
+	std::string const prefix = client.asPrefix();
+
+	for (chanNameIt = channels.begin(); chanNameIt != channels.end(); ++chanNameIt)
 	{
-		(void)message_ptr;
+		ChannelManager::iterator chanIt = server.channelManager.getChannel(*chanNameIt);
+
+		if (chanIt == server.channelManager.end())
+			client.reply<ERR_NOSUCHCHANNEL>(*chanNameIt);
+		else if (!chanIt->hasClient(client))
+			client.reply<ERR_NOTONCHANNEL>(chanIt->name);
+		else
+		{
+			// send PART to all clients in the channel
+			for (clientIt = chanIt->allClients.begin(); clientIt != chanIt->allClients.end(); ++clientIt)
+				clientIt->client->send(prefix + " PART " + chanIt->name + " :" + *messagePtr);
+
+			// remove the client from the channel
+			chanIt->removeClient(client);
+			client.channels.erase(&*chanIt);
+
+			// remove the channel if there is no client left
+			if (chanIt->allClients.empty())
+				server.channelManager.removeChannel(chanIt);
+		}
 	}
 }

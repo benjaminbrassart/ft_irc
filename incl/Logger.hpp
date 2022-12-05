@@ -1,27 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   config.h                                           :+:      :+:    :+:   */
+/*   Logger.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/21 13:04:37 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 10:01:04 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/11/25 04:54:38 by bbrassar          #+#    #+#             */
+/*   Updated: 2022/11/29 21:48:33 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef CONFIG_H
-# define CONFIG_H
+#ifndef LOGGER_HPP
+# define LOGGER_HPP
 
-# define SERVER_NAME "ft_ble"
+# include <string>
 
-# define VERSION_MAJOR 1
-# define VERSION_MINOR 0
-# define VERSION_PATCH 0
+enum LogLevel
+{
+	DEBUG,
+	INFO,
+	NOTICE,
+	WARNING,
+	ERROR,
+};
 
-# define _STR(S) #S
-# define STR(S) _STR(S)
+class Logger
+{
+public:
 
-# define VERSION "" STR(VERSION_MAJOR) "." STR(VERSION_MINOR) "." STR(VERSION_PATCH)
+public:
+	LogLevel level;
 
-#endif // CONFIG_H
+public:
+	Logger(LogLevel level);
+	~Logger();
+
+public:
+	void log(LogLevel level, std::string const& message);
+};
+
+#endif // LOGGER_HPP

@@ -3,69 +3,40 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 23:06:34 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/12/03 12:40:13 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-# include "Client.hpp"
-# include "Channel.hpp"
+# include "class/ChannelManager.hpp"
+# include "class/ClientManager.hpp"
+# include "class/NicknameManager.hpp"
+# include "class/ConnectionManager.hpp"
+# include "class/exception/IOException.hpp"
 
-# include <algorithm>
-# include <string>
-# include <vector>
-# include <iostream>
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <sys/stat.h>
-# include <arpa/inet.h>
+# include "Channel.hpp"
+# include "CommandMap.hpp"
+# include "Logger.hpp"
+# include "OperatorEntry.hpp"
+# include "Recipient.hpp"
+
 # include <netinet/in.h>
 # include <poll.h>
-# include <fcntl.h>
-# include <cstdlib>
-# include <signal.h>
-# include <netdb.h>
-# include <unistd.h>
-# include <stdio.h>
-# include <cstring>
-# include <errno.h>
 
-# if defined(__APPLE__) || defined(__MACH__)
-#  define SET_NON_BLOCKING(fd) ::fcntl(fd, F_SETFL, O_NONBLOCK);
-# else
-#  define SET_NON_BLOCKING(fd)
-# endif
+# include <vector>
 
-using	std::string;
-
-#include "OperatorEntry.hpp"
-#include "CommandMap.hpp"
-#include <iostream>
-#include <string>
-#include <set>
-#include <algorithm>
-#include "colours.h"
-
-class Client;
 class Channel;
+class ClientManager;
+class NicknameManager;
+class ChannelManager;
+class ConnectionManager;
 class CommandRegistry;
-
-//sort by socket file descriptor
-struct ClientComparator : public std::binary_function< Client, Client, bool >
-{
-	bool operator()(Client const& lhs, Client const& rhs) const;
-};
-
-// sort by channel name
-struct ChannelComparator : public std::binary_function< Channel, Channel, bool >
-{
-	bool operator()(Channel const& rhs, Channel const& lhs) const;
-};
+class Logger;
 
 class Server {
 
@@ -73,61 +44,28 @@ class Server {
 		Server();
 		~Server();
 
-		typedef std::set< Client, ClientComparator > ClientList;
-		typedef std::set< Channel, ChannelComparator > ChannelList;
 		typedef std::vector< OperatorEntry > OperatorPasswordList;
 
-		const int	&getsocketfd() const;
-		const std::vector<pollfd>	&getclientfd() const;
-
-		void		shutdown();
-
-		void		__socket(int port);
-		void		__poll();
+		void		createSocket(int port);
+		void		start();
 		void		loadOperatorFile(std::string const& file);
 
-		Channel*	getChannel(std::string const& channelName);
-		Channel&	getOrCreateChannel(std::string const& channelName);
+		Recipient*	getRecipient(std::string const& identifier);
 
-		/**
-		 * Process a line and break it into a command, then execute it if possible
-		 *
-		 * @param client the client whom issued the command
-		 * @param line the command line to process
-		 */
-		void		processCommand(Client& client, std::string const& line);
-
-		class IoException : public std::exception {
-			public:
-				/**
-				 * Construct a new IoException
-				 *
-				 * @param syscallName the name of the system call that failed
-				 * @param errnum the code of the error
-				 * @see errno(3)
-				 * @see strerror(3)
-				 */
-				IoException(string const& syscallName, int errnum);
-				~IoException() throw();
-
-				virtual const char*	what() const throw();
-
-			private:
-				string	_what;
-		};
-
+		int sockFd;
 		std::string startDate;
-		CommandMap commands;
-		std::string name;
 		std::string password;
-		std::string motdFileName;
-		ChannelList	channels;
-		ClientList	clients;
 		OperatorPasswordList operatorPasswords;
 
+		// managers
+		CommandMap commandMap;
+		NicknameManager nickManager;
+		ClientManager clientManager;
+		ChannelManager channelManager;
+		ConnectionManager connectionManager;
+		Logger logger;
+
 	private:
-		int					_socketfd;
-		std::vector<pollfd>	_clientfd;
 
 		/**
 		 * Accept a client and add it to the client list
@@ -140,19 +78,28 @@ class Server {
 		 * Read data from a polled client
 		 *
 		 * @param fd the socket file descriptor of the client
+		 * @return true if the client closed the connection, false otherwise
 		 */
-		void __readFromClient(int fd);
+		bool __readFromClient(int fd);
 
 		/**
-		 * Write data to the client (if any)
+		 * Write data to the client (if buffer has data)
 		 *
 		 * @param fd the socket file descriptor of the client
 		 */
 		void __writeToClient(int fd);
 
+		/**
+		 * Kill all active connections
+		 */
+		void __shutdown();
+
 		static std::string __getStartDate();
 }; // class Server
 
 std::ostream& operator<<(std::ostream& os, sockaddr_in& address);
+std::string operator+(std::string const& str, int n);
+std::string operator+(std::string const& str, sockaddr_in& addr);
+std::string operator+(sockaddr_in& addr, std::string const& str);
 
 #endif // SERVER_HPP
