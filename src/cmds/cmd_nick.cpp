@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/04 11:16:00 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/05 17:45:35 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,17 @@ void cmd_nick(CommandContext& context)
 				client.tryLogin();
 			}
 			else
+			{
+				std::string const& prefix = client.asPrefix();
+				ClientManager::iterator clientIt;
+
+				server.nickManager.unregisterNickname(client.nickname);
+
+				for (clientIt = server.clientManager.begin(); clientIt != server.clientManager.end(); ++clientIt)
+					clientIt->second.send(prefix + " NICK :" + nickname);
 				server.logger.log(DEBUG, "<" + client.address + "> " + client.nickname + " Changed nickname to " + nickname);
+			}
+
 			client.nickname = nickname;
 			server.nickManager.registerNickname(nickname, &client);
 		}
