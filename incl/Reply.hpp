@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:45:10 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 10:57:15 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:25:34 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ enum Reply
 	RPL_UNIQOPIS = 325,
 	RPL_NOTOPIC = 331,
 	RPL_TOPIC = 332,
+	RPL_NAMREPLY = 353,
+	RPL_ENDOFNAMES = 366,
 	RPL_MOTD = 372,
 	RPL_MOTDSTART = 375,
 	RPL_ENDOFMOTD = 376,
@@ -151,6 +153,20 @@ struct ReplyFactory<RPL_TOPIC>
 {
 	static std::string const NAME;
 	static std::string makeReply(Client& client, std::string const& channel, std::string const& topic);
+};
+
+template<>
+struct ReplyFactory<RPL_NAMREPLY>
+{
+	static std::string const NAME;
+	static std::string makeReply(Client& client, std::string const& symbol, std::string const& channel, );
+};
+
+template<>
+struct ReplyFactory<RPL_ENDOFNAMES>
+{
+	static std::string const NAME;
+	static std::string makeReply(Client& client, std::string const& channel);
 };
 
 template<>

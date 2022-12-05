@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/04 12:34:17 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:27:16 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,9 +145,17 @@ void Channel::sendMessage(Client& sender, std::string const& command, std::strin
 {
 	ClientList::iterator it;
 
+	(void)command;
+	(void)message;
+
 	for (it = this->allClients.begin(); it != this->allClients.end(); ++it)
 	{
+		// TODO send to users here, target being #channel
+		// format:  ':<prefix> <command> #<channel> <message>'
+		// example: ':ben!Benjamin@10.0.7.125 PRIVMSG #ft_ble :Hello world'
 		if (&sender != it->client)
-			it->client->sendMessage(sender, command, message); // TODO sent to users here, target being #channel
+		{
+			// it->client->sendMessage(sender, command, message);
+		}
 	}
 }

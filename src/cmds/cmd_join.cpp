@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 18:06:53 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:41:14 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,10 +29,11 @@ void cmd_join(CommandContext& context)
 	Client& client = context.client;
 	Server& server = context.server;
 	CommandContext::ArgumentList& args = context.args;
-	std::vector < std::string > channels;
-	std::vector < std::string > keys;
-	std::vector < std::string >::const_iterator chanNameIt;
-	std::vector < std::string >::const_iterator keyIt;
+	std::vector< std::string > channels;
+	std::vector< std::string > keys;
+	std::vector< std::string >::const_iterator chanNameIt;
+	std::vector< std::string >::const_iterator keyIt;
+	Channel::ClientList::iterator clientIt;
 
 	if (args.empty())
 	{
@@ -45,6 +46,8 @@ void cmd_join(CommandContext& context)
 		// TODO loop through channels, remove client and clear client's channels
 		return;
 	}
+
+	std::string const prefix = client.asPrefix();
 
 	channels = CommandContext::splitList(args[0]);
 	if (args.size() < 2)
@@ -76,7 +79,14 @@ void cmd_join(CommandContext& context)
 		if (key.empty() || chanIt->passwd == key)
 		{
 			chanIt->addClient(client, priv);
-			// TODO loop throught clients and send JOIN
+
+			for (clientIt = chanIt->allClients.begin(); clientIt != chanIt->allClients.end(); ++clientIt)
+			{
+				clientIt->client->send(prefix + " JOIN " + chanIt->name);
+				client.reply<RPL_NAMREPLY>();
+			}
+			client.reply<RPL_ENDOFNAMES>(chanIt->name);
+			client.reply<RPL_TOPIC>(chanIt->name, chanIt->topic);
 		}
 		else
 			client.reply<ERR_PASSWDMISMATCH>();

@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 18:04:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 14:41:42 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/04 14:26:02 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,22 @@ std::string ReplyFactory<RPL_TOPIC>::makeReply(Client& client, std::string const
 {
 	(void)client;
 	return channel + " :" + topic;
+}
+
+std::string const ReplyFactory<RPL_NAMREPLY>::NAME = "RPL_NAMREPLY";
+
+std::string ReplyFactory<RPL_NAMREPLY>::makeReply(Client& client, std::string const& channel, std::string const& topic)
+{
+	(void)client;
+	return channel + " :" + topic;
+}
+
+std::string const ReplyFactory<RPL_ENDOFNAMES>::NAME = "RPL_ENDOFNAMES";
+
+std::string ReplyFactory<RPL_ENDOFNAMES>::makeReply(Client& client, std::string const& channel)
+{
+	(void)client;
+	return channel + " :End of /NAMES list";
 }
 
 std::string const ReplyFactory<RPL_MOTD>::NAME = "RPL_MOTD";

@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:45:50 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/04 11:36:35 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/04 13:52:33 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,7 +89,7 @@ void CommandMap::dispatch(Client& client, std::string const& prefix, std::string
 	else if (!(it->second.first == NULL || !client.checkState(it->second.second)))
 	{
 		CommandContext ctx(client, command, line);
-		this->server.logger.log(DEBUG, "<" + client.address + "> '" + command + " " + line + "'");
+		this->server.logger.log(DEBUG, "RECV <" + client.address + "> '" + command + " " + line + "'");
 		it->second.first(ctx);
 	}
 }
