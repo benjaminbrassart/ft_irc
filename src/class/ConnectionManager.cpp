@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 10:54:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/03 14:39:14 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/05 14:15:13 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,15 @@ void ConnectionManager::removeSocket(int sock)
 void ConnectionManager::wait()
 {
 	int	poll_res;
-	pollfd* ptr = &this->_pollFds[0];
-	nfds_t nfds = this->_pollFds.size();
-	int timeout = -1;
+	int	errnum;
 
-	poll_res = ::poll(ptr, nfds, timeout);
+	poll_res = ::poll(&this->_pollFds[0], this->_pollFds.size(), -1);
 	if (poll_res == -1)
-		throw IOException("poll", errno);
+	{
+		errnum = errno;
+		if (errnum != EINTR)
+			throw IOException("poll", errnum);
+	}
 }
 
 void ConnectionManager::handlePoll(Server& server)
