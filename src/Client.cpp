@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/05 17:40:36 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/08 18:54:13 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ bool Client::readFrom()
 	if (res == -1)
 	{
 		errnum = errno;
-		std::cerr << "Error: unable to recv from " << this->address << ": " << std::strerror(errnum) << '\n';
+		this->server->logger.log(ERROR, "<" + address + "> Unable to recv: " + std::strerror(errnum));
 		this->closeConnection();
 		return true;
 	}
