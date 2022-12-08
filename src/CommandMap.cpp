@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:45:50 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/04 13:52:33 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/08 22:44:39 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,6 @@ CommandMap::CommandMap(Server& server) :
 	this->put("NOTICE", cmd_notice, CLIENT_STATE_LOGGED);
 	this->put("PRIVMSG", cmd_privmsg, CLIENT_STATE_LOGGED);
 	this->put("PING", cmd_ping);
-	this->put("PONG", cmd_pong);
 }
 
 CommandMap::~CommandMap()

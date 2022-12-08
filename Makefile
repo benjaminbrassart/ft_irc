@@ -6,7 +6,7 @@
 #    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/12/08 18:15:59 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/12/08 22:44:11 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -51,7 +51,6 @@ SRC		+= cmds/cmd_oper.cpp
 SRC		+= cmds/cmd_die.cpp
 SRC		+= cmds/cmd_kill.cpp
 SRC		+= cmds/cmd_ping.cpp
-SRC		+= cmds/cmd_pong.cpp
 SRC		+= cmds/cmd_mode.cpp
 SRC		+= cmds/cmd_privmsg.cpp
 SRC		+= cmds/cmd_notice.cpp
