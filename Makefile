@@ -6,7 +6,7 @@
 #    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/12/04 11:35:53 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/12/08 18:15:59 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -74,25 +74,25 @@ $(NAME): $(OBJ)
 	$(CC) -o $(NAME) $(OBJ)
 	@printf "\n"
 	@printf "\n"
-	@echo "   🌼\033[1;97m I R C S E R V  C R E A T E D  W I T H  S U C C E S S 🌼\e[0m"
+	@printf "   🌼\033[1;97m I R C S E R V  C R E A T E D  W I T H  S U C C E S S 🌼\e[0m\n"
 	@printf "\n"
-	@echo "				x"
+	@printf "				x\n"
 	@printf "\n"
-	@echo "		✨	~ \033[1;97mBen Enora Liana\e[0m ~	✨"
+	@printf "		✨	~ \033[1;97mBen Enora Liana\e[0m ~	✨\n"
 	@printf "\n"
 	@printf "\n"
 
 clean:
 	$(RM) obj/
 	@printf "\n"
-	@echo "💧\033[1;97m E V E R Y T H I N G  I S  C L E A N E D 💧\e[0m"
+	@printf "💧\033[1;97m E V E R Y T H I N G  I S  C L E A N E D 💧\e[0m\n"
 	@printf "\n"
 
 fclean:
 	$(RM) obj/
 	$(RM) $(NAME)
 	@printf "\n"
-	@echo "💧\033[1;97m E V E R Y T H I N G  I S  C L E A N E D 💧\e[0m"
+	@printf "💧\033[1;97m E V E R Y T H I N G  I S  C L E A N E D 💧\e[0m\n"
 	@printf "\n"
 
 re: fclean all
