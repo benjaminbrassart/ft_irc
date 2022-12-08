@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/04 14:27:16 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/08 18:12:57 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,11 @@ Channel::~Channel() {}
 /* ==========================================================================
 								MEMBER FUNCTIONS
    ========================================================================== */
+
+bool Channel::empty() const
+{
+	return this->allClients.empty();
+}
 
 bool	Channel::setName(std::string newName) {						// must change cerr for the right stream
 
