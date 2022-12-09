@@ -6,7 +6,7 @@
 #    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/12/08 22:44:11 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/12/09 16:13:09 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -54,6 +54,7 @@ SRC		+= cmds/cmd_ping.cpp
 SRC		+= cmds/cmd_mode.cpp
 SRC		+= cmds/cmd_privmsg.cpp
 SRC		+= cmds/cmd_notice.cpp
+SRC		+= cmds/cmd_topic.cpp
 
 OBJ		:=	$(addprefix ./obj/,$(SRC:%.cpp=%.o))
 

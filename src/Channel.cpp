@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/08 18:12:57 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/09 16:37:22 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -139,6 +139,16 @@ bool Channel::hasClient(Client &client) const {
 		if (it->client == &client)
 			return true;
 	return false;
+}
+
+Channel::ClientList::iterator Channel::getClient(Client& client)
+{
+	ClientList::iterator it;
+
+	for (it = this->allClients.begin(); it != this->allClients.end(); ++it)
+		if (it->client == &client)
+			break;
+	return it;
 }
 
 std::string const& Channel::getIdentifier() const
