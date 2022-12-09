@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/19 02:38:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 00:42:39 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/09 15:58:39 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,6 @@ void cmd_oper(CommandContext& context)
 	Server& server = context.server;
 	Server::OperatorPasswordList::const_iterator it;
 	CommandContext::ArgumentList& args = context.args;
-	std::string password;
-	std::string name;
 
 	if (args.size() < 2)
 	{
@@ -34,8 +32,8 @@ void cmd_oper(CommandContext& context)
 		return;
 	}
 
-	name = args[0];
-	password = args[1];
+	std::string const& name = args[0];
+	std::string const& password = args[1];
 
 	for (it = server.operatorPasswords.begin(); it != server.operatorPasswords.end(); ++it)
 	{
