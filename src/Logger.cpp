@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 05:03:51 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/05 17:52:55 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/09 16:05:07 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ void Logger::log(LogLevel level, std::string const& message)
 		{"FATAL", RED, std::cerr},
 	};
 
-	// TODO find out why valgrind reports uninitialized memory for this->_level
 	if (level < this->_level)
 		return;
 
