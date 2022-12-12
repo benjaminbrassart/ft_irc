@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 10:54:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/12 21:46:07 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/12 23:25:45 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 
 #include <cerrno>
 #include <cstring>
+#include <unistd.h>
 
 ConnectionManager::ConnectionManager() :
 	_pollFds(),
@@ -75,9 +76,9 @@ void ConnectionManager::handlePoll(Server& server)
 			++it;
 	}
 
-	this->__eraseSockets();
 	this->_pollFds.insert(this->_pollFds.end(), this->_newConnections.begin(), this->_newConnections.end());
 	this->_newConnections.clear();
+	this->__eraseSockets();
 }
 
 void ConnectionManager::disconnectClient(Client& client)
@@ -107,7 +108,9 @@ void ConnectionManager::handlePollErr(Server& server, iterator& it)
 		server.clientManager.removeClient(clientIt);
 	}
 
+	::close(it->fd);
 	this->removeSocket(it->fd);
+	++it;
 }
 
 void ConnectionManager::handlePollIn(Server& server, iterator& it)
