@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/05 17:45:35 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/12 21:08:58 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,10 @@ void cmd_nick(CommandContext& context)
 		{
 			if (!client.checkState(CLIENT_STATE_NICK))
 			{
+
+				client.nickname = nickname;
+				server.nickManager.registerNickname(nickname, &client);
+
 				server.logger.log(DEBUG, "<" + client.address + "> Registered nickname " + nickname);
 				client.setState(CLIENT_STATE_NICK);
 				client.tryLogin();
@@ -62,10 +66,10 @@ void cmd_nick(CommandContext& context)
 				for (clientIt = server.clientManager.begin(); clientIt != server.clientManager.end(); ++clientIt)
 					clientIt->second.send(prefix + " NICK :" + nickname);
 				server.logger.log(DEBUG, "<" + client.address + "> " + client.nickname + " Changed nickname to " + nickname);
-			}
 
-			client.nickname = nickname;
-			server.nickManager.registerNickname(nickname, &client);
+				client.nickname = nickname;
+				server.nickManager.registerNickname(nickname, &client);
+			}
 		}
 	}
 }
