@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 10:54:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/08 22:42:28 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/12 21:46:07 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ void ConnectionManager::handlePollErr(Server& server, iterator& it)
 		error += "Unknown error";
 	else
 		error += std::strerror(errnum);
-	server.logger.log(FATAL, error);
+	server.logger.log(ERROR, error);
 
 	ClientManager::iterator clientIt = server.clientManager.getClient(it->fd);
 
@@ -107,7 +107,7 @@ void ConnectionManager::handlePollErr(Server& server, iterator& it)
 		server.clientManager.removeClient(clientIt);
 	}
 
-	this->_pollFds.erase(it);
+	this->removeSocket(it->fd);
 }
 
 void ConnectionManager::handlePollIn(Server& server, iterator& it)
@@ -176,12 +176,18 @@ void ConnectionManager::handlePollOut(Server& server, iterator& it)
 	if (clientIt == server.clientManager.end())
 	{
 		server.logger.log(ERROR, "Internal error: unable to find connected client");
-		this->_pollFds.erase(it);
+		this->removeSocket(it->fd);
 	}
 	else
 	{
 		clientIt->second.flushWriteBuffer();
-		++it;
+		if (clientIt->second.shouldClose)
+		{
+			this->removeSocket(clientIt->first);
+			clientIt->second.closeConnection();
+		}
+		else
+			++it;
 	}
 }
 
@@ -197,13 +203,12 @@ ConnectionManager::iterator ConnectionManager::end()
 
 void ConnectionManager::__eraseSockets()
 {
-	std::vector< int >::iterator sockIt = this->_removedSockets.begin();
+	std::vector< int >::iterator sockIt;
+	iterator it;
 
-	for (; sockIt != this->_removedSockets.end(); ++sockIt)
+	for (sockIt = this->_removedSockets.begin(); sockIt != this->_removedSockets.end(); ++sockIt)
 	{
-		iterator it = this->_pollFds.begin();
-
-		for (; it != this->_pollFds.end(); ++it)
+		for (it = this->_pollFds.begin(); it != this->_pollFds.end(); ++it)
 		{
 			if (it->fd == *sockIt)
 			{
