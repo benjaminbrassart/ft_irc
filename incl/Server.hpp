@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/12 21:57:15 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/12 22:49:16 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ class Server {
 		void		createSocket(int port);
 		void		start();
 		void		loadOperatorFile(std::string const& file);
+
+		void		sendMotd(Client& client);
 
 		Recipient*	getRecipient(std::string const& identifier);
 
