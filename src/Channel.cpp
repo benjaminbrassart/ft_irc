@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/04 14:27:16 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/09 16:37:22 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,11 @@ Channel::~Channel() {}
 								MEMBER FUNCTIONS
    ========================================================================== */
 
+bool Channel::empty() const
+{
+	return this->allClients.empty();
+}
+
 bool	Channel::setName(std::string newName) {						// must change cerr for the right stream
 
 	if (newName.size() > 50) {
@@ -134,6 +139,16 @@ bool Channel::hasClient(Client &client) const {
 		if (it->client == &client)
 			return true;
 	return false;
+}
+
+Channel::ClientList::iterator Channel::getClient(Client& client)
+{
+	ClientList::iterator it;
+
+	for (it = this->allClients.begin(); it != this->allClients.end(); ++it)
+		if (it->client == &client)
+			break;
+	return it;
 }
 
 std::string const& Channel::getIdentifier() const

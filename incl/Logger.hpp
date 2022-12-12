@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/25 04:54:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/29 21:48:33 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/05 15:43:35 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,16 @@ enum LogLevel
 	NOTICE,
 	WARNING,
 	ERROR,
+	FATAL,
 };
 
 class Logger
 {
-public:
+private:
+	LogLevel _level;
 
 public:
-	LogLevel level;
-
-public:
-	Logger(LogLevel level);
+	explicit Logger(LogLevel level);
 	~Logger();
 
 public:

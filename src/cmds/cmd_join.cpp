@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/05 13:09:08 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/08 18:23:26 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,7 @@ void cmd_join(CommandContext& context)
 
 		if (key.empty() || chanIt->passwd == key)
 		{
+			client.channels.insert(&*chanIt);
 			chanIt->addClient(client, priv);
 
 			std::stringstream clientList;

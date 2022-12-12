@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 10:54:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/03 14:39:14 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/08 22:42:28 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,15 @@ void ConnectionManager::removeSocket(int sock)
 void ConnectionManager::wait()
 {
 	int	poll_res;
-	pollfd* ptr = &this->_pollFds[0];
-	nfds_t nfds = this->_pollFds.size();
-	int timeout = -1;
+	int	errnum;
 
-	poll_res = ::poll(ptr, nfds, timeout);
+	poll_res = ::poll(&this->_pollFds[0], this->_pollFds.size(), -1);
 	if (poll_res == -1)
-		throw IOException("poll", errno);
+	{
+		errnum = errno;
+		if (errnum != EINTR)
+			throw IOException("poll", errnum);
+	}
 }
 
 void ConnectionManager::handlePoll(Server& server)
@@ -95,7 +97,7 @@ void ConnectionManager::handlePollErr(Server& server, iterator& it)
 		error += "Unknown error";
 	else
 		error += std::strerror(errnum);
-	server.logger.log(ERROR, error);
+	server.logger.log(FATAL, error);
 
 	ClientManager::iterator clientIt = server.clientManager.getClient(it->fd);
 
@@ -119,11 +121,17 @@ void ConnectionManager::handlePollIn(Server& server, iterator& it)
 void ConnectionManager::handlePollInClient(Server& server, iterator& it)
 {
 	ClientManager::iterator clientIt = server.clientManager.getClient(it->fd);
+	Client::ChannelList::iterator chanIt;
 
 	if (clientIt != server.clientManager.end())
 	{
 		if (clientIt->second.readFrom())
 		{
+			chanIt = clientIt->second.channels.begin();
+			// TODO test if working as intended
+			for (; chanIt != clientIt->second.channels.end(); ++chanIt)
+				if ((*chanIt)->empty())
+					server.channelManager.removeChannel((*chanIt)->name);
 			server.clientManager.removeClient(clientIt);
 			this->removeSocket(it->fd);
 		}

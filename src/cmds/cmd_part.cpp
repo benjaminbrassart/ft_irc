@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:11:06 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 18:07:03 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/08 18:13:29 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void cmd_part(CommandContext& context)
 			client.channels.erase(&*chanIt);
 
 			// remove the channel if there is no client left
-			if (chanIt->allClients.empty())
+			if (chanIt->empty())
 				server.channelManager.removeChannel(chanIt);
 		}
 	}
