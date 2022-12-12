@@ -6,12 +6,13 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/05 17:17:38 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/12 22:50:36 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 
+#include "config.h"
 #include "command.h"
 #include "ft_irc.h"
 
@@ -118,6 +119,23 @@ Recipient* Server::getRecipient(std::string const& identifier)
 			return it->second;
 	}
 	return NULL;
+}
+
+void Server::sendMotd(Client& client)
+{
+	std::ifstream file;
+	std::string line;
+
+	file.open("motd.txt");
+	if (file)
+	{
+		client.reply<RPL_MOTDSTART>(SERVER_NAME);
+		while (std::getline(file, line))
+			client.reply<RPL_MOTD>(line.substr(0, 80));
+		client.reply<RPL_ENDOFMOTD>();
+	}
+	else
+		client.reply<ERR_NOMOTD>();
 }
 
 std::string Server::__getStartDate()

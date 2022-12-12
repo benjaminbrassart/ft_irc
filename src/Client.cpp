@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/12 21:52:08 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/12 22:48:59 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -159,6 +159,7 @@ void Client::tryLogin()
 			this->reply<RPL_CREATED>(this->server->startDate);
 			this->reply<RPL_MYINFO>(SERVER_NAME);
 			this->server->logger.log(DEBUG, "<" + this->address + "> Logged in as " + this->asPrefix());
+			this->server->sendMotd(*this);
 		}
 		else
 		{
