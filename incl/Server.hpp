@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 17:16:34 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/05 17:17:49 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/12 22:49:16 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ class Server {
 		void		start();
 		void		loadOperatorFile(std::string const& file);
 
+		void		sendMotd(Client& client);
+
 		Recipient*	getRecipient(std::string const& identifier);
 
 		Logger logger;
@@ -69,32 +71,16 @@ class Server {
 	private:
 
 		/**
-		 * Accept a client and add it to the client list
-		 *
-		 * @see accept(2)
-		 */
-		void __acceptClient();
-
-		/**
-		 * Read data from a polled client
-		 *
-		 * @param fd the socket file descriptor of the client
-		 * @return true if the client closed the connection, false otherwise
-		 */
-		bool __readFromClient(int fd);
-
-		/**
-		 * Write data to the client (if buffer has data)
-		 *
-		 * @param fd the socket file descriptor of the client
-		 */
-		void __writeToClient(int fd);
-
-		/**
 		 * Kill all active connections
 		 */
 		void __shutdown();
 
+		/**
+		 * Wrapper function for C's strftime
+		 *
+		 * @note format: '%Y-%m-%d %H:%M:%S'
+		 * @return a string that contains the current date
+		 */
 		static std::string __getStartDate();
 }; // class Server
 

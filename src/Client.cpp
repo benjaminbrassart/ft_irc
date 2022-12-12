@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/08 18:54:13 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/12 22:48:59 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,13 +28,30 @@
    ========================================================================== */
 
 Client::Client(Server* server) : Recipient(server),
+	channels(),
+	username(),
+	hostname(),
+	realname(),
 	sock_fd(-1),
+	address(),
+	readBuffer(),
+	writeBuffer(),
+	password(),
+	shouldClose(false),
 	_state(CLIENT_STATE_INIT)
 {}
 
 Client::Client(Server* server, int fd, sockaddr_in& addr) : Recipient(server),
+	channels(),
+	username(),
+	hostname(),
+	realname(),
 	sock_fd(fd),
 	address(addr),
+	readBuffer(),
+	writeBuffer(),
+	password(),
+	shouldClose(false),
 	_state(CLIENT_STATE_INIT)
 {}
 
@@ -57,6 +74,7 @@ Client		&Client::operator=(Client const &rhs) {
 		this->sock_fd = rhs.sock_fd;
 		this->nickname = rhs.nickname;
 		this->address = rhs.address;
+		this->shouldClose = rhs.shouldClose;
 	}
 	return (*this);
 }
@@ -112,6 +130,7 @@ void Client::flushWriteBuffer()
 	{
 		errnum = errno;
 		std::cerr << "Error: unable to send to " << this->address << ": " << ::strerror(errnum) << '\n';
+		this->shouldClose = true;
 		return;
 	}
 	this->server->logger.log(DEBUG, "<" + this->address + "> Sent " + res + " bytes of data");
@@ -140,11 +159,14 @@ void Client::tryLogin()
 			this->reply<RPL_CREATED>(this->server->startDate);
 			this->reply<RPL_MYINFO>(SERVER_NAME);
 			this->server->logger.log(DEBUG, "<" + this->address + "> Logged in as " + this->asPrefix());
+			this->server->sendMotd(*this);
 		}
 		else
 		{
 			this->server->logger.log(DEBUG, "<" + this->address + "> Wrong password");
-			this->reply<ERR_PASSWDMISMATCH>();
+			// this->reply<ERR_PASSWDMISMATCH>();
+			this->send("ERROR :Wrong password");
+			this->shouldClose = true;
 		}
 	}
 }

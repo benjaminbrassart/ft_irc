@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:47:46 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 02:21:20 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/12 18:21:46 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,7 @@ CommandContext::CommandContext(Client& client, std::string const& name, std::str
 	server(*client.server),
 	name(name),
 	args(CommandContext::split(line))
-{
-}
+{}
 
 CommandContext::~CommandContext()
 {}
