@@ -37,6 +37,7 @@ CommandMap::CommandMap(Server& server) :
 	this->put("PING", cmd_ping);
 	this->put("TOPIC", cmd_topic, CLIENT_STATE_LOGGED);
 	this->put("KICK", cmd_kick, CLIENT_STATE_LOGGED);
+	this->put("LIST", cmd_list, CLIENT_STATE_LOGGED);
 }
 
 CommandMap::~CommandMap()
@@ -44,7 +45,6 @@ CommandMap::~CommandMap()
 
 void CommandMap::put(std::string const& command, CommandMap::Handler handler, ClientState requiredFlags)
 {
-	this->_commands[command] = std::make_pair(handler, requiredFlags);
 	this->_commands[command] = std::make_pair(handler, requiredFlags);
 	this->server.logger.log(DEBUG, "+ " + command);
 }

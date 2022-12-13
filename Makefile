@@ -56,6 +56,7 @@ SRC		+= cmds/cmd_privmsg.cpp
 SRC		+= cmds/cmd_notice.cpp
 SRC		+= cmds/cmd_topic.cpp
 SRC		+= cmds/cmd_kick.cpp
+SRC		+= cmds/cmd_list.cpp
 
 OBJ		:=	$(addprefix ./obj/,$(SRC:%.cpp=%.o))
 

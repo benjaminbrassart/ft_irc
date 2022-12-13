@@ -56,5 +56,6 @@ void cmd_privmsg(CommandContext& ctx);
 void cmd_notice(CommandContext& ctx);
 void cmd_topic(CommandContext& ctx);
 void cmd_kick(CommandContext& ctx);
+void cmd_list(CommandContext& ctx);
 
 #endif // COMMAND_H
