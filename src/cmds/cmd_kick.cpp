@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/13 04:23:21 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 04:43:58 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 04:48:48 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ void cmd_kick(CommandContext& ctx)
 
 				// send KICK to all clients in the channel
 				for (; clientMemberIt != chanIt->allClients.end(); ++clientMemberIt)
-					clientMemberIt->client->send(prefix + " KICK " + chanIt->name + " :" + reason);
+					clientMemberIt->client->send(prefix + " KICK " + chanIt->name + " " + clientIt->second->nickname + " :" + reason);
 				chanIt->removeClient(*cliPrivIt->client);
 				continue;
 			}
