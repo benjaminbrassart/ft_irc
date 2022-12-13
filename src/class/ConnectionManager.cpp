@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionManager.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 10:54:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/12 23:49:06 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/12/13 20:10:26 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,7 @@ void ConnectionManager::handlePollOut(Server& server, iterator& it)
 		clientIt->second.flushWriteBuffer();
 		if (clientIt->second.shouldClose)
 		{
+			clientIt->second.server->nickManager.unregisterNickname(clientIt->second.nickname);
 			this->removeSocket(clientIt->first);
 			clientIt->second.closeConnection();
 		}
