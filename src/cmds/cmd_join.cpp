@@ -6,12 +6,14 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/08 18:23:26 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 02:53:49 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 #include "command.h"
+
+static bool __check_channel_name(std::string const& name);
 
 // Once a user has joined a channel, he receives information about
 // all commands his server receives affecting the channel.  This
@@ -63,6 +65,12 @@ void cmd_join(CommandContext& context)
 		ChannelManager::iterator chanIt = server.channelManager.getChannel(*chanNameIt);
 		ChannelPrivilege priv;
 
+		if (!__check_channel_name(*chanNameIt))
+		{
+			client.reply<ERR_BADCHANMASK>(*chanNameIt);
+			continue;
+		}
+
 		if (chanIt == server.channelManager.end())
 		{
 			chanIt = server.channelManager.addChannel(Channel(&server, *chanNameIt));
@@ -81,21 +89,39 @@ void cmd_join(CommandContext& context)
 			client.channels.insert(&*chanIt);
 			chanIt->addClient(client, priv);
 
-			std::stringstream clientList;
+			if (chanIt->topic.empty())
+				client.reply<RPL_NOTOPIC>(chanIt->name);
+			else
+				client.reply<RPL_TOPIC>(chanIt->name, chanIt->topic);
 
 			for (clientIt = chanIt->allClients.begin(); clientIt != chanIt->allClients.end(); ++clientIt)
 			{
+				std::stringstream clientList;
+
 				clientIt->client->send(prefix + " JOIN " + chanIt->name);
-				if (clientIt != chanIt->allClients.begin())
-					clientList << ' ';
+
+				switch (clientIt->privilege)
+				{
+					case PRIV_UNIQOP:
+					case PRIV_CHANOP: clientList << '@'; break;
+					case PRIV_VOICE: clientList << '+'; break;
+					default: break;
+				}
 				clientList << clientIt->client->nickname;
+				client.reply<RPL_NAMREPLY>("=", chanIt->name, clientList.str());
 			}
 			// TOOD see if we need to split this if there are too many clients
-			client.reply<RPL_NAMREPLY>(chanIt->name, "=", clientList.str());
 			client.reply<RPL_ENDOFNAMES>(chanIt->name);
-			client.reply<RPL_TOPIC>(chanIt->name, chanIt->topic);
 		}
 		else
 			client.reply<ERR_PASSWDMISMATCH>();
 	}
+}
+
+static bool __check_channel_name(std::string const& name)
+{
+	if (name.empty() || name.size() > 50 || name[0] != '#')
+		return false;
+	// TODO check for forbidden characters
+	return true;
 }

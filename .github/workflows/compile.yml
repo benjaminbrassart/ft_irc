@@ -9,4 +9,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Compile using Makefile
-        run: make
+        run: make -j
