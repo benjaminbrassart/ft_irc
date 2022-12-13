@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_quit.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 13:50:33 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/08 22:39:22 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 03:08:12 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ void cmd_quit(CommandContext& context)
 				recipients.insert(clientIt->client);
 	}
 	for (recipIt = recipients.begin(); recipIt != recipients.end(); ++recipIt)
-		(*recipIt)->send(":" + prefix + " QUIT :Quit: " + reason);
-	client.send("ERROR :buh-bye"); // TODO use a better message
-	server.nickManager.unregisterNickname(client.nickname);
+		(*recipIt)->send(prefix + " QUIT :Quit: " + reason);
+	client.send("ERROR :buh-bye ;D");
+	client.shouldClose = true;
 }

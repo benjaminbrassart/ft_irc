@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandMap.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:45:50 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/09 16:37:49 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/12 20:34:31 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include "CommandMap.hpp"
 #include "Reply.hpp"
 #include <algorithm>
+#include <cctype>
 
 CommandMap::CommandMap(Server& server) :
 	_commands(),
@@ -42,6 +43,7 @@ CommandMap::~CommandMap()
 
 void CommandMap::put(std::string const& command, CommandMap::Handler handler, ClientState requiredFlags)
 {
+	this->_commands[command] = std::make_pair(handler, requiredFlags);
 	this->_commands[command] = std::make_pair(handler, requiredFlags);
 	this->server.logger.log(DEBUG, "+ " + command);
 }
@@ -81,14 +83,16 @@ void CommandMap::process(Client& client, std::string const& line)
 void CommandMap::dispatch(Client& client, std::string const& prefix, std::string const& command, std::string const& line)
 {
 	CommandMap::MapType::const_iterator it;
+	std::string	cmdupper = command;
 
 	(void)prefix;
-	it = this->_commands.find(command);
+	std::transform(cmdupper.begin(), cmdupper.end(), cmdupper.begin(), toupper);
+	it = this->_commands.find(cmdupper);
 	if (it == this->_commands.end())
 		this->handleUnknownCommand(client, command);
 	else if (!(it->second.first == NULL || !client.checkState(it->second.second)))
 	{
-		CommandContext ctx(client, command, line);
+		CommandContext ctx(client, cmdupper, line);
 		this->server.logger.log(DEBUG, "RECV <" + client.address + "> '" + command + " " + line + "'");
 		it->second.first(ctx);
 	}
