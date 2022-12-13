@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/23 02:46:53 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/29 14:51:20 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 20:59:50 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #include "command.h"
 #include "Client.hpp"
 
-void cmd_die(CommandContext& context)
+void cmd_die(CommandContext& ctx)
 {
-	Client& client = context.client;
+	Client& client = ctx.client;
 
 	if (client.checkState(CLIENT_STATE_OPERATOR))
 		KEEP_RUNNING = false;

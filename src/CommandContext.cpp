@@ -6,12 +6,13 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:47:46 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/12 18:21:46 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 21:24:13 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 #include "CommandMap.hpp"
+#include "command.h"
 #include <algorithm>
 
 #define SIZEOF_ARRAY(Array) (sizeof (Array) / sizeof (*Array))
@@ -26,74 +27,47 @@ CommandContext::CommandContext(Client& client, std::string const& name, std::str
 CommandContext::~CommandContext()
 {}
 
+CommandContext::ArgumentList CommandContext::split(std::string const& line)
+{
+	return CommandContext::__split(line, ' ', true);
+}
+
 // TODO refactor common code between split and splitList
 CommandContext::ArgumentList CommandContext::splitList(std::string const& line)
 {
-	std::string args[15];
-	std::string first;
-	std::string::const_iterator it;
-	std::string::const_iterator first_it;
-	std::string::const_iterator fast;
-	unsigned int count;
-
-	count = 0;
-	it = std::find(line.begin(), line.end(), ':');
-
-	if (it != line.begin())
-	{
-		if (it != line.end())
-			--it;
-		first_it = line.begin();
-		while (count < SIZEOF_ARRAY(args) && first_it != it)
-		{
-			fast = std::find(first_it, it, ',');
-			args[count++] = std::string(first_it, fast);
-			first_it = fast;
-			if (first_it != it)
-				++first_it;
-		}
-	}
-	return std::vector< std::string >(&args[0], &args[count]);
+	return CommandContext::__split(line, ',', false);
 }
 
-CommandContext::ArgumentList CommandContext::split(std::string const& line)
+CommandContext::ArgumentList CommandContext::__split(std::string const& line, char separator, bool colon)
 {
-	std::string args[15];
-	std::string first;
-	std::string::const_iterator it;
-	std::string::const_iterator first_it;
+	ArgumentList args;
+	std::string::const_iterator it = line.begin();
 	std::string::const_iterator fast;
-	unsigned int count;
 
-	count = 0;
-	it = std::find(line.begin(), line.end(), ':');
-
-	if (it != line.begin())
+	while (it != line.end())
 	{
-		if (it != line.end())
-			--it;
-		first_it = line.begin();
-		while (count < SIZEOF_ARRAY(args) && first_it != it)
+		// go to next space
+		fast = std::find(it, line.end(), separator);
+
+		// if the first character is a colon...
+		if (colon && fast != line.end() && (fast + 1) != line.end() && *it == ':')
 		{
-			fast = std::find(first_it, it, ' ');
-			args[count++] = std::string(first_it, fast);
-			first_it = fast;
-			if (first_it != it)
-				++first_it;
-		}
-		if (it != line.end())
+			// skip the colon
 			++it;
-	}
 
-	while (count < SIZEOF_ARRAY(args) && it != line.end())
-	{
-		if (it != line.end() && *it == ':')
-			++it;
-		fast = std::find(it, line.end(), ':');
-		args[count++] = std::string(it, fast);
+			// go to the end
+			fast = line.end();
+		}
+
+		// add a new argument
+		args.push_back(std::string(it, fast));
+
+		// move the iterator
 		it = fast;
+
+		// if not at the end, skip the current space
 		if (it != line.end())
 			++it;
 	}
-	return std::vector< std::string >(&args[0], &args[count]);
+	return args;
 }

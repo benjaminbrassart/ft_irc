@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:11:06 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/08 18:13:29 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 20:59:50 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,18 +16,18 @@
 #include "CommandMap.hpp"
 #include "Reply.hpp"
 
-void cmd_part(CommandContext& context)
+void cmd_part(CommandContext& ctx)
 {
-	Client& client = context.client;
-	Server& server = context.server;
-	CommandContext::ArgumentList& args = context.args;
+	Client& client = ctx.client;
+	Server& server = ctx.server;
+	CommandContext::ArgumentList& args = ctx.args;
 	CommandContext::ArgumentList::const_iterator chanNameIt;
 	Channel::ClientList::iterator clientIt;
 	std::string const* messagePtr;
 
 	if (args.empty())
 	{
-		client.reply<ERR_NEEDMOREPARAMS>(context.name);
+		client.reply<ERR_NEEDMOREPARAMS>(ctx.name);
 		return;
 	}
 

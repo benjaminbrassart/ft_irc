@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_quit.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 13:50:33 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 03:08:12 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/12/13 20:59:50 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 #include "CommandMap.hpp"
 #include <set>
 
-void cmd_quit(CommandContext& context)
+void cmd_quit(CommandContext& ctx)
 {
-	CommandContext::ArgumentList& args = context.args;
-	Client& client = context.client;
-	Server& server = context.server;
+	CommandContext::ArgumentList& args = ctx.args;
+	Client& client = ctx.client;
+	Server& server = ctx.server;
 	std::string const prefix = client.asPrefix();
 	Client::ChannelList::iterator chanIt;
 	Channel::ClientList::iterator clientIt;
