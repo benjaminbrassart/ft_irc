@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/09 16:37:22 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 05:50:57 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,19 +158,12 @@ std::string const& Channel::getIdentifier() const
 
 void Channel::sendMessage(Client& sender, std::string const& command, std::string const& message)
 {
+	std::string const& prefix = sender.asPrefix();
 	ClientList::iterator it;
-
-	(void)command;
-	(void)message;
 
 	for (it = this->allClients.begin(); it != this->allClients.end(); ++it)
 	{
-		// TODO send to users here, target being #channel
-		// format:  ':<prefix> <command> #<channel> <message>'
-		// example: ':ben!Benjamin@10.0.7.125 PRIVMSG #ft_ble :Hello world'
-		if (&sender != it->client)
-		{
-			// it->client->sendMessage(sender, command, message);
-		}
+		if (it->client != &sender)
+			it->client->send(prefix + " " + command + " " + this->name + " :" + message);
 	}
 }
