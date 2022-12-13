@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:40:51 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 20:59:34 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 21:13:11 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,9 @@ struct CommandContext
 
 	// split arguments on comma, without long arguments
 	static ArgumentList splitList(std::string const& line);
+
+	private:
+	static ArgumentList __split(std::string const& line, char separator, bool colon);
 }; // struct CommandContext
 
 typedef void (*CommandHandler)(CommandContext& ctx);
