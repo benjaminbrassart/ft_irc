@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 06:01:06 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 20:04:12 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,7 +154,7 @@ void Client::tryLogin()
 	{
 		if (this->password == this->server->password)
 		{
-			this->reply<RPL_WELCOME>(this->nickname, this->username, this->hostname);
+			this->reply<RPL_WELCOME>(this->nickname, this->username, "" + this->address);
 			this->reply<RPL_YOURHOST>();
 			this->reply<RPL_CREATED>(this->server->startDate);
 			this->reply<RPL_MYINFO>(SERVER_NAME);
