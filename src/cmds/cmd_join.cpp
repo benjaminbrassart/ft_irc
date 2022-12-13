@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/12 23:39:14 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 02:53:49 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void cmd_join(CommandContext& context)
 		ChannelManager::iterator chanIt = server.channelManager.getChannel(*chanNameIt);
 		ChannelPrivilege priv;
 
-		if (__check_channel_name(*chanNameIt))
+		if (!__check_channel_name(*chanNameIt))
 		{
 			client.reply<ERR_BADCHANMASK>(*chanNameIt);
 			continue;
@@ -89,8 +89,6 @@ void cmd_join(CommandContext& context)
 			client.channels.insert(&*chanIt);
 			chanIt->addClient(client, priv);
 
-			std::stringstream clientList;
-
 			if (chanIt->topic.empty())
 				client.reply<RPL_NOTOPIC>(chanIt->name);
 			else
@@ -98,21 +96,21 @@ void cmd_join(CommandContext& context)
 
 			for (clientIt = chanIt->allClients.begin(); clientIt != chanIt->allClients.end(); ++clientIt)
 			{
+				std::stringstream clientList;
+
 				clientIt->client->send(prefix + " JOIN " + chanIt->name);
 
 				switch (clientIt->privilege)
 				{
-					case PRIV_UNIQOP: clientList << '~'; break;
+					case PRIV_UNIQOP:
 					case PRIV_CHANOP: clientList << '@'; break;
 					case PRIV_VOICE: clientList << '+'; break;
 					default: break;
 				}
 				clientList << clientIt->client->nickname;
-				client.reply<RPL_NAMREPLY>(chanIt->name, "=", clientList.str());
-				clientList.clear();
+				client.reply<RPL_NAMREPLY>("=", chanIt->name, clientList.str());
 			}
 			// TOOD see if we need to split this if there are too many clients
-			client.reply<RPL_NAMREPLY>(chanIt->name, "=", clientList.str());
 			client.reply<RPL_ENDOFNAMES>(chanIt->name);
 		}
 		else
