@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 06:07:59 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 20:59:50 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,11 @@ static bool __is_nickname_valid(std::string const& nickname);
 // []\`_^{}|a-zZ-Z0-9-
 // first character must not be a digit
 // length range: 1-9
-void cmd_nick(CommandContext& context)
+void cmd_nick(CommandContext& ctx)
 {
-	Client& client = context.client;
-	Server& server = context.server;
-	CommandContext::ArgumentList& args = context.args;
+	Client& client = ctx.client;
+	Server& server = ctx.server;
+	CommandContext::ArgumentList& args = ctx.args;
 
 	if (args.empty())
 		client.reply<ERR_NONICKNAMEGIVEN>();

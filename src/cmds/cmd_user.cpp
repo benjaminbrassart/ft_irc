@@ -6,23 +6,23 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:01:23 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/25 00:40:24 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 20:59:50 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 #include "CommandMap.hpp"
 
-void cmd_user(CommandContext& context)
+void cmd_user(CommandContext& ctx)
 {
-	Client& client = context.client;
-	std::vector< std::string >& args = context.args;
+	Client& client = ctx.client;
+	std::vector< std::string >& args = ctx.args;
 	std::string mode;
 
 	if (client.checkState(CLIENT_STATE_USER))
 		client.reply<ERR_ALREADYREGISTRED>();
 	else if (args.size() < 4)
-		client.reply<ERR_NEEDMOREPARAMS>(context.name);
+		client.reply<ERR_NEEDMOREPARAMS>(ctx.name);
 	else
 	{
 		client.username = args[0];

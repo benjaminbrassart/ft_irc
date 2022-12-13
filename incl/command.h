@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:40:51 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 04:56:08 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 20:59:34 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,20 +38,20 @@ struct CommandContext
 	static ArgumentList splitList(std::string const& line);
 }; // struct CommandContext
 
-typedef void (*CommandHandler)(CommandContext& context);
+typedef void (*CommandHandler)(CommandContext& ctx);
 
-void cmd_pass(CommandContext& context);
-void cmd_user(CommandContext& context);
-void cmd_nick(CommandContext& context);
-void cmd_quit(CommandContext& context);
-void cmd_join(CommandContext& context);
-void cmd_part(CommandContext& context);
-void cmd_motd(CommandContext& context);
-void cmd_oper(CommandContext& context);
-void cmd_die(CommandContext& context);
-void cmd_kill(CommandContext& context);
-void cmd_ping(CommandContext& context);
-void cmd_pong(CommandContext& context);
+void cmd_pass(CommandContext& ctx);
+void cmd_user(CommandContext& ctx);
+void cmd_nick(CommandContext& ctx);
+void cmd_quit(CommandContext& ctx);
+void cmd_join(CommandContext& ctx);
+void cmd_part(CommandContext& ctx);
+void cmd_motd(CommandContext& ctx);
+void cmd_oper(CommandContext& ctx);
+void cmd_die(CommandContext& ctx);
+void cmd_kill(CommandContext& ctx);
+void cmd_ping(CommandContext& ctx);
+void cmd_pong(CommandContext& ctx);
 void cmd_privmsg(CommandContext& ctx);
 void cmd_notice(CommandContext& ctx);
 void cmd_topic(CommandContext& ctx);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_kill.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/23 03:00:42 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 03:07:48 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/12/13 20:59:50 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 #include "Client.hpp"
 #include "Channel.hpp"
 
-void cmd_kill(CommandContext& context)
+void cmd_kill(CommandContext& ctx)
 {
-	CommandContext::ArgumentList& args = context.args;
-	Client& client = context.client;
-	Server& server = context.server;
+	CommandContext::ArgumentList& args = ctx.args;
+	Client& client = ctx.client;
+	Server& server = ctx.server;
 	std::set< Client* > contents;
 	std::set< Client* >::iterator contentIt;
 
 	if (args.size() < 2)
-		client.reply<ERR_NEEDMOREPARAMS>(context.name);
+		client.reply<ERR_NEEDMOREPARAMS>(ctx.name);
 	else if (!client.checkState(CLIENT_STATE_OPERATOR))
 		client.reply<ERR_NOPRIVILEGES>();
 	else

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_mode.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 01:07:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/28 19:46:49 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/12/13 20:59:50 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,10 +77,10 @@
 // // NOT send QUIT messages for users leaving such channels to the other
 // // channel members but generate a PART message instead.
 
-// void cmd_mode(CommandContext& context)
+// void cmd_mode(CommandContext& ctx)
 // {
-// 	Client&										client = context.client;
-// 	std::vector< std::string > const			args = CommandContext::splitArguments(context.line);
+// 	Client&										client = ctx.client;
+// 	std::vector< std::string > const			args = CommandContext::splitArguments(ctx.line);
 // 	std::vector< std::string >::const_iterator	it;
 // 	Channel* channel;
 // 	Privilege privilege = PRIV_NONE; // TODO get it somehow

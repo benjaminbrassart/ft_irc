@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 02:53:49 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 20:59:50 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ static bool __check_channel_name(std::string const& name);
 // the list of users who are on the channel (using RPL_NAMREPLY), which
 // MUST include the user joining.
 
-void cmd_join(CommandContext& context)
+void cmd_join(CommandContext& ctx)
 {
-	Client& client = context.client;
-	Server& server = context.server;
-	CommandContext::ArgumentList& args = context.args;
+	Client& client = ctx.client;
+	Server& server = ctx.server;
+	CommandContext::ArgumentList& args = ctx.args;
 	std::vector< std::string > channels;
 	std::vector< std::string > keys;
 	std::vector< std::string >::const_iterator chanNameIt;
@@ -39,7 +39,7 @@ void cmd_join(CommandContext& context)
 
 	if (args.empty())
 	{
-		client.reply<ERR_NEEDMOREPARAMS>(context.name);
+		client.reply<ERR_NEEDMOREPARAMS>(ctx.name);
 		return;
 	}
 

@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:38:48 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 17:25:35 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 20:59:50 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class Server;
 class CommandMap
 {
 public:
-	typedef void (*Handler)(::CommandContext& context);
+	typedef void (*Handler)(::CommandContext& ctx);
 	typedef std::pair< Handler, ClientState > HandlerPair;
 	typedef std::map< std::string, HandlerPair > MapType;
 
