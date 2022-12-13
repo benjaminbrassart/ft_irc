@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:31:24 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/12 21:08:58 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 06:07:59 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ void cmd_nick(CommandContext& context)
 		{
 			if (!client.checkState(CLIENT_STATE_NICK))
 			{
-
 				client.nickname = nickname;
 				server.nickManager.registerNickname(nickname, &client);
 
@@ -58,19 +57,37 @@ void cmd_nick(CommandContext& context)
 			}
 			else
 			{
+				std::set< Client* > recipients;
+				std::set< Client* >::iterator recipIt;
 				std::string const& prefix = client.asPrefix();
-				ClientManager::iterator clientIt;
+				Client::ChannelList::iterator chanIt = client.channels.begin();
+				Channel::ClientList::iterator chanClientIt;
+
+				recipients.insert(&client);
+				for (; chanIt != client.channels.end(); ++chanIt)
+				{
+					chanClientIt = (*chanIt)->allClients.begin();
+
+					for (; chanClientIt != (*chanIt)->allClients.end(); ++chanClientIt)
+						recipients.insert(chanClientIt->client);
+				}
+
+				recipIt = recipients.begin();
+
+				for (; recipIt != recipients.end(); ++recipIt)
+					(*recipIt)->send(prefix + " NICK " + nickname);
 
 				server.nickManager.unregisterNickname(client.nickname);
 
-				for (clientIt = server.clientManager.begin(); clientIt != server.clientManager.end(); ++clientIt)
-					clientIt->second.send(prefix + " NICK :" + nickname);
 				server.logger.log(DEBUG, "<" + client.address + "> " + client.nickname + " Changed nickname to " + nickname);
 
 				client.nickname = nickname;
 				server.nickManager.registerNickname(nickname, &client);
+				return;
 			}
 		}
+
+		client.setState(CLIENT_STATE_NICK_FAILED);
 	}
 }
 

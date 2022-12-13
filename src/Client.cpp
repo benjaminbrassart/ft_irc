@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/12 22:48:59 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 20:04:12 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -154,12 +154,14 @@ void Client::tryLogin()
 	{
 		if (this->password == this->server->password)
 		{
-			this->reply<RPL_WELCOME>(this->nickname, this->username, this->hostname);
+			this->reply<RPL_WELCOME>(this->nickname, this->username, "" + this->address);
 			this->reply<RPL_YOURHOST>();
 			this->reply<RPL_CREATED>(this->server->startDate);
 			this->reply<RPL_MYINFO>(SERVER_NAME);
 			this->server->logger.log(DEBUG, "<" + this->address + "> Logged in as " + this->asPrefix());
 			this->server->sendMotd(*this);
+			if (this->checkState(CLIENT_STATE_NICK_FAILED))
+				this->send(this->asPrefix() + " NICK " + this->nickname);
 		}
 		else
 		{
