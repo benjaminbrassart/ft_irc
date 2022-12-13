@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 20:04:12 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 00:05:53 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,11 +198,7 @@ std::string const& Client::getIdentifier() const
 
 void Client::sendMessage(Client& sender, std::string const& command, std::string const& message)
 {
-	std::string const prefix = sender.asPrefix();
-	std::stringstream ss;
-
-	ss << prefix << " " << command << this->nickname << " :" << message;
-	// TODO
+	this->send(sender.asPrefix() + " " + command + " " + this->nickname + " :" + message);
 }
 
 void Client::__replyRaw(Reply code, std::string const& message)

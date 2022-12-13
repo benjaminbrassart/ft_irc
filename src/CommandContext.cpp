@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:47:46 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 21:24:13 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 00:12:00 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ CommandContext::ArgumentList CommandContext::__split(std::string const& line, ch
 		fast = std::find(it, line.end(), separator);
 
 		// if the first character is a colon...
-		if (colon && fast != line.end() && (fast + 1) != line.end() && *it == ':')
+		if (colon && *it == ':')
 		{
 			// skip the colon
 			++it;
