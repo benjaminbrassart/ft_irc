@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandMap.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:45:50 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/12 20:34:31 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/12/13 04:57:02 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ CommandMap::CommandMap(Server& server) :
 	this->put("PRIVMSG", cmd_privmsg, CLIENT_STATE_LOGGED);
 	this->put("PING", cmd_ping);
 	this->put("TOPIC", cmd_topic, CLIENT_STATE_LOGGED);
+	this->put("KICK", cmd_kick, CLIENT_STATE_LOGGED);
 }
 
 CommandMap::~CommandMap()

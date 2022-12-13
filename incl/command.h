@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:40:51 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/09 16:38:22 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 04:56:08 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,5 +55,6 @@ void cmd_pong(CommandContext& context);
 void cmd_privmsg(CommandContext& ctx);
 void cmd_notice(CommandContext& ctx);
 void cmd_topic(CommandContext& ctx);
+void cmd_kick(CommandContext& ctx);
 
 #endif // COMMAND_H
