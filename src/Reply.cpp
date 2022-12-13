@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 18:04:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/12 21:51:30 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/13 04:14:25 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ std::string const ReplyFactory<RPL_LISTEND>::NAME = "RPL_LISTEND";
 
 std::string ReplyFactory<RPL_LISTEND>::makeReply()
 {
-	return ":End of LIST";
+	return ":End of /LIST";
 }
 
 std::string const ReplyFactory<RPL_CHANNELMODEIS>::NAME = "RPL_CHANNELMODEIS";
