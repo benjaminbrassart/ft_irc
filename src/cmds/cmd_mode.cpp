@@ -6,7 +6,7 @@
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/14 17:18:44 by lrandria          #+#    #+#             */
-/*   Updated: 2022/12/14 17:42:42 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/14 17:56:44 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void	handleModes(Client &client, Server &server, std::vector< std::string > args
 	modes = args[1];
 	if (modes[0] == '-' && modes.length() > 1 )
 		removeModes(client, itChan, args);
-	if (allowedChars.find(modes[0]) != std::string::npos && modes.length() > 1)
+	else if (allowedChars.find(modes[0]) != std::string::npos && modes.length() > 1)
 		addModes(client, itChan, args);
 	else
 		client.reply<ERR_UNKNOWNMODE>(modes, itChan->name);
