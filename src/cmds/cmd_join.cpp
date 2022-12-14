@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 07:34:20 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 22:40:12 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,29 +29,6 @@ void cmd_join(CommandContext& ctx)
 	if (args.empty())
 	{
 		client.reply<ERR_NEEDMOREPARAMS>(ctx.name);
-		return;
-	}
-
-	if (args[0] == "0")
-	{
-		Client::ChannelList::iterator chanIt = client.channels.begin();
-		Client::ChannelList::iterator nextIt;
-		std::string const prefix = client.asPrefix();
-
-		for (; chanIt != client.channels.end();)
-		{
-			nextIt = chanIt;
-			++nextIt;
-			clientIt = (*chanIt)->allClients.begin();
-			for (; clientIt != (*chanIt)->allClients.end(); ++clientIt)
-				clientIt->client->send(prefix + " PART " + (*chanIt)->name + " :leaving");
-			(*chanIt)->removeClient(client);
-			if ((*chanIt)->empty())
-				server.channelManager.removeChannel((*chanIt)->name);
-			chanIt = nextIt;
-		}
-
-		client.channels.clear();
 		return;
 	}
 
@@ -128,6 +105,5 @@ static bool __check_channel_name(std::string const& name)
 {
 	if (name.empty() || name.size() > 50 || name[0] != '#')
 		return false;
-	// TODO check for forbidden characters
-	return true;
+	return name.find_first_of("\b\r\n ,:") == std::string::npos;
 }
