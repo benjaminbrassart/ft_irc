@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 18:04:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 21:52:00 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/14 23:21:32 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@
 
 std::string const ReplyFactory<RPL_WELCOME>::NAME = "RPL_WELCOME";
 
-// TODO change `hostname` to `address`, and use the client's ip address rather than the hostname used to connect to the server
 std::string ReplyFactory<RPL_WELCOME>::makeReply(std::string const& nickname, std::string const& username, std::string const& hostname)
 {
 	return ":Welcome to the Internet Relay Network " + nickname + '!' + username + '@' + hostname;
@@ -322,14 +321,6 @@ std::string ReplyFactory<ERR_YOUREBANNEDCREEP>::makeReply()
 {
 	return ":You are banned from this server";
 }
-
-std::string const ReplyFactory<ERR_YOUWILLBEBANNED>::NAME = "ERR_YOUWILLBEBANNED";
-
-std::string ReplyFactory<ERR_YOUWILLBEBANNED>::makeReply()
-{
-	return ""; // TODO
-}
-
 
 std::string const ReplyFactory<ERR_KEYSET>::NAME = "ERR_KEYSET";
 
