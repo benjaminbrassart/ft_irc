@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandMap.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:45:50 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 08:32:27 by parallels        ###   ########.fr       */
+/*   Updated: 2022/12/14 18:27:14 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ CommandMap::CommandMap(Server& server) :
 	this->put("QUIT", cmd_quit, CLIENT_STATE_LOGGED);
 	this->put("MOTD", cmd_motd, CLIENT_STATE_LOGGED);
 	this->put("OPER", cmd_oper, CLIENT_STATE_LOGGED);
+	this->put("MODE", cmd_mode, CLIENT_STATE_LOGGED);
 	this->put("JOIN", cmd_join, CLIENT_STATE_LOGGED);
 	this->put("PART", cmd_part, CLIENT_STATE_LOGGED);
 	this->put("DIE", cmd_die, CLIENT_STATE_LOGGED);

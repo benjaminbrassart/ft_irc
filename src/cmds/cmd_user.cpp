@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_user.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 12:01:23 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 20:59:50 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 19:56:22 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,5 @@ void cmd_user(CommandContext& ctx)
 		client.realname = args[3];
 		client.setState(CLIENT_STATE_USER);
 		client.tryLogin();
-		// TODO do something with `mode`
 	}
 }

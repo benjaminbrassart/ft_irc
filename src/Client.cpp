@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 06:54:18 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 22:31:38 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ Client::Client(Server* server) : Recipient(server),
 	writeBuffer(),
 	password(),
 	shouldClose(false),
+	isInvisible(false),
 	_state(CLIENT_STATE_INIT)
 {}
 
@@ -52,6 +53,7 @@ Client::Client(Server* server, int fd, sockaddr_in& addr) : Recipient(server),
 	writeBuffer(),
 	password(),
 	shouldClose(false),
+	isInvisible(false),
 	_state(CLIENT_STATE_INIT)
 {}
 
@@ -75,6 +77,7 @@ Client		&Client::operator=(Client const &rhs) {
 		this->nickname = rhs.nickname;
 		this->address = rhs.address;
 		this->shouldClose = rhs.shouldClose;
+		this->isInvisible = rhs.isInvisible;
 	}
 	return (*this);
 }
