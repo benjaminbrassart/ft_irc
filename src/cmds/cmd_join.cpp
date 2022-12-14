@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 07:05:34 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 07:34:20 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,29 @@ void cmd_join(CommandContext& ctx)
 	if (args.empty())
 	{
 		client.reply<ERR_NEEDMOREPARAMS>(ctx.name);
+		return;
+	}
+
+	if (args[0] == "0")
+	{
+		Client::ChannelList::iterator chanIt = client.channels.begin();
+		Client::ChannelList::iterator nextIt;
+		std::string const prefix = client.asPrefix();
+
+		for (; chanIt != client.channels.end();)
+		{
+			nextIt = chanIt;
+			++nextIt;
+			clientIt = (*chanIt)->allClients.begin();
+			for (; clientIt != (*chanIt)->allClients.end(); ++clientIt)
+				clientIt->client->send(prefix + " PART " + (*chanIt)->name + " :leaving");
+			(*chanIt)->removeClient(client);
+			if ((*chanIt)->empty())
+				server.channelManager.removeChannel((*chanIt)->name);
+			chanIt = nextIt;
+		}
+
+		client.channels.clear();
 		return;
 	}
 
