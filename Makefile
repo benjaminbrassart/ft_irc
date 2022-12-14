@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
+#    By: parallels <parallels@student.42.fr>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/12/13 04:56:31 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/12/14 03:14:13 by parallels        ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -53,6 +53,7 @@ SRC		+= cmds/cmd_kill.cpp
 SRC		+= cmds/cmd_ping.cpp
 SRC		+= cmds/cmd_mode.cpp
 SRC		+= cmds/cmd_privmsg.cpp
+SRC		+= cmds/cmd_restart.cpp
 SRC		+= cmds/cmd_notice.cpp
 SRC		+= cmds/cmd_topic.cpp
 SRC		+= cmds/cmd_kick.cpp

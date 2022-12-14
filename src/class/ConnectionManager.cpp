@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionManager.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 10:54:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 20:10:26 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 11:27:26 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ void ConnectionManager::handlePoll(Server& server)
 {
 	iterator it;
 
-	for (it = this->begin(); KEEP_RUNNING && it != this->end();)
+	for (it = this->begin(); g_Mode == 1 && it != this->end();)
 	{
 		if (it->revents & POLLERR)
 			this->handlePollErr(server, it);

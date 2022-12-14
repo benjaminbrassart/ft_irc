@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 00:55:38 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/05 15:49:40 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 11:56:38 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,9 @@
 
 static Logger* __logger;
 
-volatile sig_atomic_t KEEP_RUNNING;
+// volatile sig_atomic_t KEEP_RUNNING;
+// volatile sig_atomic_t RESTART;
+int	g_Mode;
 
 long	parsing_input(int ac, char *str) {
 
@@ -67,22 +69,38 @@ int	main(int ac, char **av) {
 	__logger = &server.logger;
 	server.logger.log(INFO, "Starting " SERVER_NAME " version " VERSION);
 	server.loadOperatorFile("operators.txt");
-	KEEP_RUNNING = true;
 	server.password = av[2];
 
 	std::signal(SIGINT, __handleSignal);
 	server.logger.log(DEBUG, "Signal handlers setup");
 
-	try
+	g_Mode = 1;
+	while (g_Mode != 0)
 	{
-		server.createSocket(port);
-		server.start();
-	}
-	catch (IOException const& e)
-	{
-		server.logger.log(FATAL, std::string("I/O error: ") + e.what());
+		while (g_Mode == 1)
+		{
+			// Server server;
+			// TODO: regler pb nickname already in use/password non reconu
+			try
+			{
+				server.createSocket(port);
+				server.start();
+			}
+			catch (IOException const& e)
+			{
+				server.logger.log(FATAL, std::string("I/O error: ") + e.what());
+				close(server.sockFd);
+				return 1;
+			}
+		}
+		if (g_Mode == 2)
+		{
+			server.logger.log(INFO, "Restarting, please wait...");
+			g_Mode = 1;
+		}
+		else
+			server.logger.log(INFO, "Server off");
 		close(server.sockFd);
-		return 1;
 	}
 	close(server.sockFd);
 	return 0;
@@ -92,7 +110,8 @@ static void __handleSignal(int sig)
 {
 	std::cout << "\b\b"; // remove ^C from terminal
 	__logger->log(INFO, "Press Ctrl+C again to force shutdown");
-	KEEP_RUNNING = false; // stop the server as soon as possible
+	// KEEP_RUNNING = false; // stop the server as soon as possible
+	g_Mode = 0;
 	std::signal(sig, SIG_DFL); // reset signal handler
 	__logger->log(DEBUG, "Reset signal handler");
 }

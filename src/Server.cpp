@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 20:05:51 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/12 22:50:36 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 11:24:32 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void Server::start()
 {
 	this->connectionManager.setServer(*this);
 
-	while (KEEP_RUNNING)
+	while (g_Mode == 1)
 	{
 		this->connectionManager.wait();
 		this->connectionManager.handlePoll(*this);
