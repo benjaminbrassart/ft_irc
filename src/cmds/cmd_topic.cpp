@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/09 16:05:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/09 16:41:51 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 23:14:11 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ static void __send_topic(Channel& channel, Client& client)
 
 static void __set_topic(Channel& channel, Client& client, ChannelPrivilege priv, std::string const& topic)
 {
-	// TODO check protected topic mode on channel
 	if (priv < PRIV_CHANOP)
 		client.reply<ERR_CHANOPRIVSNEEDED>(channel.name);
 	else

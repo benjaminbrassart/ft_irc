@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:47:46 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 01:42:52 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 06:53:55 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ CommandContext::ArgumentList CommandContext::split(std::string const& line)
 	return CommandContext::__split(line, ' ', true);
 }
 
-// TODO refactor common code between split and splitList
 CommandContext::ArgumentList CommandContext::splitList(std::string const& line)
 {
 	return CommandContext::__split(line, ',', false);

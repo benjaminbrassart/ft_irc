@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 20:59:44 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/14 22:31:38 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,12 +85,6 @@ Client		&Client::operator=(Client const &rhs) {
 /* ==========================================================================
 								MEMBERS FUNCTIONS
    ========================================================================== */
-
-void Client::quit(std::string const& message)
-{
-	(void)message;
-	// TODO
-}
 
 bool Client::readFrom()
 {

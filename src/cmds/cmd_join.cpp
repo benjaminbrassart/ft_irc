@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 20:59:50 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 22:40:12 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,6 @@
 #include "command.h"
 
 static bool __check_channel_name(std::string const& name);
-
-// Once a user has joined a channel, he receives information about
-// all commands his server receives affecting the channel.  This
-// includes JOIN, MODE, KICK, PART, QUIT and of course PRIVMSG/NOTICE.
-// This allows channel members to keep track of the other channel
-// members, as well as channel modes.
-
-// If a JOIN is successful, the user receives a JOIN message as
-// confirmation and is then sent the channel's topic (using RPL_TOPIC) and
-// the list of users who are on the channel (using RPL_NAMREPLY), which
-// MUST include the user joining.
 
 void cmd_join(CommandContext& ctx)
 {
@@ -40,12 +29,6 @@ void cmd_join(CommandContext& ctx)
 	if (args.empty())
 	{
 		client.reply<ERR_NEEDMOREPARAMS>(ctx.name);
-		return;
-	}
-
-	if (args[0] == "0")
-	{
-		// TODO loop through channels, remove client and clear client's channels
 		return;
 	}
 
@@ -122,6 +105,5 @@ static bool __check_channel_name(std::string const& name)
 {
 	if (name.empty() || name.size() > 50 || name[0] != '#')
 		return false;
-	// TODO check for forbidden characters
-	return true;
+	return name.find_first_of("\b\r\n ,:") == std::string::npos;
 }

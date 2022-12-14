@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:45:10 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 21:24:13 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/14 23:21:28 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ enum Reply
 	ERR_NOPERMFORHOST = 463,
 	ERR_PASSWDMISMATCH = 464,
 	ERR_YOUREBANNEDCREEP = 465,
-	ERR_YOUWILLBEBANNED = 466,
 	ERR_KEYSET = 467,
 	ERR_CHANNELISFULL = 471,
 	ERR_UNKNOWNMODE = 472,
@@ -78,7 +77,7 @@ enum Reply
 	ERR_RESTRICTED = 484,
 	ERR_UMODEUNKNOWNFLAG = 501,
 	ERR_USERSDONTMATCH = 502,
-	
+
 }; // enum Reply
 
 class Client;
@@ -390,13 +389,6 @@ struct ReplyFactory<ERR_PASSWDMISMATCH>
 
 template<>
 struct ReplyFactory<ERR_YOUREBANNEDCREEP>
-{
-	static std::string const NAME;
-	static std::string makeReply();
-};
-
-template<>
-struct ReplyFactory<ERR_YOUWILLBEBANNED>
 {
 	static std::string const NAME;
 	static std::string makeReply();
