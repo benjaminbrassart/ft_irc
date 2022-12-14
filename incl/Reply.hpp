@@ -6,7 +6,7 @@
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:45:10 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 17:40:54 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/14 21:24:13 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,9 @@ enum Reply
 	ERR_NOPRIVILEGES = 481,
 	ERR_CHANOPRIVSNEEDED = 482,
 	ERR_RESTRICTED = 484,
+	ERR_UMODEUNKNOWNFLAG = 501,
+	ERR_USERSDONTMATCH = 502,
+	
 }; // enum Reply
 
 class Client;
@@ -474,6 +477,20 @@ struct ReplyFactory<ERR_CHANOPRIVSNEEDED>
 {
 	static std::string const NAME;
 	static std::string makeReply(std::string const& channel);
+};
+
+template<>
+struct ReplyFactory<ERR_UMODEUNKNOWNFLAG>
+{
+	static std::string const NAME;
+	static std::string makeReply();
+};
+
+template<>
+struct ReplyFactory<ERR_USERSDONTMATCH>
+{
+	static std::string const NAME;
+	static std::string makeReply();
 };
 
 #endif // REPLY_H

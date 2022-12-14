@@ -6,7 +6,7 @@
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/14 17:18:44 by lrandria          #+#    #+#             */
-/*   Updated: 2022/12/14 17:56:44 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/14 21:49:59 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,29 +16,47 @@
 #include <algorithm>
 #include <iostream>
 
+void		usrModes(Client &client, std::vector< std::string > args) {
+
+	if (args.size() < 2) {
+		client.reply<ERR_NEEDMOREPARAMS>("MODE");
+		return;
+	}
+	if (client.nickname != args[0]) {
+		client.reply<ERR_USERSDONTMATCH>();
+		return;
+	}
+	if (args[1] == "+i")
+		client.isInvisible = true;
+	else if (args[1] == "-i")
+		client.isInvisible = false;
+	else
+		client.reply<ERR_UMODEUNKNOWNFLAG>();
+}
+
 void		addModes(Client &client, ChannelManager::iterator itChan, std::vector< std::string > args) {
 
 	if (args[1] == "+i" || args[1] == "i") {
 		itChan->addChanModes("i");
+		itChan->invitationMasks.insert(args[2]);
 		itChan->inviteMode = true;
 	}
 	else if (args[1] == "+k" || args[1] == "k") {
-		if (args.size() != 3) {
+		if (args.size() < 3) {
 			client.reply<ERR_NEEDMOREPARAMS>("MODE");
 			return;
 		}
 		itChan->addChanModes("k");
-		itChan->keyMode = true;
 		itChan->passwd = args[2];
+		itChan->keyMode = true;
 	}
 	else if (args[1] == "+l" || args[1] == "l") {
-		if (args.size() != 3) {
+		if (args.size() < 3) {
 			client.reply<ERR_NEEDMOREPARAMS>("MODE");
 			return;
 		}
-		if (args[2].length() == 2 && (args[2].find('-') != std::string::npos)) 
-			if (args[2].length() > 2)
-				return ;
+		if (args[2].length() > 2 && (args[2].find('-') != std::string::npos)) 
+			return ;
 		itChan->userLimit = strtoul(args[2].c_str(), NULL, 10);
 		if (itChan->userLimit > 0) {
 			itChan->addChanModes("l");
@@ -46,7 +64,7 @@ void		addModes(Client &client, ChannelManager::iterator itChan, std::vector< std
 		}
 	}
 	else if ((args[1] == "+o" || args[1] == "o") && args.size() == 3) {
-		if (args.size() != 3) {
+		if (args.size() < 3) {
 			client.reply<ERR_NEEDMOREPARAMS>("MODE");
 			return ;
 		}
@@ -80,14 +98,14 @@ void		removeModes(Client &client, ChannelManager::iterator itChan, std::vector< 
 		client.reply<ERR_UNKNOWNMODE>(args[1], itChan->name);
 }
 
-void	handleModes(Client &client, Server &server, std::vector< std::string > args) {
+void	chanModes(Client &client, Server &server, std::vector< std::string > args) {
 
 	ChannelManager::iterator			itChan;
 	std::string							requestedChanName;
 	std::string							modes;
 	std::string							allowedChars = "iklo+";
 
-	requestedChanName = args[0].erase(0,1);								// from #chan to chan
+	requestedChanName = args[0].erase(0,1);							// from #chan to chan
 	itChan = server.channelManager.getChannel(requestedChanName);
 	if (itChan == server.channelManager.end()) {
 		client.reply<ERR_NOSUCHCHANNEL>(requestedChanName);
@@ -95,10 +113,9 @@ void	handleModes(Client &client, Server &server, std::vector< std::string > args
 	}
 	if (args.size() == 1) {
 		client.reply<RPL_CHANNELMODEIS>(itChan->name, itChan->modes); 
-		// client.reply<RPL_CREATED>() maybe add date of creation?
 		return;
 	}
-	else if (itChan->getClientPriv(client) < PRIV_CHANOP) { // is this the right check?
+	else if (itChan->getClientPriv(client) < PRIV_CHANOP) { 		// is this the right check?
 		client.reply<ERR_CHANOPRIVSNEEDED>(requestedChanName);
 		return;
 	}
@@ -121,8 +138,8 @@ void	    cmd_mode(CommandContext &context) {
 		client.reply<ERR_NEEDMOREPARAMS>("MODE");
 		return;
 	}
-	else if (args[0][0] == '&' || args[0][0] == '#'|| args[0][0] == '+' || args[0][0] == '!')
-		handleModes(client, server, args);
+	else if (args[0][0] == '#')
+		chanModes(client, server, args);
 	else
-		client.reply<ERR_NOSUCHCHANNEL>(args[0]);
+		usrModes(client, args);
 }

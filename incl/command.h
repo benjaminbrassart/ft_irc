@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:40:51 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 09:03:37 by parallels        ###   ########.fr       */
+/*   Updated: 2022/12/14 18:15:41 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ void cmd_join(CommandContext& ctx);
 void cmd_part(CommandContext& ctx);
 void cmd_motd(CommandContext& ctx);
 void cmd_oper(CommandContext& ctx);
+void cmd_mode(CommandContext& ctx);
 void cmd_die(CommandContext& ctx);
 void cmd_kill(CommandContext& ctx);
 void cmd_ping(CommandContext& ctx);

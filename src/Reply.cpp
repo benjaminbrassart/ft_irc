@@ -6,7 +6,7 @@
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 18:04:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 17:40:26 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/14 21:52:00 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ std::string const ReplyFactory<RPL_MYINFO>::NAME = "RPL_MYINFO";
 
 std::string ReplyFactory<RPL_MYINFO>::makeReply(std::string const& serverName)
 {
-	return ":" + serverName + " " VERSION " o O"; // TODO add channel modes
+	return ":" + serverName + " " VERSION " io iklo";
 };
 
 std::string const ReplyFactory<RPL_LIST>::NAME = "RPL_LIST";
@@ -406,4 +406,18 @@ std::string const ReplyFactory<ERR_CHANOPRIVSNEEDED>::NAME = "ERR_CHANOPRIVSNEED
 std::string ReplyFactory<ERR_CHANOPRIVSNEEDED>::makeReply(std::string const& channel)
 {
 	return channel + " :You're not channel operator";
+}
+
+std::string const ReplyFactory<ERR_UMODEUNKNOWNFLAG>::NAME = "ERR_UMODEUNKNOWNFLAG";
+
+std::string ReplyFactory<ERR_UMODEUNKNOWNFLAG>::makeReply()
+{
+	return ":Unknown MODE flag";
+}
+
+std::string const ReplyFactory<ERR_USERSDONTMATCH>::NAME = "ERR_USERSDONTMATCH";
+
+std::string ReplyFactory<ERR_USERSDONTMATCH>::makeReply()
+{
+	return ":Cant change mode for other users";
 }
