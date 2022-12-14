@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:45:10 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/12 21:11:38 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 17:40:54 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ template<>
 struct ReplyFactory<RPL_CHANNELMODEIS>
 {
 	static std::string const NAME;
-	static std::string makeReply(std::string const& channel, std::string const& mode, std::string const& params);
+	static std::string makeReply(std::string const& channel, std::string const& mode); // removed params
 };
 
 template<>

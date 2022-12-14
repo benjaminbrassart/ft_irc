@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 18:04:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 04:14:25 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 17:40:26 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,9 +59,9 @@ std::string ReplyFactory<RPL_LISTEND>::makeReply()
 
 std::string const ReplyFactory<RPL_CHANNELMODEIS>::NAME = "RPL_CHANNELMODEIS";
 
-std::string ReplyFactory<RPL_CHANNELMODEIS>::makeReply(std::string const& channel, std::string const& mode, std::string const& params)
+std::string ReplyFactory<RPL_CHANNELMODEIS>::makeReply(std::string const& channel, std::string const& mode) // removed params
 {
-	return channel + " " + mode + " " + params;
+	return channel + " " + mode + " ";
 }
 
 std::string const ReplyFactory<RPL_UNIQOPIS>::NAME = "RPL_UNIQOPIS";

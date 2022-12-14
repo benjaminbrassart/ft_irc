@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.cpp                                        :+:      :+:    :+:   */
+/*   testChannel.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 19:34:40 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/14 17:14:47 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Channel.hpp"
+#include "testChannel.hpp"
 #include <iostream>
 
 ChannelMode const Channel::DEFAULT_MODE = 0;
@@ -114,6 +114,11 @@ bool	Channel::setName(std::string newName) {	// must change cerr for the right s
 /* ==========================================================================
 								MEMBER FUNCTIONS
    ========================================================================== */
+
+bool Channel::empty() const
+{
+	return this->allClients.empty();
+}
 
 void Channel::addChanModes(std::string newModes) {
 

@@ -3,188 +3,126 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_mode.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/21 01:07:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 20:59:50 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/12/14 17:18:44 by lrandria          #+#    #+#             */
+/*   Updated: 2022/12/14 17:42:42 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// #include "Client.hpp"
-// #include "ChannelMode.hpp"
-// #include "command.h"
-// #include <algorithm>
+#include "Client.hpp"
+#include "ChannelMode.hpp"
+#include "command.h"
+#include <algorithm>
+#include <iostream>
 
-// enum Privilege
-// {
-// 	PRIV_NONE,
-// 	PRIV_VOICE,
-// 	PRIV_CHANOP,
-// 	PRIV_UNIQOP,
-// };
+void		addModes(Client &client, ChannelManager::iterator itChan, std::vector< std::string > args) {
 
-// enum Action
-// {
-// 	ENABLE,
-// 	DISABLE,
-// 	DISPLAY,
-// };
+	if (args[1] == "+i" || args[1] == "i") {
+		itChan->addChanModes("i");
+		itChan->inviteMode = true;
+	}
+	else if (args[1] == "+k" || args[1] == "k") {
+		if (args.size() != 3) {
+			client.reply<ERR_NEEDMOREPARAMS>("MODE");
+			return;
+		}
+		itChan->addChanModes("k");
+		itChan->keyMode = true;
+		itChan->passwd = args[2];
+	}
+	else if (args[1] == "+l" || args[1] == "l") {
+		if (args.size() != 3) {
+			client.reply<ERR_NEEDMOREPARAMS>("MODE");
+			return;
+		}
+		if (args[2].length() == 2 && (args[2].find('-') != std::string::npos)) 
+			if (args[2].length() > 2)
+				return ;
+		itChan->userLimit = strtoul(args[2].c_str(), NULL, 10);
+		if (itChan->userLimit > 0) {
+			itChan->addChanModes("l");
+			itChan->usrLimitMode = true;	
+		}
+	}
+	else if ((args[1] == "+o" || args[1] == "o") && args.size() == 3) {
+		if (args.size() != 3) {
+			client.reply<ERR_NEEDMOREPARAMS>("MODE");
+			return ;
+		}
+		itChan->addChanOps(args[2]);
+	}
+	else
+		client.reply<ERR_UNKNOWNMODE>(args[1], itChan->name);
+}
 
-// enum Type
-// {
-// 	ERROR, // invalid character
-// 	ACTION, // 'enable', 'disable' or 'display'
-// 	TOGGLE, // channel mode bit mask
-// 	KEY, // channel password
-// 	LIMIT, // channel user limit
-// 	USER, // user name
-// 	MASK, // ban, exception or invitation mask
-// };
+void		removeModes(Client &client, ChannelManager::iterator itChan, std::vector< std::string > args) {
 
-// union Data
-// {
-// 	Action action;
-// 	ChannelMode toggle;
-// 	struct Functions
-// 	{
-// 		bool (Channel::*addFunc)(std::string const&);
-// 		bool (Channel::*removeFunc)(std::string const&);
-// 		void (Channel::*displayFunc)(Client& client);
-// 	} funcs;
-// };
+	std::string		nick;
 
-// struct State
-// {
-// 	Privilege editPrivilege;
-// 	Privilege displayPrivilege;
-// 	bool addRequireNext;
-// 	bool removeRequireNext;
-// 	Type type;
-// 	Data data;
-// };
+	if (args[1] == "-i") {
+		itChan->removeChanModes("i");
+		itChan->inviteMode = false;
+	}
+	else if (args[1] == "-k") {
+		itChan->removeChanModes("k");
+		itChan->keyMode = false;	
+	}
+	else if (args[1] == "-l") {
+		itChan->removeChanModes("l");
+		itChan->usrLimitMode = false;	
+	}
+	else if (args[1] == "-o" && args.size() == 3) {
+		nick = args[2];
+		itChan->removeChanOps(nick);
+	}
+	else
+		client.reply<ERR_UNKNOWNMODE>(args[1], itChan->name);
+}
 
-// static State const STATES[256] = {};
+void	handleModes(Client &client, Server &server, std::vector< std::string > args) {
 
-// // TODO anonymous flag
-// // https://datatracker.ietf.org/doc/html/rfc2811#section-4.2.1
-// // The channel flag 'a' defines an anonymous channel.  This means that
-// // when a message sent to the channel is sent by the server to users,
-// // and the origin is a user, then it MUST be masked.  To mask the
-// // message, the origin is changed to "anonymous!anonymous@anonymous."
-// // (e.g., a user with the nickname "anonymous", the username "anonymous"
-// // and from a host called "anonymous.").  Because of this, servers MUST
-// // forbid users from using the nickname "anonymous".  Servers MUST also
-// // NOT send QUIT messages for users leaving such channels to the other
-// // channel members but generate a PART message instead.
+	ChannelManager::iterator			itChan;
+	std::string							requestedChanName;
+	std::string							modes;
+	std::string							allowedChars = "iklo+";
 
-// void cmd_mode(CommandContext& ctx)
-// {
-// 	Client&										client = ctx.client;
-// 	std::vector< std::string > const			args = CommandContext::splitArguments(ctx.line);
-// 	std::vector< std::string >::const_iterator	it;
-// 	Channel* channel;
-// 	Privilege privilege = PRIV_NONE; // TODO get it somehow
+	requestedChanName = args[0].erase(0,1);								// from #chan to chan
+	itChan = server.channelManager.getChannel(requestedChanName);
+	if (itChan == server.channelManager.end()) {
+		client.reply<ERR_NOSUCHCHANNEL>(requestedChanName);
+		return;
+	}
+	if (args.size() == 1) {
+		client.reply<RPL_CHANNELMODEIS>(itChan->name, itChan->modes); 
+		// client.reply<RPL_CREATED>() maybe add date of creation?
+		return;
+	}
+	else if (itChan->getClientPriv(client) < PRIV_CHANOP) { // is this the right check?
+		client.reply<ERR_CHANOPRIVSNEEDED>(requestedChanName);
+		return;
+	}
+	modes = args[1];
+	if (modes[0] == '-' && modes.length() > 1 )
+		removeModes(client, itChan, args);
+	if (allowedChars.find(modes[0]) != std::string::npos && modes.length() > 1)
+		addModes(client, itChan, args);
+	else
+		client.reply<ERR_UNKNOWNMODE>(modes, itChan->name);
+}
 
-// 	if (args.empty())
-// 	{
-// 		client.reply<ERR_NEEDMOREPARAMS>("MODE");
-// 		return;
-// 	}
+void	    cmd_mode(CommandContext &context) {
+ 
+	Client							&client = context.client;
+	Server							&server = context.server;	
+	std::vector< std::string >		args = context.args;
 
-// 	channel = client.server->getChannel(args[0]);
-// 	it = ++args.begin(); // skip channel name from arguments
-
-// 	for (; it != args.end(); ++it)
-// 	{
-// 		std::string::const_iterator	sit;
-// 		Action action;
-// 		Privilege statePrivilege;
-// 		State const* state;
-
-// 		action = DISPLAY;
-
-// 		for (sit = it->begin(); sit != it->end(); ++sit)
-// 		{
-// 			state = &STATES[static_cast<unsigned char>(*sit)];
-
-// 			if (action == DISPLAY)
-// 				statePrivilege = state->displayPrivilege;
-// 			else
-// 				statePrivilege = state->editPrivilege;
-
-// 			if (privilege < statePrivilege)
-// 			{
-// 				if (statePrivilege == PRIV_CHANOP)
-// 				{} // TODO reply with ERR_CHANOPRIVSNEEDED
-// 				else
-// 				{} // TODO reply with ERR_UNIQOPPRIVSNEEDED
-// 				return;
-// 			}
-
-// 			if (((action == ENABLE && state->addRequireNext) ||
-// 				(action == DISABLE && state->removeRequireNext)) &&
-// 				++it == args.end())
-// 			{
-// 				client.reply<ERR_NEEDMOREPARAMS>("MODE");
-// 				return;
-// 			}
-
-// 			switch (state->type)
-// 			{
-// 			case ACTION: // change mode (+/-)
-// 				action = state->data.action;
-// 				break;
-// 			case KEY:
-// 				channel->passwd = *it;
-// 				break;
-// 			case LIMIT:
-// 				switch (action)
-// 				{
-// 				case ENABLE:
-// 					channel->userLimit = 0; // TODO parse number
-// 					break;
-// 				case DISABLE:
-// 					channel->userLimit = 0;
-// 					break;
-// 				case DISPLAY:
-// 					break;
-// 				}
-// 				break;
-// 			case TOGGLE:
-// 				switch (action)
-// 				{
-// 				case ENABLE:
-// 					channel->mode |= state->data.toggle;
-// 					break;
-// 				case DISABLE:
-// 					channel->mode &= ~state->data.toggle;
-// 					break;
-// 				case DISPLAY:
-// 					// TODO display flag to client
-// 					break;
-// 				}
-// 				break;
-// 			case MASK:
-// 				switch (action)
-// 				{
-// 				case ENABLE:
-// 					(channel->*state->data.funcs.addFunc)(*it);
-// 					break;
-// 				case DISABLE:
-// 					(channel->*state->data.funcs.removeFunc)(*it);
-// 					break;
-// 				case DISPLAY:
-// 					(channel->*state->data.funcs.displayFunc)(client);
-// 					break;
-// 				}
-// 				break;
-// 			case USER:
-// 				// TODO find user and grant/revoke/display privilege if present in the channel
-// 				break;
-// 			default: // unknown type or ERROR
-// 				// TODO reply with ERR_UNKNOWNMODE
-// 				return;
-// 			}
-// 		}
-// 	}
-// }
+	if (args.empty()) {
+		client.reply<ERR_NEEDMOREPARAMS>("MODE");
+		return;
+	}
+	else if (args[0][0] == '&' || args[0][0] == '#'|| args[0][0] == '+' || args[0][0] == '!')
+		handleModes(client, server, args);
+	else
+		client.reply<ERR_NOSUCHCHANNEL>(args[0]);
+}

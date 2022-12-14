@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Channel.hpp                                        :+:      :+:    :+:   */
+/*   testChannel.hpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:34:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 17:03:22 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/14 17:16:30 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ class Channel : public Recipient {
 
 		static ChannelMode const DEFAULT_MODE;
 
+		bool	empty() const;
 		bool	setName(std::string newName);						// must change cerr for the right stream
 		void	addChanModes(std::string newModes);
 		void	removeChanModes(std::string byeModes);
