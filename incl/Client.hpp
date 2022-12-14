@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/12 21:54:36 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 06:55:36 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,18 +50,6 @@ class Client : public Recipient {
 		void 					reply(std::string const& param1, std::string const& param2);
 		template< Reply reply >
 		void 					reply(std::string const& param1, std::string const& param2, std::string const& param3);
-
-		/**
-		 * Make this client client leave the server
-		 *
-		 * @param message the message to be displayed to other clients
-		 */
-		void					quit(std::string const& message);
-
-		/**
-		 * Send the server's Message Of The Day to this client
-		 */
-		void					sendMotd();
 
 		/**
 		 * Read data from the client's socket

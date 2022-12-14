@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 22:19:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 00:05:53 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 06:54:18 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,6 @@ Client		&Client::operator=(Client const &rhs) {
 /* ==========================================================================
 								MEMBERS FUNCTIONS
    ========================================================================== */
-
-void Client::quit(std::string const& message)
-{
-	(void)message;
-	// TODO
-}
 
 bool Client::readFrom()
 {
