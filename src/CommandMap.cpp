@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandMap.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:45:50 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 04:57:02 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 08:32:27 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ CommandMap::CommandMap(Server& server) :
 	this->put("PART", cmd_part, CLIENT_STATE_LOGGED);
 	this->put("DIE", cmd_die, CLIENT_STATE_LOGGED);
 	this->put("KILL", cmd_kill, CLIENT_STATE_LOGGED);
+	this->put("RESTART", cmd_restart, CLIENT_STATE_LOGGED);
 	this->put("NOTICE", cmd_notice, CLIENT_STATE_LOGGED);
 	this->put("PRIVMSG", cmd_privmsg, CLIENT_STATE_LOGGED);
 	this->put("PING", cmd_ping);

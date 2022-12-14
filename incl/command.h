@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:40:51 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 21:13:11 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/14 09:03:37 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,7 @@ void cmd_die(CommandContext& ctx);
 void cmd_kill(CommandContext& ctx);
 void cmd_ping(CommandContext& ctx);
 void cmd_pong(CommandContext& ctx);
+void cmd_restart(CommandContext& ctx);
 void cmd_privmsg(CommandContext& ctx);
 void cmd_notice(CommandContext& ctx);
 void cmd_topic(CommandContext& ctx);

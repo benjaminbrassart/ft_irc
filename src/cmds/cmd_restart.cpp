@@ -1,22 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_irc.h                                           :+:      :+:    :+:   */
+/*   cmd_restart.cpp                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/29 14:37:14 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 11:27:05 by parallels        ###   ########.fr       */
+/*   Created: 2022/12/14 00:00:44 by parallels         #+#    #+#             */
+/*   Updated: 2022/12/14 11:25:06 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_IRC_H
-# define FT_IRC_H
+#include "ft_irc.h"
+#include "command.h"
+#include "Client.hpp"
 
-// # include <csignal>
+void cmd_restart(CommandContext& ctx)
+{
+	Client& client = ctx.client;
 
-// extern volatile sig_atomic_t KEEP_RUNNING;
-// extern volatile sig_atomic_t RESTART;
-extern int g_Mode;
-
-#endif
+	if (!client.checkState(CLIENT_STATE_OPERATOR))
+		client.reply<ERR_NOPRIVILEGES>();
+	else {
+		g_Mode = 2;
+	}
+}
