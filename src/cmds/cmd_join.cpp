@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/15 22:21:50 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/15 22:37:00 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void cmd_join(CommandContext& ctx)
 				client.reply<ERR_INVITEONLYCHAN>(chanIt->name);
 				continue;
 			}
+			chanIt->uninviteClient(client);
 			priv = PRIV_NONE;
 		}
 
