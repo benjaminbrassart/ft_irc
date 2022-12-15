@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 15:01:48 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/04 13:49:04 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/15 08:06:26 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,8 @@
 
 ChannelManager::ChannelManager() :
 	_channels()
-{}
+{
+}
 
 ChannelManager::~ChannelManager()
 {}
@@ -31,7 +32,9 @@ ChannelManager::iterator ChannelManager::getChannel(std::string const& name)
 ChannelManager::iterator ChannelManager::addChannel(Channel const& channel)
 {
 	this->_channels.push_back(channel);
-	return (++this->_channels.rbegin()).base();
+
+	iterator it = this->_channels.end();
+	return --it;
 }
 
 bool ChannelManager::removeChannel(std::string const& channelName)
