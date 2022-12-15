@@ -6,7 +6,7 @@
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 17:30:36 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/15 21:00:40 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,7 @@ Channel::Channel(Server* server) : Recipient(server),
 	usrLimitMode(false),
 	userLimit(0),
 	allClients(),
-	allChanOps(),
-	invitationMasks(),
-	banMasks(),
-	exceptionMasks()
+	invitedClients()
 {}
 
 Channel::Channel(Server* server, std::string name, std::string passwd) : Recipient(server),
@@ -47,10 +44,7 @@ Channel::Channel(Server* server, std::string name, std::string passwd) : Recipie
 	usrLimitMode(false),
 	userLimit(0),
 	allClients(),
-	allChanOps(),
-	invitationMasks(),
-	banMasks(),
-	exceptionMasks()
+	invitedClients()
 {}
 
 Channel::Channel(Channel const& rhs) : Recipient(rhs.server),
@@ -63,11 +57,7 @@ Channel::Channel(Channel const& rhs) : Recipient(rhs.server),
 	keyMode(rhs.keyMode),
 	usrLimitMode(rhs.usrLimitMode),
 	userLimit(rhs.userLimit),
-	allClients(rhs.allClients),
-	allChanOps(rhs.allChanOps),
-	invitationMasks(rhs.invitationMasks),
-	banMasks(rhs.banMasks),
-	exceptionMasks(rhs.exceptionMasks)
+	allClients(rhs.allClients)
 {}
 
 Channel	&Channel::operator=(Channel const& rhs) {
@@ -84,10 +74,7 @@ Channel	&Channel::operator=(Channel const& rhs) {
 		this->usrLimitMode = rhs.usrLimitMode;
 		this->userLimit = rhs.userLimit;
 		this->allClients = rhs.allClients;
-		this->allChanOps = rhs.allChanOps;
-		this->invitationMasks = rhs.invitationMasks;
-		this->banMasks = rhs.banMasks;
-		this->exceptionMasks = rhs.exceptionMasks;
+		this->invitedClients = rhs.invitedClients;
 	}
 	return (*this);
 }
@@ -126,10 +113,10 @@ void Channel::removeChanModes(std::string byeModes) {
 	}
 }
 
-int	Channel::getClientPriv(Client &client) {
+int		Channel::getClientPriv(Client &client) {
 
 	int						priv = PRIV_NONE;
-	ClientList::iterator 	itCli = this->allClients.begin(); 
+	ClientList::iterator 	itCli = this->allClients.begin();
 
 	for (; itCli != this->allClients.end(); ++itCli)
 		if (itCli->client == &client)
@@ -137,41 +124,50 @@ int	Channel::getClientPriv(Client &client) {
 	return (priv);
 }
 
-void Channel::addChanOps(std::string nick) {
+void	Channel::setPriv(std::string &nick, ChannelPrivilege priv) {
 
-	ClientList::iterator 				iteCli = this->allClients.begin(); 
-	std::set< std::string >::iterator	iteChanOps = this->allChanOps.find(nick);
+	ClientList::iterator 	itCli = this->allClients.begin();
 
-	for (; iteCli != this->allClients.end(); ++iteCli) {	// loop through clients
-		if (iteCli->client->nickname == nick) { 		// if found with nick
-			if (iteChanOps == this->allChanOps.end()) { // and it's not already in chanOps, then we add it to the list and change client's priv
-				this->allChanOps.insert(nick);
-				iteCli->privilege = PRIV_CHANOP;
-				return ;
-			}
-		}
-		else
-			std::cerr << "error: user not found in channel.\n";
-	}
+	for (; itCli != this->allClients.end(); ++itCli)
+		if (itCli->client->nickname == nick)
+			itCli->privilege = priv;
 }
 
-void Channel::removeChanOps(std::string nick) {
+// void Channel::addChanOps(std::string nick) {
 
-	ClientList::iterator 				iteCli = this->allClients.begin(); 
-	std::set< std::string >::iterator	iteChanOps = this->allChanOps.find(nick);
+// 	ClientList::iterator 				iteCli = this->allClients.begin();
+// 	std::set< std::string >::iterator	iteChanOps = this->allChanOps.find(nick);
 
-	for (; iteCli != this->allClients.end(); ++iteCli) {
-		if (iteCli->client->nickname == nick) {
-			if (iteChanOps == this->allChanOps.end()) {
-				this->allChanOps.erase(nick);
-				iteCli->privilege = PRIV_NONE;
-				return ;
-			}
-		}
-		else
-			std::cerr << "error: user not found in channel.\n";
-	}
-}
+// 	for (; iteCli != this->allClients.end(); ++iteCli) {	// loop through clients
+// 		if (iteCli->client->nickname == nick) { 		// if found with nick
+// 			if (iteChanOps == this->allChanOps.end()) { // and it's not already in chanOps, then we add it to the list and change client's priv
+// 				this->allChanOps.insert(nick);
+// 				iteCli->privilege = PRIV_CHANOP;
+// 				return ;
+// 			}
+// 		}
+// 		else
+// 			std::cerr << "error: user not found in channel.\n";
+// 	}
+// }
+
+// void Channel::removeChanOps(std::string nick) {
+
+// 	ClientList::iterator 				iteCli = this->allClients.begin();
+// 	std::set< std::string >::iterator	iteChanOps = this->allChanOps.find(nick);
+
+// 	for (; iteCli != this->allClients.end(); ++iteCli) {
+// 		if (iteCli->client->nickname == nick) {
+// 			if (iteChanOps == this->allChanOps.end()) {
+// 				this->allChanOps.erase(nick);
+// 				iteCli->privilege = PRIV_NONE;
+// 				return ;
+// 			}
+// 		}
+// 		else
+// 			std::cerr << "error: user not found in channel.\n";
+// 	}
+// }
 
 /* ==========================================================================
 								MEMBER FUNCTIONS
@@ -228,4 +224,19 @@ void Channel::sendMessage(Client& sender, std::string const& command, std::strin
 		if (it->client != &sender)
 			it->client->send(prefix + " " + command + " " + this->name + " :" + message);
 	}
+}
+
+void	Channel::inviteClient(Client& client) {
+
+	this->invitedClients.insert(&client);
+}
+
+bool	Channel::isInvited(Client& client) {
+
+	return (this->invitedClients.find(&client) != this->invitedClients.end());
+}
+
+void	Channel::uninviteClient(Client& client) {
+
+	this->invitedClients.erase(&client);
 }

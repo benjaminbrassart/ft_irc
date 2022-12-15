@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:45:10 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 23:21:28 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/15 18:31:10 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ enum Reply
 	RPL_UNIQOPIS = 325,
 	RPL_NOTOPIC = 331,
 	RPL_TOPIC = 332,
+	RPL_INVITING = 341,
 	RPL_NAMREPLY = 353,
 	RPL_ENDOFNAMES = 366,
 	RPL_MOTD = 372,
@@ -155,6 +156,13 @@ struct ReplyFactory<RPL_TOPIC>
 {
 	static std::string const NAME;
 	static std::string makeReply(std::string const& channel, std::string const& topic);
+};
+
+template<>
+struct ReplyFactory<RPL_INVITING>
+{
+	static std::string const NAME;
+	static std::string makeReply(std::string const& nick, std::string const& channel);
 };
 
 template<>

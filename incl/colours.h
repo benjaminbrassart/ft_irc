@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   colours.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/01 03:50:25 by lrandria          #+#    #+#             */
-/*   Updated: 2022/11/16 16:12:38 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/12/15 19:56:49 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 # define CYAN			"\e[0;36m"
 # define V_CYAN			"\e[0;38;5;44m"
 # define MAGENTA		"\e[0;35m"
-# define PURPLE			"\e[0;38;5;93m"
+# define PU2E			"\e[0;38;5;93m"
 # define LILAC			"\e[0;38;5;13m"
 # define PINK			"\e[0;38;5;199m"
 # define YELLOW			"\e[0;33m"

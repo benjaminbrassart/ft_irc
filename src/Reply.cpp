@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 18:04:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 23:21:32 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/15 18:31:49 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,13 @@ std::string const ReplyFactory<RPL_TOPIC>::NAME = "RPL_TOPIC";
 std::string ReplyFactory<RPL_TOPIC>::makeReply(std::string const& channel, std::string const& topic)
 {
 	return channel + " :" + topic;
+}
+
+std::string const ReplyFactory<RPL_INVITING>::NAME = "RPL_INVITING";
+
+std::string ReplyFactory<RPL_INVITING>::makeReply(std::string const& nick, std::string const& channel)
+{
+	return nick + " " + channel;
 }
 
 std::string const ReplyFactory<RPL_NAMREPLY>::NAME = "RPL_NAMREPLY";

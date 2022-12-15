@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
+#    By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/12/15 02:32:26 by bbrassar         ###   ########.fr        #
+#    Updated: 2022/12/15 18:38:02 by lrandria         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -63,6 +63,7 @@ SRC		+= cmds/cmd_topic.cpp
 SRC		+= cmds/cmd_kick.cpp
 SRC		+= cmds/cmd_list.cpp
 SRC		+= cmds/cmd_names.cpp
+SRC		+= cmds/cmd_invite.cpp
 
 OBJ		:=	$(addprefix ./obj/,$(SRC:%.cpp=%.o))
 
