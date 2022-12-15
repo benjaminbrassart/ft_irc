@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   CommandMap.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:45:50 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/15 02:33:58 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/15 21:03:14 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ CommandMap::CommandMap(Server& server) :
 	this->put("KICK", cmd_kick, CLIENT_STATE_LOGGED);
 	this->put("LIST", cmd_list, CLIENT_STATE_LOGGED);
 	this->put("NAMES", cmd_names, CLIENT_STATE_LOGGED);
+	this->put("INVITE", cmd_invite, CLIENT_STATE_LOGGED);
 }
 
 CommandMap::~CommandMap()
