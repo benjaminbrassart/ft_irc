@@ -6,14 +6,14 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 14:56:48 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/12 22:01:15 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/15 08:06:08 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #pragma once
 
+#include <deque>
 #include <string>
-#include <vector>
 
 class Channel;
 
@@ -23,7 +23,7 @@ class Channel;
 class ChannelManager
 {
 public:
-	typedef std::vector< Channel > container_type;
+	typedef std::deque< Channel > container_type;
 	typedef container_type::iterator iterator;
 	typedef container_type::reverse_iterator reverse_iterator;
 
