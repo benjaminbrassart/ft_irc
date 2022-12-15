@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   command.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 18:40:51 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/15 02:34:09 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/15 21:02:53 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,6 @@ void cmd_topic(CommandContext& ctx);
 void cmd_kick(CommandContext& ctx);
 void cmd_list(CommandContext& ctx);
 void cmd_names(CommandContext& ctx);
+void cmd_invite(CommandContext& ctx);
 
 #endif // COMMAND_H

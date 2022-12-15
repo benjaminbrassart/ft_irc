@@ -6,7 +6,7 @@
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:34:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 17:18:20 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/15 20:58:17 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,9 @@ class Channel : public Recipient {
 			Client* client;
 			ChannelPrivilege privilege;
 		};
-	
+
 		typedef std::vector< ClientPrivilege > ClientList;
+		typedef std::set< Client* > InviteList;
 		typedef std::set< std::string >	MaskList;
 
 		std::string const		name;
@@ -57,24 +58,27 @@ class Channel : public Recipient {
 		bool					usrLimitMode;
 		unsigned int			userLimit;
 		ClientList				allClients;
-		MaskList				allChanOps;
-		MaskList				invitationMasks;
-		MaskList				banMasks; // not used yet
-		MaskList				exceptionMasks; // not used
-	
+		InviteList				invitedClients;
+
+
 		static ChannelMode const DEFAULT_MODE;
 
 		bool					empty() const;
 		bool					setName(std::string newName); 				// must change cerr for the right stream
 		void					addChanModes(std::string newModes);
 		void					removeChanModes(std::string byeModes);
-		void					addChanOps(std::string nick);
-		void					removeChanOps(std::string nick);					
+		// void					addChanOps(std::string nick);
+		// void					removeChanOps(std::string nick);
 		void					addClient(Client &newClient, ChannelPrivilege privilege);
 		void					removeClient(Client &client);
 		bool					hasClient(Client &client) const;
 		ClientList::iterator	getClient(Client& client);
+		void					setPriv(std::string &nick, ChannelPrivilege privilege);
 		int						getClientPriv(Client &client);
+
+		void 					inviteClient(Client& client);
+		bool 					isInvited(Client& client);
+		void 					uninviteClient(Client& client);
 
 		// Recipient overloads
 		std::string const& getIdentifier() const;
