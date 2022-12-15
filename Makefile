@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: parallels <parallels@student.42.fr>        +#+  +:+       +#+         #
+#    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/12/14 03:14:13 by parallels        ###   ########.fr        #
+#    Updated: 2022/12/15 02:32:26 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,10 @@ FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98 $(DEFINES)
 
 # main
 SRC		= main.cpp
+
+# utils
+
+SRC		+= utils/NameUtils.cpp
 
 # classes
 SRC		+= class/NicknameManager.cpp
@@ -58,6 +62,7 @@ SRC		+= cmds/cmd_notice.cpp
 SRC		+= cmds/cmd_topic.cpp
 SRC		+= cmds/cmd_kick.cpp
 SRC		+= cmds/cmd_list.cpp
+SRC		+= cmds/cmd_names.cpp
 
 OBJ		:=	$(addprefix ./obj/,$(SRC:%.cpp=%.o))
 
