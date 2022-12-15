@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/15 02:55:25 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/15 04:10:44 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,14 @@ void cmd_join(CommandContext& ctx)
 
 	for (; chanNameIt != channels.end(); ++chanNameIt)
 	{
-		ChannelManager::iterator chanIt = server.channelManager.getChannel(*chanNameIt);
-		ChannelPrivilege priv;
-
 		if (!__check_channel_name(*chanNameIt))
 		{
 			client.reply<ERR_BADCHANMASK>(*chanNameIt);
 			continue;
 		}
+
+		ChannelManager::iterator chanIt = server.channelManager.getChannel(*chanNameIt);
+		ChannelPrivilege priv;
 
 		if (chanIt == server.channelManager.end())
 		{
