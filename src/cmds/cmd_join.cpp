@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/15 04:10:44 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/15 22:21:50 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,16 @@ void cmd_join(CommandContext& ctx)
 			priv = PRIV_UNIQOP;
 		}
 		else
+		{
+			if (chanIt->hasClient(client))
+				continue;
+			if (chanIt->inviteMode && !chanIt->isInvited(client))
+			{
+				client.reply<ERR_INVITEONLYCHAN>(chanIt->name);
+				continue;
+			}
 			priv = PRIV_NONE;
+		}
 
 		std::string key;
 
