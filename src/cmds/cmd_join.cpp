@@ -6,12 +6,13 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 22:40:12 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/15 02:55:25 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 #include "command.h"
+#include "utils/NameUtils.hpp"
 
 static bool __check_channel_name(std::string const& name);
 
@@ -72,9 +73,7 @@ void cmd_join(CommandContext& ctx)
 			client.channels.insert(&*chanIt);
 			chanIt->addClient(client, priv);
 
-			if (chanIt->topic.empty())
-				client.reply<RPL_NOTOPIC>(chanIt->name);
-			else
+			if (!chanIt->topic.empty())
 				client.reply<RPL_TOPIC>(chanIt->name, chanIt->topic);
 
 			for (clientIt = chanIt->allClients.begin(); clientIt != chanIt->allClients.end(); ++clientIt)
@@ -90,8 +89,16 @@ void cmd_join(CommandContext& ctx)
 					case PRIV_VOICE: clientList << '+'; break;
 					default: break;
 				}
+
+				std::string symbol;
+
+				if (chanIt->mode & MODE_SECRET)
+					symbol = "@";
+				else
+					symbol = "=";
+
 				clientList << clientIt->client->nickname;
-				client.reply<RPL_NAMREPLY>("=", chanIt->name, clientList.str());
+				client.reply<RPL_NAMREPLY>(symbol, chanIt->name, clientList.str());
 			}
 			// TOOD see if we need to split this if there are too many clients
 			client.reply<RPL_ENDOFNAMES>(chanIt->name);
