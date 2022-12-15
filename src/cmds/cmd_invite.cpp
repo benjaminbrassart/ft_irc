@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_invite.cpp                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 16:40:38 by lrandria          #+#    #+#             */
-/*   Updated: 2022/12/15 18:47:44 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/15 22:24:41 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,14 +21,14 @@ void cmd_invite(CommandContext& ctx)
 	std::vector< std::string >&		args = ctx.args;
 	ChannelManager::iterator		itChan;
     NicknameManager::iterator       itNick;
-    
+
 	if (args.size() < 2) {
 		client.reply<ERR_NEEDMOREPARAMS>(ctx.name);
         return;
     }
 
     itChan = server.channelManager.getChannel(args[1]);
-	
+
 	if (itChan == server.channelManager.end()) {
 		client.reply<ERR_NOSUCHCHANNEL>(args[1]);
 		return;
@@ -54,12 +54,12 @@ void cmd_invite(CommandContext& ctx)
 		client.reply<ERR_NOSUCHNICK>(args[0]);
 		return;
 	}
-	
+
 	Channel::ClientList::iterator clientIt = itChan->getClient(*itNick->second);
 
-	if (clientIt == itChan->allClients.end())
+	if (clientIt != itChan->allClients.end())
 	{
-		client.reply<ERR_USERNOTINCHANNEL>(itNick->second->nickname, itChan->name);
+		client.reply<ERR_USERONCHANNEL>(itNick->second->nickname, itChan->name);
 		return;
 	}
 
@@ -67,7 +67,6 @@ void cmd_invite(CommandContext& ctx)
 
 	std::string const prefix = client.asPrefix();
 
-	clientIt->client->send(prefix + " INVITE " + itChan->name);
-	// TODO add target to invite list
-	itChan->inviteClient(*clientIt->client);
+	itNick->second->send(prefix + " INVITE " + itChan->name);
+	itChan->inviteClient(*itNick->second);
 }
