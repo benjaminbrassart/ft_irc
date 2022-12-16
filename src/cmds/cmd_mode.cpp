@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_mode.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/14 17:18:44 by lrandria          #+#    #+#             */
-/*   Updated: 2022/12/16 01:08:12 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/16 19:51:31 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <algorithm>
 #include <iostream>
 
-void		usrModes(Client &client, std::vector< std::string > args) {
+void		usrModes(Client &client, std::vector< std::string >& args) {
 
 	if (args.size() < 2) {
 		client.reply<ERR_NEEDMOREPARAMS>("MODE");
@@ -33,9 +33,9 @@ void		usrModes(Client &client, std::vector< std::string > args) {
 		client.reply<ERR_UMODEUNKNOWNFLAG>();
 }
 
-bool		addModes(Client &client, ChannelManager::iterator itChan, std::vector< std::string > args) {
+bool		addModes(Client &client, ChannelManager::iterator itChan, std::vector< std::string >& args) {
 
-	NicknameManager::iterator       itNick;
+	NicknameManager::iterator	itNick;
 
 	if (args[1] == "+i" || args[1] == "i") {
 		itChan->addChanModes("i");
@@ -69,7 +69,7 @@ bool		addModes(Client &client, ChannelManager::iterator itChan, std::vector< std
 			itChan->usrLimitMode = true;
 		}
 	}
-	else if ((args[1] == "+o" || args[1] == "o") && args.size() == 3) {
+	else if ((args[1] == "+o" || args[1] == "o")) {
 		if (args.size() < 3) {
 			client.reply<ERR_NEEDMOREPARAMS>("MODE");
 			return false;
@@ -89,9 +89,9 @@ bool		addModes(Client &client, ChannelManager::iterator itChan, std::vector< std
 	return true;
 }
 
-bool	removeModes(Client &client, ChannelManager::iterator itChan, std::vector< std::string > args) {
+bool	removeModes(Client &client, ChannelManager::iterator itChan, std::vector< std::string >& args) {
 
-	NicknameManager::iterator       itNick;
+	NicknameManager::iterator	itNick;
 
 	if (args[1] == "-i") {
 		itChan->removeChanModes("i");
@@ -105,7 +105,11 @@ bool	removeModes(Client &client, ChannelManager::iterator itChan, std::vector< s
 		itChan->removeChanModes("l");
 		itChan->usrLimitMode = false;
 	}
-	else if (args[1] == "-o" && args.size() == 3) {
+	else if (args[1] == "-o") {
+		if (args.size() < 3) {
+			client.reply<ERR_NEEDMOREPARAMS>("MODE");
+			return false;
+		}
 		itNick = client.server->nickManager.getClient(args[2]);
 		if (itNick == client.server->nickManager.end())
 		{
@@ -121,10 +125,10 @@ bool	removeModes(Client &client, ChannelManager::iterator itChan, std::vector< s
 	return true;
 }
 
-void	chanModes(Client &client, Server &server, std::vector< std::string > args) {
+void	chanModes(Client &client, Server &server, std::vector< std::string >& args) {
 
 	ChannelManager::iterator			itChan;
-	Channel::ClientList::iterator 		itCli;
+	Channel::ClientList::iterator		itCli;
 	std::string							modes;
 	std::string							allowedChars = "iklo+";
 	bool								updated = false;
@@ -164,7 +168,7 @@ void		cmd_mode(CommandContext &ctx) {
 
 	Client							&client = ctx.client;
 	Server							&server = ctx.server;
-	std::vector< std::string >		args = ctx.args;
+	std::vector< std::string >		&args = ctx.args;
 
 	if (args.empty()) {
 		client.reply<ERR_NEEDMOREPARAMS>(ctx.name);

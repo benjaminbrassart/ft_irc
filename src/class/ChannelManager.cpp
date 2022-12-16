@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 15:01:48 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/15 08:06:26 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/16 18:30:26 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ bool ChannelManager::removeChannel(iterator it)
 {
 	if (it == this->end())
 		return false;
+	it->server->logger.log(DEBUG, "Removed channel " + it->name);
 	this->_channels.erase(it);
 	return true;
 }

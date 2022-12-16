@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:34:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/16 00:52:13 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/16 19:17:06 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ class Channel : public Recipient {
 		InviteList				invitedClients;
 
 		bool					empty() const;
-	
+
 		void					addChanModes(std::string newModes);
 		void					removeChanModes(std::string byeModes);
 
@@ -72,7 +72,7 @@ class Channel : public Recipient {
 		bool 					isInvited(Client& client);
 		void 					uninviteClient(Client& client);
 
-		void					setPriv(std::string &nick, ChannelPrivilege privilege);
+		void					setPriv(std::string const &nick, ChannelPrivilege privilege);
 		int						getClientPriv(Client &client);
 
 		// Recipient overloads
