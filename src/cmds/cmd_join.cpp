@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_join.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/16 01:02:56 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/16 02:39:44 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,14 @@ void cmd_join(CommandContext& ctx)
 
 	for (; chanNameIt != channels.end(); ++chanNameIt)
 	{
-		ChannelManager::iterator chanIt = server.channelManager.getChannel(*chanNameIt);
-		ChannelPrivilege priv;
-
 		if (!__check_channel_name(*chanNameIt))
 		{
 			client.reply<ERR_BADCHANMASK>(*chanNameIt);
 			continue;
 		}
+
+		ChannelManager::iterator chanIt = server.channelManager.getChannel(*chanNameIt);
+		ChannelPrivilege priv;
 
 		if (chanIt == server.channelManager.end())
 		{
@@ -61,7 +61,17 @@ void cmd_join(CommandContext& ctx)
 			priv = PRIV_UNIQOP;
 		}
 		else
+		{
+			if (chanIt->hasClient(client))
+				continue;
+			if (chanIt->inviteMode && !chanIt->isInvited(client))
+			{
+				client.reply<ERR_INVITEONLYCHAN>(chanIt->name);
+				continue;
+			}
+			chanIt->uninviteClient(client);
 			priv = PRIV_NONE;
+		}
 
 		std::string key;
 

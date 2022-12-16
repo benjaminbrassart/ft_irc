@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ConnectionManager.cpp                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 10:54:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 11:27:26 by parallels        ###   ########.fr       */
+/*   Updated: 2022/12/15 22:16:29 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,6 @@ void ConnectionManager::handlePollInClient(Server& server, iterator& it)
 		if (clientIt->second.readFrom())
 		{
 			chanIt = clientIt->second.channels.begin();
-			// TODO test if working as intended
 			for (; chanIt != clientIt->second.channels.end(); ++chanIt)
 				if ((*chanIt)->empty())
 					server.channelManager.removeChannel((*chanIt)->name);
