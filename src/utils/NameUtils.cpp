@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   NameUtils.cpp                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 01:55:43 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/15 02:29:29 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/16 01:03:40 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void NameUtils::showName(Client& client, Request& request)
 		Channel& channel = *request.channel;
 		bool isMember = channel.hasClient(client);
 
-		if (isMember || (channel.mode & MODE_SECRET) == 0)
+		if (isMember)
 		{
 			namePtr = &channel.name;
 			clientIt = channel.allClients.begin();
@@ -76,12 +76,7 @@ static void __showClient(Client& sender, Channel::ClientList::iterator const& it
 			default: break;
 		}
 
-		std::string symbol;
-
-		if (channel.mode & MODE_SECRET)
-			symbol = "@";
-		else
-			symbol = "=";
+		std::string symbol = "=";
 
 		ss << it->client->nickname;
 		sender.reply<RPL_NAMREPLY>(symbol, channel.name, ss.str());

@@ -6,12 +6,11 @@
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/14 17:18:44 by lrandria          #+#    #+#             */
-/*   Updated: 2022/12/15 20:53:25 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/16 01:08:12 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
-#include "ChannelMode.hpp"
 #include "command.h"
 #include <algorithm>
 #include <iostream>
@@ -78,7 +77,7 @@ bool		addModes(Client &client, ChannelManager::iterator itChan, std::vector< std
 		itNick = client.server->nickManager.getClient(args[2]);
 		if (itNick == client.server->nickManager.end())
 		{
-			client.reply<ERR_NOTONCHANNEL>(itChan->name);
+			client.reply<ERR_USERNOTINCHANNEL>(args[2], itChan->name);
 			return false;
 		}
 		itChan->setPriv(args[2], PRIV_CHANOP);

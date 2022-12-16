@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_join.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/15 02:55:25 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/16 01:02:56 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,7 @@ void cmd_join(CommandContext& ctx)
 					default: break;
 				}
 
-				std::string symbol;
-
-				if (chanIt->mode & MODE_SECRET)
-					symbol = "@";
-				else
-					symbol = "=";
+				std::string symbol = "=";
 
 				clientList << clientIt->client->nickname;
 				client.reply<RPL_NAMREPLY>(symbol, chanIt->name, clientList.str());
