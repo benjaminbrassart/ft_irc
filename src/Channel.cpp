@@ -6,14 +6,12 @@
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/15 21:00:40 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/16 01:02:16 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Channel.hpp"
 #include <iostream>
-
-ChannelMode const Channel::DEFAULT_MODE = 0;
 
 /* ==========================================================================
 								COPLIEN AFORM
@@ -23,7 +21,6 @@ Channel::Channel(Server* server) : Recipient(server),
 	name(),
 	topic(),
 	passwd(),
-	mode(Channel::DEFAULT_MODE),
 	modes("+"),
 	inviteMode(false),
 	keyMode(false),
@@ -37,7 +34,6 @@ Channel::Channel(Server* server, std::string name, std::string passwd) : Recipie
 	name(name),
 	topic(),
 	passwd(passwd),
-	mode(Channel::DEFAULT_MODE),
 	modes("+"),
 	inviteMode(false),
 	keyMode(false),
@@ -51,7 +47,6 @@ Channel::Channel(Channel const& rhs) : Recipient(rhs.server),
 	name(rhs.name),
 	topic(rhs.topic),
 	passwd(rhs.passwd),
-	mode(rhs.mode),
 	modes(rhs.modes),
 	inviteMode(rhs.inviteMode),
 	keyMode(rhs.keyMode),
@@ -67,7 +62,6 @@ Channel	&Channel::operator=(Channel const& rhs) {
 		const_cast<std::string&>(this->name) = rhs.name;
 		this->topic = rhs.topic;
 		this->passwd = rhs.passwd;
-		this->mode = rhs.mode;
 		this->modes = rhs.modes;
 		this->inviteMode = rhs.inviteMode;
 		this->keyMode = rhs.keyMode;
@@ -89,6 +83,10 @@ bool Channel::empty() const
 {
 	return this->allClients.empty();
 }
+
+/* ==========================================================================
+								MEMBER FUNCTIONS
+   ========================================================================== */
 
 void Channel::addChanModes(std::string newModes) {
 
@@ -112,62 +110,6 @@ void Channel::removeChanModes(std::string byeModes) {
 		}
 	}
 }
-
-int		Channel::getClientPriv(Client &client) {
-
-	int						priv = PRIV_NONE;
-	ClientList::iterator 	itCli = this->allClients.begin();
-
-	for (; itCli != this->allClients.end(); ++itCli)
-		if (itCli->client == &client)
-			priv = itCli->privilege;
-	return (priv);
-}
-
-void	Channel::setPriv(std::string &nick, ChannelPrivilege priv) {
-
-	ClientList::iterator 	itCli = this->allClients.begin();
-
-	for (; itCli != this->allClients.end(); ++itCli)
-		if (itCli->client->nickname == nick)
-			itCli->privilege = priv;
-}
-
-// void Channel::addChanOps(std::string nick) {
-
-// 	ClientList::iterator 				iteCli = this->allClients.begin();
-// 	std::set< std::string >::iterator	iteChanOps = this->allChanOps.find(nick);
-
-// 	for (; iteCli != this->allClients.end(); ++iteCli) {	// loop through clients
-// 		if (iteCli->client->nickname == nick) { 		// if found with nick
-// 			if (iteChanOps == this->allChanOps.end()) { // and it's not already in chanOps, then we add it to the list and change client's priv
-// 				this->allChanOps.insert(nick);
-// 				iteCli->privilege = PRIV_CHANOP;
-// 				return ;
-// 			}
-// 		}
-// 		else
-// 			std::cerr << "error: user not found in channel.\n";
-// 	}
-// }
-
-// void Channel::removeChanOps(std::string nick) {
-
-// 	ClientList::iterator 				iteCli = this->allClients.begin();
-// 	std::set< std::string >::iterator	iteChanOps = this->allChanOps.find(nick);
-
-// 	for (; iteCli != this->allClients.end(); ++iteCli) {
-// 		if (iteCli->client->nickname == nick) {
-// 			if (iteChanOps == this->allChanOps.end()) {
-// 				this->allChanOps.erase(nick);
-// 				iteCli->privilege = PRIV_NONE;
-// 				return ;
-// 			}
-// 		}
-// 		else
-// 			std::cerr << "error: user not found in channel.\n";
-// 	}
-// }
 
 /* ==========================================================================
 								MEMBER FUNCTIONS
@@ -209,6 +151,54 @@ Channel::ClientList::iterator Channel::getClient(Client& client)
 	return it;
 }
 
+/* ==========================================================================
+								MEMBER FUNCTIONS
+   ========================================================================== */
+
+void	Channel::inviteClient(Client& client) {
+
+	this->invitedClients.insert(&client);
+}
+
+bool	Channel::isInvited(Client& client) {
+
+	return (this->invitedClients.find(&client) != this->invitedClients.end());
+}
+
+void	Channel::uninviteClient(Client& client) {
+
+	this->invitedClients.erase(&client);
+}
+
+/* ==========================================================================
+								MEMBER FUNCTIONS
+   ========================================================================== */
+
+int		Channel::getClientPriv(Client &client) {
+
+	int						priv = PRIV_NONE;
+	ClientList::iterator 	itCli = this->allClients.begin();
+
+	for (; itCli != this->allClients.end(); ++itCli)
+		if (itCli->client == &client)
+			priv = itCli->privilege;
+	return (priv);
+}
+
+void	Channel::setPriv(std::string &nick, ChannelPrivilege priv) {
+
+	ClientList::iterator 	itCli = this->allClients.begin();
+
+	for (; itCli != this->allClients.end(); ++itCli)
+		if (itCli->client->nickname == nick)
+			itCli->privilege = priv;
+}
+
+
+/* ==========================================================================
+					MEMBER FUNCTIONS -RECIPIENTS OVERLOADS-
+   ========================================================================== */
+
 std::string const& Channel::getIdentifier() const
 {
 	return this->name;
@@ -224,19 +214,4 @@ void Channel::sendMessage(Client& sender, std::string const& command, std::strin
 		if (it->client != &sender)
 			it->client->send(prefix + " " + command + " " + this->name + " :" + message);
 	}
-}
-
-void	Channel::inviteClient(Client& client) {
-
-	this->invitedClients.insert(&client);
-}
-
-bool	Channel::isInvited(Client& client) {
-
-	return (this->invitedClients.find(&client) != this->invitedClients.end());
-}
-
-void	Channel::uninviteClient(Client& client) {
-
-	this->invitedClients.erase(&client);
 }

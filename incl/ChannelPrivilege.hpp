@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ChannelPrivilege.hpp                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/21 09:39:35 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/11/21 09:53:01 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/16 00:46:28 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,4 +22,4 @@ enum ChannelPrivilege
 	PRIV_DISABLED = 4,
 };
 
-#endif // CHANNELPRIVILEGE_HPP
+#endif
