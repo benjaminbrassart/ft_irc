@@ -6,7 +6,7 @@
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/18 18:04:40 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/15 18:31:49 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/16 22:14:56 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,13 @@ std::string ReplyFactory<RPL_MYINFO>::makeReply(std::string const& serverName)
 {
 	return ":" + serverName + " " VERSION " io iklo";
 };
+
+std::string const ReplyFactory<RPL_UMODEIS>::NAME = "RPL_UMODEIS";
+
+std::string ReplyFactory<RPL_UMODEIS>::makeReply(std::string const& user, std::string const& userModes)
+{
+	return "irc.example.org 221 " + user + " :" + userModes;
+}
 
 std::string const ReplyFactory<RPL_LIST>::NAME = "RPL_LIST";
 
