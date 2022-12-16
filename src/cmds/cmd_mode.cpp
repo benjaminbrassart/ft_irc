@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_mode.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/14 17:18:44 by lrandria          #+#    #+#             */
-/*   Updated: 2022/12/16 01:08:12 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/16 19:13:53 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ bool		addModes(Client &client, ChannelManager::iterator itChan, std::vector< std
 			itChan->usrLimitMode = true;
 		}
 	}
-	else if ((args[1] == "+o" || args[1] == "o") && args.size() == 3) {
+	else if ((args[1] == "+o" || args[1] == "o")) {
 		if (args.size() < 3) {
 			client.reply<ERR_NEEDMOREPARAMS>("MODE");
 			return false;
@@ -105,7 +105,11 @@ bool	removeModes(Client &client, ChannelManager::iterator itChan, std::vector< s
 		itChan->removeChanModes("l");
 		itChan->usrLimitMode = false;
 	}
-	else if (args[1] == "-o" && args.size() == 3) {
+	else if (args[1] == "-o") {
+		if (args.size() < 3) {
+			client.reply<ERR_NEEDMOREPARAMS>("MODE");
+			return false;
+		}
 		itNick = client.server->nickManager.getClient(args[2]);
 		if (itNick == client.server->nickManager.end())
 		{
