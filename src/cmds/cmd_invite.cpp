@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 16:40:38 by lrandria          #+#    #+#             */
-/*   Updated: 2022/12/16 02:40:03 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/16 02:47:20 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,6 @@ void cmd_invite(CommandContext& ctx)
 
 	std::string const prefix = client.asPrefix();
 
-	itNick->second->send(prefix + " INVITE " + itChan->name);
+	itNick->second->send(prefix + " INVITE " + " " + itNick->second->nickname + " " + itChan->name);
 	itChan->inviteClient(*itNick->second);
 }
