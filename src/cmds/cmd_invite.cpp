@@ -6,7 +6,7 @@
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 16:40:38 by lrandria          #+#    #+#             */
-/*   Updated: 2022/12/16 01:31:04 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/16 01:38:37 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,10 +55,10 @@ void cmd_invite(CommandContext& ctx)
 		return;
 	}
 	
+	Channel::ClientList::iterator	clientIt = itChan->getClient(*itNick->second);
+	std::string const 				prefix = client.asPrefix();
+
 	client.reply<RPL_INVITING>(itNick->second->nickname, itChan->name);
-
-	std::string const prefix = client.asPrefix();
-
 	clientIt->client->send(prefix + " INVITE " + itChan->name);
 	itChan->inviteClient(*clientIt->client);
 }
