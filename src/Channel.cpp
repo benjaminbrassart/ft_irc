@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 14:00:38 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/16 01:02:16 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/16 19:33:59 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,13 +185,16 @@ int		Channel::getClientPriv(Client &client) {
 	return (priv);
 }
 
-void	Channel::setPriv(std::string &nick, ChannelPrivilege priv) {
+void	Channel::setPriv(std::string const &nick, ChannelPrivilege priv) {
 
-	ClientList::iterator 	itCli = this->allClients.begin();
+	ClientList::iterator	itCli = this->allClients.begin();
 
 	for (; itCli != this->allClients.end(); ++itCli)
 		if (itCli->client->nickname == nick)
+		{
 			itCli->privilege = priv;
+			break;
+		}
 }
 
 
