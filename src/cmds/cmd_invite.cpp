@@ -6,7 +6,7 @@
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/15 16:40:38 by lrandria          #+#    #+#             */
-/*   Updated: 2022/12/15 18:47:44 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/16 01:31:04 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,19 +55,10 @@ void cmd_invite(CommandContext& ctx)
 		return;
 	}
 	
-	Channel::ClientList::iterator clientIt = itChan->getClient(*itNick->second);
-
-	if (clientIt == itChan->allClients.end())
-	{
-		client.reply<ERR_USERNOTINCHANNEL>(itNick->second->nickname, itChan->name);
-		return;
-	}
-
 	client.reply<RPL_INVITING>(itNick->second->nickname, itChan->name);
 
 	std::string const prefix = client.asPrefix();
 
 	clientIt->client->send(prefix + " INVITE " + itChan->name);
-	// TODO add target to invite list
 	itChan->inviteClient(*clientIt->client);
 }
