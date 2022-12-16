@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 19:11:58 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/16 02:39:44 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/16 19:39:43 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,38 +78,38 @@ void cmd_join(CommandContext& ctx)
 		if (keyIt != keys.end())
 			key = *keyIt++;
 
-		if (key.empty() || chanIt->passwd == key)
+		if (chanIt->keyMode && key != chanIt->passwd)
 		{
-			client.channels.insert(&*chanIt);
-			chanIt->addClient(client, priv);
-
-			if (!chanIt->topic.empty())
-				client.reply<RPL_TOPIC>(chanIt->name, chanIt->topic);
-
-			for (clientIt = chanIt->allClients.begin(); clientIt != chanIt->allClients.end(); ++clientIt)
-			{
-				std::stringstream clientList;
-
-				clientIt->client->send(prefix + " JOIN " + chanIt->name);
-
-				switch (clientIt->privilege)
-				{
-					case PRIV_UNIQOP:
-					case PRIV_CHANOP: clientList << '@'; break;
-					case PRIV_VOICE: clientList << '+'; break;
-					default: break;
-				}
-
-				std::string symbol = "=";
-
-				clientList << clientIt->client->nickname;
-				client.reply<RPL_NAMREPLY>(symbol, chanIt->name, clientList.str());
-			}
-			// TOOD see if we need to split this if there are too many clients
-			client.reply<RPL_ENDOFNAMES>(chanIt->name);
+			client.reply<ERR_BADCHANNELKEY>(chanIt->name);
+			continue;
 		}
-		else
-			client.reply<ERR_PASSWDMISMATCH>();
+
+		client.channels.insert(&*chanIt);
+		chanIt->addClient(client, priv);
+
+		if (!chanIt->topic.empty())
+			client.reply<RPL_TOPIC>(chanIt->name, chanIt->topic);
+
+		for (clientIt = chanIt->allClients.begin(); clientIt != chanIt->allClients.end(); ++clientIt)
+		{
+			std::stringstream ss;
+
+			clientIt->client->send(prefix + " JOIN " + chanIt->name);
+
+			switch (clientIt->privilege)
+			{
+				case PRIV_UNIQOP:
+				case PRIV_CHANOP: ss << '@'; break;
+				case PRIV_VOICE: ss << '+'; break;
+				default: break;
+			}
+
+			std::string symbol = "=";
+
+			ss << clientIt->client->nickname;
+			client.reply<RPL_NAMREPLY>(symbol, chanIt->name, ss.str());
+		}
+		client.reply<RPL_ENDOFNAMES>(chanIt->name);
 	}
 }
 
