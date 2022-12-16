@@ -1,20 +1,4 @@
-USER MODES :
-- a : away
-- i : invisible
-- w : wallops
-- r : restricted
-- o : operator
+TESTS :
 
-CHANNEL MODES :
-for users :
-    - O : channel creator
-    - o : channel operator
-    - v : voice
-for channels :
-    - i : invite only
-    - m : moderated
-    - n : outside privmsg disabled
-    - p : private
-    - t : topic locked
-    - k : key locked
-    - l : user limit
+- /invite prout #mychan => NOSUCHNICK if prout doesn't exist?
+- /invite prout #mychan => USERNOTINCHANNEL mais c'est pas bon.
