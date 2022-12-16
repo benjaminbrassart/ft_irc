@@ -6,7 +6,7 @@
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:45:10 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/15 18:31:10 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/16 21:51:31 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ enum Reply
 	RPL_YOURHOST = 2,
 	RPL_CREATED = 3,
 	RPL_MYINFO = 4,
+	RPL_UMODEIS = 221,
 	RPL_LIST = 322,
 	RPL_LISTEND = 323,
 	RPL_CHANNELMODEIS = 324,
@@ -114,6 +115,13 @@ struct ReplyFactory<RPL_MYINFO>
 {
 	static std::string const NAME;
 	static std::string makeReply(std::string const& serverName);
+};
+
+template<>
+struct ReplyFactory<RPL_UMODEIS>
+{
+	static std::string const NAME;
+	static std::string makeReply(std::string const& user, std::string const& userModes);
 };
 
 template<>
