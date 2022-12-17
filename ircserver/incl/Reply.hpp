@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Reply.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 01:45:10 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/16 21:51:31 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/17 07:03:23 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,7 +121,7 @@ template<>
 struct ReplyFactory<RPL_UMODEIS>
 {
 	static std::string const NAME;
-	static std::string makeReply(std::string const& user, std::string const& userModes);
+	static std::string makeReply(std::string const& userModes);
 };
 
 template<>

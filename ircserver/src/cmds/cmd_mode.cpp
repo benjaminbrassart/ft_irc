@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_mode.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/14 17:18:44 by lrandria          #+#    #+#             */
-/*   Updated: 2022/12/17 03:35:40 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/17 07:03:35 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,12 @@ void		usrModes(Client &client, std::vector< std::string >& args) {
 	if (args.size() == 1) {
 
 		std::string	clientModes = "+";
-		
+
 		if (client.isInvisible == true)
 			clientModes += 'i';
 		if (client.checkState(CLIENT_STATE_OPERATOR))
 			clientModes += 'o';
-		client.reply<RPL_UMODEIS>(client.nickname, clientModes);
+		client.reply<RPL_UMODEIS>(clientModes);
 		return;
 	}
 	if (args[1] == "+i")

@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 10:54:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/17 05:20:47 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/17 06:59:12 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,8 +132,13 @@ void ConnectionManager::handlePollInClient(Server& server, iterator& it)
 		{
 			chanIt = clientIt->second.channels.begin();
 			for (; chanIt != clientIt->second.channels.end(); ++chanIt)
+			{
+				(*chanIt)->removeClient(clientIt->second);
 				if ((*chanIt)->empty())
 					server.channelManager.removeChannel((*chanIt)->name);
+			}
+			clientIt->second.closeConnection();
+			server.nickManager.unregisterNickname(clientIt->second.nickname);
 			server.clientManager.removeClient(clientIt);
 			this->removeSocket(it->fd);
 		}
