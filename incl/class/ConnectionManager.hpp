@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 10:54:57 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/03 14:33:59 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/17 05:18:17 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ public:
 	void wait();
 	void handlePoll(Server& server);
 	void disconnectClient(Client& client);
+
+	void clear();
 
 public:
 	iterator begin();

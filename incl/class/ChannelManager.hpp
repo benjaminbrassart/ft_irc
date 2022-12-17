@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 14:56:48 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/15 08:06:08 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/17 05:17:21 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,8 @@ public:
 	 * @return true if the iterator is not `end()`, false otherwise
 	 */
 	bool removeChannel(iterator channel);
+
+	void clear();
 
 public:
 	iterator begin();

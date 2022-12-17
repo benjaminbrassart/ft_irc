@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 14:55:18 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 16:38:02 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/17 05:17:27 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ public:
 
 	void addClient(Client const& client);
 	void removeClient(iterator it);
+
+	void clear();
 
 	iterator begin();
 	iterator end();

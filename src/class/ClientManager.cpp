@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 16:07:30 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 17:50:31 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/17 05:18:52 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,9 @@ ClientManager::iterator ClientManager::begin()
 ClientManager::iterator ClientManager::end()
 {
 	return this->_clients.end();
+}
+
+void ClientManager::clear()
+{
+	this->_clients.clear();
 }
