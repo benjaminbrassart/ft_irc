@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+         #
+#    By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/11/10 00:50:14 by estoffel          #+#    #+#              #
-#    Updated: 2022/12/15 18:38:02 by lrandria         ###   ########.fr        #
+#    Updated: 2022/12/17 08:17:01 by estoffel         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -81,28 +81,13 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CC) -o $(NAME) $(OBJ)
-	@printf "\n"
-	@printf "\n"
-	@printf "   🌼\033[1;97m I R C S E R V  C R E A T E D  W I T H  S U C C E S S 🌼\e[0m\n"
-	@printf "\n"
-	@printf "				x\n"
-	@printf "\n"
-	@printf "		✨	~ \033[1;97mBen Enora Liana\e[0m ~	✨\n"
-	@printf "\n"
-	@printf "\n"
 
 clean:
 	$(RM) obj/
-	@printf "\n"
-	@printf "💧\033[1;97m E V E R Y T H I N G  I S  C L E A N E D 💧\e[0m\n"
-	@printf "\n"
 
 fclean:
 	$(RM) obj/
 	$(RM) $(NAME)
-	@printf "\n"
-	@printf "💧\033[1;97m E V E R Y T H I N G  I S  C L E A N E D 💧\e[0m\n"
-	@printf "\n"
 
 re: fclean all
 
