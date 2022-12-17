@@ -6,7 +6,7 @@
 /*   By: lrandria <lrandria@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/14 17:18:44 by lrandria          #+#    #+#             */
-/*   Updated: 2022/12/16 21:50:21 by lrandria         ###   ########.fr       */
+/*   Updated: 2022/12/17 02:46:39 by lrandria         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,17 @@ void		usrModes(Client &client, std::vector< std::string >& args) {
 
 bool		addModes(Client &client, ChannelManager::iterator itChan, std::vector< std::string >& args) {
 
-	NicknameManager::iterator	itNick;
+	NicknameManager::iterator		itNick;
+	Channel::ClientList::iterator 	itClient;
 
 	if (args[1] == "+i" || args[1] == "i") {
 		itChan->addChanModes("i");
 		if (itChan->inviteMode == true)
 			return false;
 		itChan->inviteMode = true;
+		for (itClient = itChan->allClients.begin(); itClient != itChan->allClients.end(); ++itClient)
+			itClient->client->send("MODE " +  itChan->name + " " + args[1]);
+		return true;
 	}
 	else if (args[1] == "+k" || args[1] == "k") {
 		if (args.size() < 3) {
@@ -93,6 +97,8 @@ bool		addModes(Client &client, ChannelManager::iterator itChan, std::vector< std
 		client.reply<ERR_UNKNOWNMODE>(args[1], itChan->name);
 		return false;
 	}
+	for (itClient = itChan->allClients.begin(); itClient != itChan->allClients.end(); ++itClient)
+		itClient->client->send("MODE " +  itChan->name + " " + args[1] + " " + args[2]);
 	return true;
 }
 
