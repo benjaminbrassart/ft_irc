@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:52:19 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/17 09:05:18 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/12/17 15:22:38 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdexcept>
 # include <string>
 
+struct InputContext;
 
 class Bot {
 
@@ -30,6 +31,11 @@ class Bot {
 		Bot &operator=(Bot const&);
 
 		void	connexionClient();
+
+		void onInvite(InputContext& ctx);
+		void onError(InputContext& ctx);
+		void onPart(InputContext& ctx);
+		void onMessage(InputContext& ctx);
 
 		class IOException : public std::exception
 		{

@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+         #
+#    By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/12/17 08:09:48 by estoffel          #+#    #+#              #
-#    Updated: 2022/12/17 08:13:40 by estoffel         ###   ########.fr        #
+#    Updated: 2022/12/17 13:46:14 by bbrassar         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,12 +21,10 @@ FLAGS	=	-Wall -Wextra -Werror -Iincl -g3 -MMD -MP -std=c++98 $(DEFINES)
 # main
 SRC		= main.cpp
 
-# # utils
-
-# SRC		+= utils/NameUtils.cpp
-
 # classes
 SRC		+= Bot.cpp
+SRC		+= MessageRegistry.cpp
+SRC		+= InputContext.cpp
 
 OBJ		:=	$(addprefix ./obj/,$(SRC:%.cpp=%.o))
 

@@ -5,7 +5,7 @@
       "name": "Launch ircserv",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/ircserv",
+      "program": "${workspaceFolder}/ircserv/ircserv",
       "args": ["6667", "ppp"],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
@@ -25,6 +25,30 @@
           },
       ],
       "preLaunchTask": "Make",
+    },
+    {
+      "name": "Launch bot",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/botclient/bot",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}/botclient",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "setupCommands": [
+          {
+              "description": "Enable pretty-printing for gdb",
+              "text": "-enable-pretty-printing",
+              "ignoreFailures": true
+          },
+          {
+              "description":  "Set Disassembly Flavor to Intel",
+              "text": "-gdb-set disassembly-flavor intel",
+              "ignoreFailures": true
+          }
+      ]
     },
   ],
 }
