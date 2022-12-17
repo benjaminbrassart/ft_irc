@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 15:13:33 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 17:53:22 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/17 05:21:02 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,9 @@ NicknameManager::iterator NicknameManager::begin()
 NicknameManager::iterator NicknameManager::end()
 {
 	return this->_nicknames.end();
+}
+
+void NicknameManager::clear()
+{
+	this->_nicknames.clear();
 }

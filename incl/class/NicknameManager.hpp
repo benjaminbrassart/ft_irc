@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/02 15:11:05 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/02 17:51:52 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/17 05:18:20 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ public:
 	bool unregisterNickname(std::string const& nickname);
 	bool hasNickname(std::string const& nickname);
 	iterator getClient(std::string const& nickname);
+
+	void clear();
 
 public:
 	iterator begin();

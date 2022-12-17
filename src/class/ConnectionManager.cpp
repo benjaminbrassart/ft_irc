@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 10:54:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/15 22:16:29 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/17 05:20:47 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -220,4 +220,9 @@ void ConnectionManager::__eraseSockets()
 		}
 	}
 	this->_removedSockets.clear();
+}
+
+void ConnectionManager::clear()
+{
+	this->_pollFds.clear();
 }

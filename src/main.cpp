@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 00:55:38 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/14 11:56:38 by parallels        ###   ########.fr       */
+/*   Updated: 2022/12/17 05:29:40 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,10 @@ int	main(int ac, char **av) {
 		}
 		if (g_Mode == 2)
 		{
+			server.channelManager.clear();
+			server.nickManager.clear();
+			server.clientManager.clear();
+			server.connectionManager.clear();
 			server.logger.log(INFO, "Restarting, please wait...");
 			g_Mode = 1;
 		}
