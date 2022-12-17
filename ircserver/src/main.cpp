@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 00:55:38 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/17 06:59:44 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/17 11:11:31 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@
 
 static Logger* __logger;
 
-// volatile sig_atomic_t KEEP_RUNNING;
-// volatile sig_atomic_t RESTART;
 int	g_Mode;
 
 long	parsing_input(int ac, char *str) {
@@ -112,8 +110,7 @@ static void __handleSignal(int sig)
 {
 	std::cout << "\b\b"; // remove ^C from terminal
 	__logger->log(INFO, "Press Ctrl+C again to force shutdown");
-	// KEEP_RUNNING = false; // stop the server as soon as possible
-	g_Mode = 0;
+	g_Mode = 0; // stop the server as soon as possible
 	std::signal(sig, SIG_DFL); // reset signal handler
 	__logger->log(DEBUG, "Reset signal handler");
 }

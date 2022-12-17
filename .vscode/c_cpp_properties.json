@@ -4,7 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/ircserver/incl",
-                "${workspaceFolder}/botclient/incl"
+                "${workspaceFolder}/botclient/incl",
+                "${workspaceFolder}/**/*"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",
