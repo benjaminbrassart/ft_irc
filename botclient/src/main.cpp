@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:57:48 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/17 15:21:32 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/18 17:32:29 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,4 +133,21 @@ static void __interpretInput(Bot& bot, std::string const& message, std::deque< s
 		}
 	}
 	// any other input is discarded
+}
+	Bot	Mee1;
+
+	if (ac != 3) {
+		std::cerr << "Wrong number of arguments" << std::endl;
+		return 1;
+	}
+	try
+	{
+		Mee1.connectClient(av[1], av[2]);
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+		return 1;
+	}
+	return 0;
 }

@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:52:19 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/17 15:22:38 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/18 17:30:34 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ class Bot {
 
 		Bot &operator=(Bot const&);
 
-		void	connexionClient();
+		void	connectClient(const char*, const char*);
 
 		void onInvite(InputContext& ctx);
 		void onError(InputContext& ctx);
@@ -44,6 +44,7 @@ class Bot {
 
 		public:
 			IOException(std::string const& syscallName, int errnum);
+			IOException(std::string const& syscallName, std::string const& msg);
 			~IOException() throw();
 
 		public:
@@ -51,6 +52,7 @@ class Bot {
 		}; // class IOException
 
 	private:
+		int	clientFd;
 };
 
 #endif
