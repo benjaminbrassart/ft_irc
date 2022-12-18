@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:57:48 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/18 19:33:24 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 00:51:05 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,6 @@
 int	main(int ac, char **av) {
 
 	Bot	Mee1;
-
 	if (ac != 3) {
 		std::cerr << "Wrong number of arguments" << std::endl;
 		return 1;
