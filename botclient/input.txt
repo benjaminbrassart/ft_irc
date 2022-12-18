@@ -1,6 +1,0 @@
-:ft_ble ERROR :abc      def
-:ft_ble ERROR :abc      def
-:ft_ble ERROR :abc      def
-:ft_ble ERROR :abc      def
-:ft_ble ERROR :abc      def
-:ft_ble ERROR :abc      def
