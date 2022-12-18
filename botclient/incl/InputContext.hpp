@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 13:38:11 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/17 13:40:34 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 00:38:27 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ struct InputContext
 {
 	typedef std::deque< std::string > Args;
 
+	// std::string sender;
 	std::string message;
 	Args& args;
 
