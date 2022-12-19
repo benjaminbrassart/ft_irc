@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 10:54:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/17 06:59:12 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 11:40:15 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,7 @@ void ConnectionManager::handlePollInClient(Server& server, iterator& it)
 	{
 		if (clientIt->second.readFrom())
 		{
+			// recv returned <= 0
 			chanIt = clientIt->second.channels.begin();
 			for (; chanIt != clientIt->second.channels.end(); ++chanIt)
 			{
