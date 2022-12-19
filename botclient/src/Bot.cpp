@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:57:33 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/19 20:51:04 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 21:13:36 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -284,6 +284,7 @@ static unsigned int edit_distance(const std::string& s1, const std::string& s2)
 	return d[len1][len2];
 }
 
+// returns true if the strings are too similar, false otherwise
 bool Bot::checkSimilarMessage(std::string const& message)
 {
 	// levenshtein's distance algorithm
@@ -296,7 +297,7 @@ bool Bot::checkSimilarMessage(std::string const& message)
 		distance = edit_distance(message, this->ballQuestions[i]);
 	}
 	std::cout << "distance is " << distance << std::endl;
-	return true;
+	return false;
 }
 
 void Bot::respond(std::string const& recipient, std::string const& target, std::string const& message)
