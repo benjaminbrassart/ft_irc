@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:57:33 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/19 20:25:01 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/12/19 21:13:36 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,18 +25,26 @@ Bot::Bot() :
 	readBuffer(),
 	messageRegistry(),
 	inputMap(),
+	channelCache(),
 	alive(true),
-	loginState(0) {
+	loginState(0),
+	nickname() {
 
 	this->inputMap["ERROR"] = &Bot::onError;
 	this->inputMap["INVITE"] = &Bot::onInvite;
 	this->inputMap["PART"] = &Bot::onPart;
 	this->inputMap["PRIVMSG"] = &Bot::onMessage;
+	this->inputMap["QUIT"] = &Bot::onQuit;
+	this->inputMap["JOIN"] = &Bot::onJoin;
 
 	this->inputMap["001"] = &Bot::onReply;
 	this->inputMap["002"] = &Bot::onReply;
 	this->inputMap["003"] = &Bot::onReply;
 	this->inputMap["004"] = &Bot::onReply;
+	this->inputMap["353"] = &Bot::onReply;
+	this->inputMap["366"] = &Bot::onReply;
+	this->inputMap["432"] = &Bot::onReply;
+	this->inputMap["433"] = &Bot::onReply;
 }
 
 Bot::Bot(Bot const& cpy) :
@@ -44,8 +52,10 @@ Bot::Bot(Bot const& cpy) :
 	readBuffer(cpy.readBuffer),
 	messageRegistry(cpy.messageRegistry),
 	inputMap(cpy.inputMap),
+	channelCache(cpy.channelCache),
 	alive(cpy.alive),
-	loginState(cpy.loginState)
+	loginState(cpy.loginState),
+	nickname(cpy.nickname)
 {}
 
 Bot&	Bot::operator=(Bot const& asgn) {
@@ -54,8 +64,10 @@ Bot&	Bot::operator=(Bot const& asgn) {
 	this->readBuffer = asgn.readBuffer;
 	this->messageRegistry = asgn.messageRegistry;
 	this->inputMap = asgn.inputMap;
+	this->channelCache = asgn.channelCache;
 	this->alive = asgn.alive;
 	this->loginState = asgn.loginState;
+	this->nickname = asgn.nickname;
 	return *this;
 }
 
@@ -135,7 +147,27 @@ void Bot::onInvite(InputContext& ctx)
 
 void Bot::onPart(InputContext& ctx)
 {
-	(void)ctx;
+	std::string const& chanName = ctx.args[0];
+	ChannelCache::iterator ccIt = this->channelCache.find(chanName);
+
+	if (ccIt == this->channelCache.end())
+		return;
+	--ccIt->second;
+	if (ccIt->second <= 1)
+	{
+		this->send("PART " + chanName + " :Lonely, I'm Mistah Lonely...");
+		this->channelCache.erase(ccIt);
+	}
+}
+
+void Bot::onJoin(InputContext& ctx)
+{
+	// ignore join messages that reference the bot itself
+	if (ctx.sender == this->nickname)
+		return;
+
+	std::string const& chanName = ctx.args[0];
+	(void)chanName;
 }
 
 void Bot::onMessage(InputContext& ctx)
@@ -144,8 +176,6 @@ void Bot::onMessage(InputContext& ctx)
 	std::string const& message = ctx.args[1];
 	std::string::const_iterator prefix_it = Bot::PREFIX.begin();
 	std::string::const_iterator msg_it = message.begin();
-
-	// std::string recipient;
 
 	if (ctx.args[0][0] != '#')
 		return ;
@@ -163,18 +193,16 @@ void Bot::onMessage(InputContext& ctx)
 		++msg_it;
 
 	std::string const prefixlessMessage = std::string(msg_it, message.end());
-	std::string const target = "TODO"; // TODO parse target's nickname
+	std::string const target = ctx.sender;
 
 	if (msg_it == message.end())
 	{
-		// TODO respond with rules
 		this->respond(recipient, target, "the rules are simple: you ask a question, I give you an answer.");
 		return;
 	}
 
 	if (this->checkSimilarMessage(prefixlessMessage))
 	{
-		// TODO maybe print which question was asked and also by whom
 		this->respond(recipient, target, "a similar question was already asked.");
 		return;
 	}
@@ -187,18 +215,58 @@ void Bot::onMessage(InputContext& ctx)
 
 void Bot::onReply(InputContext& ctx)
 {
+	InputContext::Args& args = ctx.args;
 	int const code = std::atoi(ctx.message.c_str());
 
-	if (code >= 1 && code <= 4)
+	switch (code)
 	{
-		if (this->isLogged())
-			return;
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+			if (this->isLogged())
+				break;
 
-		// set the nth bit of the login state
-		this->loginState |= (1 << (code - 1));
-		if (this->isLogged())
-			std::cout << "Logged in!\n";
+			// set the nth bit of the login state
+			this->loginState |= (1 << (code - 1));
+			if (this->isLogged())
+				std::cout << "Logged in!\n";
+			break;
+		case 353: {
+			std::string const& chanName = args[2];
+
+			++this->channelCache[chanName];
+			break;
+		}
+		case 366: {
+			std::string const& chanName = args[1];
+
+			if (this->channelCache[chanName] <= 1)
+			{
+				this->send("PART " + chanName + " :Lonely, I'm Mistah Lonely...");
+				this->channelCache.erase(chanName);
+			}
+			break;
+		}
+		case 432: {
+			std::cerr << "This nickname is invalid.\n";
+			this->alive = false;
+			break;
+		}
+		case 433: {
+			std::cerr << "Nickname already taken (is another instance running?)\n";
+			this->alive = false;
+			break;
+		}
+		default:
+			break;
 	}
+}
+
+void Bot::onQuit(InputContext& ctx)
+{
+	(void)ctx;
+	this->updateChannelCache();
 }
 
 static unsigned int edit_distance(const std::string& s1, const std::string& s2)
@@ -216,6 +284,7 @@ static unsigned int edit_distance(const std::string& s1, const std::string& s2)
 	return d[len1][len2];
 }
 
+// returns true if the strings are too similar, false otherwise
 bool Bot::checkSimilarMessage(std::string const& message)
 {
 	// levenshtein's distance algorithm
@@ -228,7 +297,7 @@ bool Bot::checkSimilarMessage(std::string const& message)
 		distance = edit_distance(message, this->ballQuestions[i]);
 	}
 	std::cout << "distance is " << distance << std::endl;
-	return true;
+	return false;
 }
 
 void Bot::respond(std::string const& recipient, std::string const& target, std::string const& message)
@@ -250,6 +319,7 @@ void Bot::receive()
 		::close(this->clientFd);
 		this->clientFd = -1;
 		std::cout << "Connection closed by peer.\n";
+		this->alive = false;
 		return;
 	}
 
@@ -309,17 +379,17 @@ void Bot::__processLine(std::string const& line)
 
 	if (cmdIt != this->inputMap.end() && cmdIt->second != NULL)
 	{
-		InputContext ctx(cmd, args);
+		InputContext ctx(this->extractNickname(origin), cmd, args);
 
 		(this->*cmdIt->second)(ctx);
 	}
 }
 
-void Bot::authenticate(std::string const& password)
+void Bot::authenticate(std::string const& nickname, std::string const& password)
 {
 	this->send("PASS " + password);
-	this->send("NICK FlexBot");
-	this->send("USER FlexBot 0 * :Flex Bot");
+	this->send("NICK " + nickname);
+	this->send("USER " + nickname + " 0 * :" + nickname);
 }
 
 void Bot::send(std::string const& str)
@@ -338,4 +408,29 @@ bool Bot::isLogged()
 	// 15
 	// 0xF
 	return (this->loginState & 0xF) == 0xF;
+}
+
+void Bot::updateChannelCache()
+{
+	ChannelCache::iterator ccIt = this->channelCache.begin();
+
+	for (; ccIt != this->channelCache.end(); ++ccIt)
+	{
+		ccIt->second = 0;
+		this->send("NAMES " + ccIt->first);
+	}
+}
+
+std::string Bot::extractNickname(std::string const& prefix)
+{
+	std::string::const_iterator begin = prefix.begin();
+	std::string::const_iterator it = std::find(begin, prefix.end(), '!');
+
+	if (it == prefix.end())
+		return "";
+
+	if (*begin == ':')
+		++begin;
+
+	return std::string(begin, it);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:52:19 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/19 19:53:32 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/12/19 20:49:19 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,14 @@ class Bot {
 
 	public:
 		typedef std::map< std::string, InputHandler > InputMap;
+		typedef std::map< std::string, unsigned int > ChannelCache;
 
 		static std::string const PREFIX;
 
-	private:
+	public:
 		int clientFd;
+
+	private:
 		std::string readBuffer;
 
 		std::vector< std::string > ballQuestions;
@@ -40,8 +43,10 @@ class Bot {
 	public:
 		MessageRegistry messageRegistry;
 		InputMap inputMap;
+		ChannelCache channelCache;
 		bool alive;
 		int loginState;
+		std::string nickname;
 
 		Bot();
 		Bot(Bot const& cpy);
@@ -50,7 +55,7 @@ class Bot {
 		Bot &operator=(Bot const& asgn);
 
 		void	connectClient(const char* hostname, const char* port);
-		void	authenticate(std::string const& password);
+		void	authenticate(std::string const& nickname, std::string const& password);
 		bool	isLogged();
 
 		bool	checkSimilarMessage(std::string const& message);
@@ -61,9 +66,15 @@ class Bot {
 
 		void	onInvite(InputContext& ctx);
 		void	onError(InputContext& ctx);
+		void	onQuit(InputContext& ctx);
 		void	onPart(InputContext& ctx);
 		void	onMessage(InputContext& ctx);
 		void	onReply(InputContext& ctx);
+		void	onJoin(InputContext& ctx);
+
+		void	updateChannelCache();
+
+		std::string extractNickname(std::string const& prefix);
 
 		class IOException : public std::exception
 		{

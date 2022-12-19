@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:57:48 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/19 20:30:17 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/12/19 20:53:05 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <unistd.h>
 
 int	main(int ac, char **av) {
 
-	Bot	Mee1;
 	if (ac != 4) {
 		std::cerr << "Wrong number of arguments\n";
 		return 1;
@@ -39,18 +39,24 @@ int	main(int ac, char **av) {
 		return 1;
 	}
 
+	Bot Mee1;
+	int status = 0;
+
 	try
 	{
 		Mee1.messageRegistry.load(input);
+		input.close();
 		Mee1.connectClient(av[1], av[2]);
-		Mee1.authenticate(av[3]); // TODO use automation (argv, env, stdin...)
+		Mee1.authenticate("FlexBot", av[3]);
 		while (Mee1.alive)
 			Mee1.receive();
 	}
 	catch(const std::exception& e)
 	{
 		std::cerr << "I/O error: " << e.what() << '\n';
-		return 1;
+		status = 1;
 	}
-	return 0;
+	if (Mee1.clientFd != -1)
+		::close(Mee1.clientFd);
+	return status;
 }
