@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:57:48 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/19 20:35:11 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 20:49:02 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 
 int	main(int ac, char **av) {
 
-	if (ac != 3) {
+	if (ac != 4) {
 		std::cerr << "Wrong number of arguments\n";
 		return 1;
 	}
@@ -46,7 +46,7 @@ int	main(int ac, char **av) {
 	{
 		Mee1.messageRegistry.load(input);
 		Mee1.connectClient(av[1], av[2]);
-		Mee1.authenticate("FlexBot", "ppp"); // TODO use automation (argv, env, stdin...)
+		Mee1.authenticate("FlexBot", av[3]); // TODO use automation (argv, env, stdin...)
 		while (Mee1.alive)
 			Mee1.receive();
 	}

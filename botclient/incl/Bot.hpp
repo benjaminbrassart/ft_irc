@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:52:19 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/19 20:33:08 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 20:49:19 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ class Bot {
 
 	private:
 		std::string readBuffer;
+
+		std::vector< std::string > ballQuestions;
 
 	public:
 		MessageRegistry messageRegistry;
