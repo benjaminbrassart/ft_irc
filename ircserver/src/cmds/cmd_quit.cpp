@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 13:50:33 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/13 20:59:50 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 18:10:57 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,5 @@ void cmd_quit(CommandContext& ctx)
 		(*recipIt)->send(prefix + " QUIT :Quit: " + reason);
 	client.send("ERROR :buh-bye ;D");
 	client.shouldClose = true;
+	client.hasQuit = true;
 }
