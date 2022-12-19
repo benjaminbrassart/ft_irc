@@ -1,41 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   InputContext.hpp                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/12/17 07:57:48 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/19 00:51:05 by bbrassar         ###   ########.fr       */
+/*   Created: 2022/12/17 13:38:11 by bbrassar          #+#    #+#             */
+/*   Updated: 2022/12/19 00:38:27 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Bot.hpp"
-#include "InputContext.hpp"
-#include "MessageRegistry.hpp"
+#pragma once
 
-#include <algorithm>
 #include <deque>
-#include <fstream>
-#include <iostream>
-#include <map>
 #include <string>
 
-int	main(int ac, char **av) {
+struct InputContext;
+class Bot;
 
-	Bot	Mee1;
-	if (ac != 3) {
-		std::cerr << "Wrong number of arguments" << std::endl;
-		return 1;
-	}
-	try
-	{
-		Mee1.connectClient(av[1], av[2]);
-	}
-	catch(const std::exception& e)
-	{
-		std::cerr << "I/O error: " << e.what() << '\n';
-		return 1;
-	}
-	return 0;
-}
+typedef void (Bot::*InputHandler)(InputContext&);
+
+struct InputContext
+{
+	typedef std::deque< std::string > Args;
+
+	// std::string sender;
+	std::string message;
+	Args& args;
+
+	InputContext(std::string const& message, Args& args);
+	~InputContext();
+};
