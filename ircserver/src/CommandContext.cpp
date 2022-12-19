@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:47:46 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 06:53:55 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 13:09:47 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,6 @@
 #include "CommandMap.hpp"
 #include "command.h"
 #include <algorithm>
-
-#define SIZEOF_ARRAY(Array) (sizeof (Array) / sizeof (*Array))
 
 CommandContext::CommandContext(Client& client, std::string const& name, std::string const& line) :
 	client(client),
