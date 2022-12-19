@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:57:33 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/19 16:56:49 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 20:25:01 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,7 +147,8 @@ void Bot::onMessage(InputContext& ctx)
 
 	// std::string recipient;
 
-	// if (ctx.args[0][0] != '#')
+	if (ctx.args[0][0] != '#')
+		return ;
 
 	// check if the beginning of the message matches the prefix
  	for (; prefix_it != Bot::PREFIX.end(); ++prefix_it)
@@ -200,11 +201,34 @@ void Bot::onReply(InputContext& ctx)
 	}
 }
 
+static unsigned int edit_distance(const std::string& s1, const std::string& s2)
+{
+	const std::size_t len1 = s1.size(), len2 = s2.size();
+	std::vector< std::vector<unsigned int> > d(len1 + 1, std::vector<unsigned int>(len2 + 1));
+
+	d[0][0] = 0;
+	for(unsigned int i = 1; i <= len1; ++i) d[i][0] = i;
+	for(unsigned int i = 1; i <= len2; ++i) d[0][i] = i;
+
+	for(unsigned int i = 1; i <= len1; ++i)
+		for(unsigned int j = 1; j <= len2; ++j)
+			d[i][j] = std::min(std::min(d[i - 1][j] + 1, d[i][j - 1] + 1), d[i - 1][j - 1] + (s1[i - 1] == s2[j - 1] ? 0 : 1));
+	return d[len1][len2];
+}
+
 bool Bot::checkSimilarMessage(std::string const& message)
 {
-	// TODO @ShuBei33 add levenshtein's distance algorithm
-	(void)message;
-	return false;
+	// levenshtein's distance algorithm
+	if (this->ballQuestions.empty()) {
+		this->ballQuestions.push_back(message);
+		return false;
+	}
+	uint distance;
+	for (uint i = 0; i != this->ballQuestions.size(); ++i) {
+		distance = edit_distance(message, this->ballQuestions[i]);
+	}
+	std::cout << "distance is " << distance << std::endl;
+	return true;
 }
 
 void Bot::respond(std::string const& recipient, std::string const& target, std::string const& message)
