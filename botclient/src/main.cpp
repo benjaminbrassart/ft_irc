@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:57:48 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/19 16:20:28 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 20:35:11 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <unistd.h>
 
 int	main(int ac, char **av) {
 
-	Bot	Mee1;
 	if (ac != 3) {
 		std::cerr << "Wrong number of arguments\n";
 		return 1;
@@ -39,18 +39,25 @@ int	main(int ac, char **av) {
 		return 1;
 	}
 
+	Bot Mee1;
+	int status = 0;
+
 	try
 	{
 		Mee1.messageRegistry.load(input);
 		Mee1.connectClient(av[1], av[2]);
-		Mee1.authenticate("ppp"); // TODO use automation (argv, env, stdin...)
+		Mee1.authenticate("FlexBot", "ppp"); // TODO use automation (argv, env, stdin...)
 		while (Mee1.alive)
 			Mee1.receive();
 	}
 	catch(const std::exception& e)
 	{
+		if (Mee1.clientFd != -1)
+			::close(Mee1.clientFd);
 		std::cerr << "I/O error: " << e.what() << '\n';
-		return 1;
+		status = 1;
 	}
-	return 0;
+	if (Mee1.clientFd != -1)
+		::close(Mee1.clientFd);
+	return status;
 }
