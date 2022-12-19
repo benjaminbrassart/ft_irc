@@ -31,7 +31,7 @@
       "type": "cppdbg",
       "request": "launch",
       "program": "${workspaceFolder}/botclient/bot",
-      "args": [],
+      "args": ["localhost", "6667"],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}/botclient",
       "environment": [],
