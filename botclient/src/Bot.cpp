@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:57:33 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/19 13:43:47 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 16:03:44 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,11 @@ Bot::Bot() :
 	this->inputMap["INVITE"] = &Bot::onInvite;
 	this->inputMap["PART"] = &Bot::onPart;
 	this->inputMap["PRIVMSG"] = &Bot::onMessage;
+
+	this->inputMap["001"] = &Bot::onReply;
+	this->inputMap["002"] = &Bot::onReply;
+	this->inputMap["003"] = &Bot::onReply;
+	this->inputMap["004"] = &Bot::onReply;
 }
 
 Bot::Bot(Bot const& cpy) :
@@ -121,10 +126,11 @@ void Bot::onError(InputContext& ctx)
 
 void Bot::onInvite(InputContext& ctx)
 {
-	if (ctx.args.size() < 3)
-		return;
+	InputContext::Args& args = ctx.args;
 
-	(void)ctx;
+	if (args.size() != 2)
+		return;
+	this->send("JOIN " + args[1]);
 }
 
 void Bot::onPart(InputContext& ctx)
@@ -171,6 +177,22 @@ void Bot::onMessage(InputContext& ctx)
 	this->respond(target, answer);
 }
 
+void Bot::onReply(InputContext& ctx)
+{
+	int const code = std::atoi(ctx.message.c_str());
+
+	if (code >= 1 && code <= 4)
+	{
+		if (this->isLogged())
+			return;
+
+		// set the nth bit of the login state
+		this->loginState |= (1 << (code - 1));
+		if (this->isLogged())
+			std::cout << "Logged in!\n";
+	}
+}
+
 bool Bot::checkSimilarMessage(std::string const& message)
 {
 	// TODO @ShuBei33 add levenshtein's distance algorithm
@@ -180,7 +202,7 @@ bool Bot::checkSimilarMessage(std::string const& message)
 
 void Bot::respond(std::string const& target, std::string const& message)
 {
-	// TODO format and call this->send with
+	// TODO format and call this->send
 	(void)target;
 	(void)message;
 }
@@ -213,7 +235,7 @@ void Bot::receive()
 	{
 		it = this->readBuffer.begin();
 		offset = this->readBuffer.find("\r\n");
-		if (offset == std::string::npos)
+		if (offset == std::string::npos) // partial input, stop here
 			break;
 		line = std::string(it, it + offset);
 		this->readBuffer = this->readBuffer.substr(offset + 2);
@@ -229,52 +251,38 @@ void Bot::__processLine(std::string const& line)
 	std::string origin;
 
 	// process prefixes
-	while (it != line.end() && *it != ':')
+	while (it != line.end() && *it == ':')
 	{
 		fast = std::find(it, line.end(), ' ');
 		arg = std::string(it, fast);
+
+		it = fast;
 
 		// try to find a '!', which indicates this is the origin of the message
 		fast = std::find(arg.begin(), arg.end(), '!');
 		if (fast != arg.end())
 			origin = arg;
 
-		it = fast;
 		if (it != line.end())
 			++it;
 	}
 
 	// command without prefixes
 	// ':bbrassar!Benjamin@10.0.4.4 JOIN #channel' becomes 'JOIN #channel'
-	std::string cmd = std::string(it, line.end());
-	int reply = 0;
-	int i = 0;
+	std::string message = std::string(it, line.end());
 
-	it = cmd.begin();
+	InputContext::Args args = InputContext::split(message);
 
-	// parse 3 numbers and a space => response
-	while (i < 3 && it != cmd.end())
+	std::string cmd = args.front();
+	args.pop_front();
+
+	InputMap::iterator cmdIt = this->inputMap.find(cmd);
+
+	if (cmdIt != this->inputMap.end() && cmdIt->second != NULL)
 	{
-		if (*it < '0' || *it > '9')
-			break;
-		reply = reply * 10 + ('0' - *it);
-		++it;
-		++i;
-	}
+		InputContext ctx(cmd, args);
 
-	if (i == 3 && it != cmd.end() && *it == ' ')
-	{
-		// no need to check bounds or whatever, value is between 0 and 999
-		int code = std::atoi(cmd.c_str());
-
-		switch (code)
-		{
-
-		}
-	}
-	else
-	{
-		// not a numeric reply
+		(this->*cmdIt->second)(ctx);
 	}
 }
 
@@ -292,4 +300,13 @@ void Bot::send(std::string const& str)
 	res = ::send(this->clientFd, (str + "\r\n").c_str(), str.size() + 2, 0);
 	if (res == -1)
 		throw IOException("send", errno);
+}
+
+bool Bot::isLogged()
+{
+	// 1000 & 0100 & 0010 & 0001
+	// 8 + 4 + 2 + 1
+	// 15
+	// 0xF
+	return (this->loginState & 0xF) == 0xF;
 }

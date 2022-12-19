@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:52:19 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/19 13:42:22 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 13:51:14 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,7 @@ class Bot {
 
 		void	connectClient(const char* hostname, const char* port);
 		void	authenticate(std::string const& password);
+		bool	isLogged();
 
 		bool	checkSimilarMessage(std::string const& message);
 

@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 13:38:11 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/19 00:38:27 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 15:34:38 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,4 +30,6 @@ struct InputContext
 
 	InputContext(std::string const& message, Args& args);
 	~InputContext();
+
+	static Args split(std::string const& line);
 };
