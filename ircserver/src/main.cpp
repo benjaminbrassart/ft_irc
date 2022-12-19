@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 00:55:38 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/17 11:11:31 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/12/19 21:42:03 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ long	parsing_input(int ac, char *str) {
 }
 
 static void __handleSignal(int sig);
+static void __setupSignalHandlers();
 
 //./ircserv <port> <password>
 int	main(int ac, char **av) {
@@ -69,7 +70,7 @@ int	main(int ac, char **av) {
 	server.loadOperatorFile("operators.txt");
 	server.password = av[2];
 
-	std::signal(SIGINT, __handleSignal);
+	__setupSignalHandlers();
 	server.logger.log(DEBUG, "Signal handlers setup");
 
 	g_Mode = 1;
@@ -104,6 +105,16 @@ int	main(int ac, char **av) {
 	}
 	close(server.sockFd);
 	return 0;
+}
+
+static void __setupSignalHandlers()
+{
+	struct sigaction sa;
+
+	::sigemptyset(&sa.sa_mask);
+	sa.sa_handler = __handleSignal;
+
+	::sigaction(SIGINT, &sa, NULL);
 }
 
 static void __handleSignal(int sig)
