@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:52:19 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/19 00:50:49 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 16:27:12 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,13 @@ class Bot {
 
 	private:
 		int clientFd;
+		std::string readBuffer;
 
 	public:
 		MessageRegistry messageRegistry;
 		InputMap inputMap;
+		bool alive;
+		int loginState;
 
 		Bot();
 		Bot(Bot const& cpy);
@@ -45,17 +48,20 @@ class Bot {
 		Bot &operator=(Bot const& asgn);
 
 		void	connectClient(const char* hostname, const char* port);
+		void	authenticate(std::string const& password);
+		bool	isLogged();
 
 		bool	checkSimilarMessage(std::string const& message);
 
 		void	receive();
 		void	send(std::string const& message);
-		void	respond(std::string const& target, std::string const& message);
+		void	respond(std::string const& recipient, std::string const& target, std::string const& message);
 
 		void	onInvite(InputContext& ctx);
 		void	onError(InputContext& ctx);
 		void	onPart(InputContext& ctx);
 		void	onMessage(InputContext& ctx);
+		void	onReply(InputContext& ctx);
 
 		class IOException : public std::exception
 		{
@@ -70,6 +76,9 @@ class Bot {
 		public:
 			char const* what() const throw();
 		}; // class IOException
+
+	private:
+		void __processLine(std::string const& line);
 };
 
 #endif

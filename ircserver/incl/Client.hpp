@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 16:33:12 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/14 22:31:30 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 18:09:57 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ class Client : public Recipient {
 		std::string				password;
 		// whether the connection to this client should be closed or not
 		bool					shouldClose;
+		bool					hasQuit;
 		// whether client is visible or not in WHO / NAMES lists
 		bool					isInvisible;
 

@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/03 10:54:39 by bbrassar          #+#    #+#             */
-/*   Updated: 2022/12/17 06:59:12 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 18:33:07 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,17 +128,34 @@ void ConnectionManager::handlePollInClient(Server& server, iterator& it)
 
 	if (clientIt != server.clientManager.end())
 	{
-		if (clientIt->second.readFrom())
+		Client& client = clientIt->second;
+
+		if (client.readFrom())
 		{
-			chanIt = clientIt->second.channels.begin();
-			for (; chanIt != clientIt->second.channels.end(); ++chanIt)
+			// recv returned <= 0
+
+			std::string const prefix = client.asPrefix();
+			Client::ChannelList::iterator chanIt;
+			Channel::ClientList::iterator chanMemberIt;
+			std::set< Client* > recipients;
+			std::set< Client* >::iterator recipIt;
+
+			for (chanIt = client.channels.begin(); chanIt != client.channels.end(); ++chanIt)
 			{
-				(*chanIt)->removeClient(clientIt->second);
+				(*chanIt)->removeClient(client);
 				if ((*chanIt)->empty())
 					server.channelManager.removeChannel((*chanIt)->name);
+				else
+					for (chanMemberIt = (*chanIt)->allClients.begin(); chanMemberIt != (*chanIt)->allClients.end(); ++chanMemberIt)
+						recipients.insert(chanMemberIt->client);
 			}
-			clientIt->second.closeConnection();
-			server.nickManager.unregisterNickname(clientIt->second.nickname);
+
+			if (!client.hasQuit)
+				for (recipIt = recipients.begin(); recipIt != recipients.end(); ++recipIt)
+					(*recipIt)->send(prefix + " QUIT :Quit: suddenly disconnected");
+
+			client.closeConnection();
+			server.nickManager.unregisterNickname(client.nickname);
 			server.clientManager.removeClient(clientIt);
 			this->removeSocket(it->fd);
 		}
@@ -187,12 +204,35 @@ void ConnectionManager::handlePollOut(Server& server, iterator& it)
 	}
 	else
 	{
-		clientIt->second.flushWriteBuffer();
-		if (clientIt->second.shouldClose)
+		Client& client = clientIt->second;
+		Server& server = *client.server;
+
+		client.flushWriteBuffer();
+		if (client.shouldClose)
 		{
-			clientIt->second.server->nickManager.unregisterNickname(clientIt->second.nickname);
+			std::string const prefix = client.asPrefix();
+			Client::ChannelList::iterator chanIt;
+			Channel::ClientList::iterator chanMemberIt;
+			std::set< Client* > recipients;
+			std::set< Client* >::iterator recipIt;
+
+			for (chanIt = client.channels.begin(); chanIt != client.channels.end(); ++chanIt)
+			{
+				(*chanIt)->removeClient(client);
+				if ((*chanIt)->empty())
+					server.channelManager.removeChannel((*chanIt)->name);
+				else
+					for (chanMemberIt = (*chanIt)->allClients.begin(); chanMemberIt != (*chanIt)->allClients.end(); ++chanMemberIt)
+						recipients.insert(chanMemberIt->client);
+			}
+
+			if (!client.hasQuit)
+				for (recipIt = recipients.begin(); recipIt != recipients.end(); ++recipIt)
+					(*recipIt)->send(prefix + " QUIT :Quit: suddenly disconnected");
+
+			server.nickManager.unregisterNickname(client.nickname);
 			this->removeSocket(clientIt->first);
-			clientIt->second.closeConnection();
+			client.closeConnection();
 		}
 		++it;
 	}
