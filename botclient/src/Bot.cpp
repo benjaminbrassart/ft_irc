@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:57:33 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/19 16:03:44 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 16:56:49 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,41 +140,48 @@ void Bot::onPart(InputContext& ctx)
 
 void Bot::onMessage(InputContext& ctx)
 {
-	std::string const& message = ctx.message;
+	std::string const& recipient = ctx.args[0];
+	std::string const& message = ctx.args[1];
 	std::string::const_iterator prefix_it = Bot::PREFIX.begin();
-	std::string::const_iterator ctx_it = message.begin();
+	std::string::const_iterator msg_it = message.begin();
+
+	// std::string recipient;
+
+	// if (ctx.args[0][0] != '#')
 
 	// check if the beginning of the message matches the prefix
-	for (; prefix_it != Bot::PREFIX.end(); ++prefix_it)
+ 	for (; prefix_it != Bot::PREFIX.end(); ++prefix_it)
 	{
-		if (ctx_it == message.end() || *ctx_it != *prefix_it)
+		if (msg_it == message.end() || *msg_it != *prefix_it)
 			return;
-		++ctx_it;
+		++msg_it;
 	}
 
 	// skip spaces
-	while (ctx_it != message.end() && *ctx_it != ' ')
-		++ctx_it;
+	while (msg_it != message.end() && *msg_it == ' ')
+		++msg_it;
 
-	if (ctx_it == message.end())
+	std::string const prefixlessMessage = std::string(msg_it, message.end());
+	std::string const target = "TODO"; // TODO parse target's nickname
+
+	if (msg_it == message.end())
 	{
 		// TODO respond with rules
+		this->respond(recipient, target, "the rules are simple: you ask a question, I give you an answer.");
 		return;
 	}
-
-	std::string const prefixlessMessage = std::string(ctx_it, message.end());
-	std::string const target = "TODO"; // TODO parse target's nickname
 
 	if (this->checkSimilarMessage(prefixlessMessage))
 	{
 		// TODO maybe print which question was asked and also by whom
-		this->respond(target, "a similar question was already asked.");
+		this->respond(recipient, target, "a similar question was already asked.");
 		return;
 	}
 
 	std::string const answer = this->messageRegistry.getRandomMessage();
 
-	this->respond(target, answer);
+	(void)recipient;
+	this->respond(recipient, target, answer);
 }
 
 void Bot::onReply(InputContext& ctx)
@@ -200,11 +207,9 @@ bool Bot::checkSimilarMessage(std::string const& message)
 	return false;
 }
 
-void Bot::respond(std::string const& target, std::string const& message)
+void Bot::respond(std::string const& recipient, std::string const& target, std::string const& message)
 {
-	// TODO format and call this->send
-	(void)target;
-	(void)message;
+	this->send("PRIVMSG " + recipient + " :" + target + ": " + message);
 }
 
 void Bot::receive()

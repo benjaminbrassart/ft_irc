@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:52:19 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/19 13:51:14 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 16:27:12 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ class Bot {
 
 		void	receive();
 		void	send(std::string const& message);
-		void	respond(std::string const& target, std::string const& message);
+		void	respond(std::string const& recipient, std::string const& target, std::string const& message);
 
 		void	onInvite(InputContext& ctx);
 		void	onError(InputContext& ctx);
