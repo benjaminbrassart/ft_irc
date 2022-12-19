@@ -6,7 +6,7 @@
 /*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:57:33 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/19 21:13:36 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/19 21:38:23 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -313,7 +313,12 @@ void Bot::receive()
 	res = ::recv(this->clientFd, buffer, sizeof (buffer), 0);
 
 	if (res == -1)
+	{
+		this->alive = false;
+		if (errno == EINTR)
+			return;
 		throw IOException("recv", errno);
+	}
 	if (res == 0)
 	{
 		::close(this->clientFd);
