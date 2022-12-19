@@ -1,5 +1,4 @@
 /obj/
 /ircserv
 *.old
-.nfs*
 massif.out.*
