@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
+/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:57:33 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/20 05:06:30 by parallels        ###   ########.fr       */
+/*   Updated: 2022/12/20 18:45:36 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ Bot::Bot() :
 	this->inputMap["PRIVMSG"] = &Bot::onMessage;
 	this->inputMap["QUIT"] = &Bot::onQuit;
 	this->inputMap["JOIN"] = &Bot::onJoin;
+	this->inputMap["KICK"] = &Bot::onKick;
 
 	this->inputMap["001"] = &Bot::onReply;
 	this->inputMap["002"] = &Bot::onReply;
@@ -158,6 +159,11 @@ void Bot::onPart(InputContext& ctx)
 		this->send("PART " + chanName + " :Lonely, I'm Mistah Lonely...");
 		this->channelCache.erase(ccIt);
 	}
+}
+
+void Bot::onKick(InputContext& ctx)
+{
+	this->channelCache.erase(ctx.args[0]);
 }
 
 void Bot::onJoin(InputContext& ctx)
@@ -299,10 +305,11 @@ bool Bot::checkSimilarMessage(std::string const& message)
 	for (uint i = 0; i != this->ballQuestions.size(); ++i) {
 		distance = edit_distance(this->ballQuestions[i], message);
 		std::cout << "distance is " << distance << std::endl;
+		// std::cout << "distance is " << distance << std::endl;
 		if (distance <= 6)
 			return true;
-		this->ballQuestions.push_back(message);
 	}
+	this->ballQuestions.push_back(message);
 	return false;
 }
 

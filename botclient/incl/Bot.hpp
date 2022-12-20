@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.hpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:52:19 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/19 20:49:19 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/20 18:38:23 by estoffel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ class Bot {
 		void	onMessage(InputContext& ctx);
 		void	onReply(InputContext& ctx);
 		void	onJoin(InputContext& ctx);
+		void	onKick(InputContext& ctx);
 
 		void	updateChannelCache();
 
