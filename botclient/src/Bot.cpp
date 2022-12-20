@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Bot.cpp                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: estoffel <estoffel@student.42.fr>          +#+  +:+       +#+        */
+/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:57:33 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/20 18:45:36 by estoffel         ###   ########.fr       */
+/*   Updated: 2022/12/20 19:54:08 by bbrassar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -294,9 +294,8 @@ static unsigned int edit_distance(const std::string& s1, const std::string& s2)
 bool Bot::checkSimilarMessage(std::string const& message)
 {
 	// levenshtein's distance algorithm
-	if (this->ballQuestions.size() == 500)
-		for (uint i = 0; i != this->ballQuestions.size(); ++i)
-			this->ballQuestions[i].clear();
+	if (this->ballQuestions.size() >= 500)
+		this->ballQuestions.clear();
 	if (this->ballQuestions.empty()) {
 		this->ballQuestions.push_back(message);
 		return false;
@@ -304,8 +303,6 @@ bool Bot::checkSimilarMessage(std::string const& message)
 	uint distance;
 	for (uint i = 0; i != this->ballQuestions.size(); ++i) {
 		distance = edit_distance(this->ballQuestions[i], message);
-		std::cout << "distance is " << distance << std::endl;
-		// std::cout << "distance is " << distance << std::endl;
 		if (distance <= 6)
 			return true;
 	}
