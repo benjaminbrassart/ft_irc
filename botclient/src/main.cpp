@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: bbrassar <bbrassar@student.42.fr>          +#+  +:+       +#+        */
+/*   By: parallels <parallels@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/12/17 07:57:48 by estoffel          #+#    #+#             */
-/*   Updated: 2022/12/19 21:38:43 by bbrassar         ###   ########.fr       */
+/*   Updated: 2022/12/20 04:21:04 by parallels        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	main(int ac, char **av) {
 		::sigaction(SIGINT, &sa, NULL);
 
 		mee1.connectClient(av[1], av[2]);
-		mee1.authenticate("FlexBot", av[3]);
+		mee1.authenticate("Mee1", av[3]);
 		while (mee1.alive)
 			mee1.receive();
 	}
