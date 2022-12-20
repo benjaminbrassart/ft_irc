@@ -1,4 +1,0 @@
-TESTS :
-
-- /invite prout #mychan => NOSUCHNICK if prout doesn't exist?
-- /invite prout #mychan => USERNOTINCHANNEL mais c'est pas bon.
