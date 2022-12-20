@@ -8,6 +8,7 @@ template< Reply code >
 void Client::__replyRaw(std::string const& message)
 {
 	std::stringstream ss;
+	std::string const nick = (this->nickname.empty() ? "(null)" : this->nickname);
 
 	ss
 		<< std::setfill('0') << std::setw(3) << code << " "
